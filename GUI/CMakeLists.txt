@@ -118,8 +118,8 @@ MAIN_DEPENDENCY "${CMAKE_CURRENT_SOURCE_DIR}/Embedded.i"
 DEPENDS "EmbeddedPythonFunctions.h"
 COMMENT "Generating SWIG wrapper code...")
 
-include_directories(../TinyXML)
-include_directories(../Tetgen)
+#include_directories(../TinyXML)
+#include_directories(../Tetgen)
 include_directories(../Core)
 include_directories(../Renderer)
 target_link_libraries(GUI Renderer.Core)

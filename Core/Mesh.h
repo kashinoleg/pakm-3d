@@ -1,6 +1,8 @@
 #pragma once
 #include <list>
 #include <set>
+#include <string>
+#include <iostream>
 #include <fstream>
 #include "MeshData.h"
 #include "Misc.h"

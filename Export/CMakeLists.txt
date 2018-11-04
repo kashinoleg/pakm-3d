@@ -13,23 +13,23 @@ ADD_LIBRARY(Export.Core STATIC
 	${SOURCE_LIB}
 )
 
-include_directories(../TinyXML)
-include_directories(../Tetgen)
+#include_directories(../TinyXML)
+#include_directories(../Tetgen)
 include_directories(../Core)
 target_link_libraries(Export.Core Core.Core)
 
-ADD_DEFINITIONS(-DWNT)
-INCLUDE(FindOpenCascade.cmake)
-include_directories(${OPENCASCADE_INCLUDE_DIR})
-target_link_libraries(Export.Core
-  ${OPENCASCADE_STATIC_LIB}
-)
+#ADD_DEFINITIONS(-DWNT)
+#INCLUDE(FindOpenCascade.cmake)
+#include_directories(${OPENCASCADE_INCLUDE_DIR})
+#target_link_libraries(Export.Core
+#  ${OPENCASCADE_STATIC_LIB}
+#)
 
-INSTALL(FILES
-  ${OPENCASCADE_SHARED_LIB}
-DESTINATION
-  ${CMAKE_INSTALL_PREFIX}/Python/libxtra/TexGen
-)
+#INSTALL(FILES
+#  ${OPENCASCADE_SHARED_LIB}
+#DESTINATION
+#  ${CMAKE_INSTALL_PREFIX}/Python/libxtra/TexGen
+#)
 
-add_subdirectory(Test)
+#add_subdirectory(Test)
 add_subdirectory(Python)

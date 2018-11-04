@@ -33,9 +33,10 @@ void CLoggerScreen::TexGenError(std::string FileName, int iLineNumber, std::stri
 /// so that the filename and linenumbers are filled in automatically
 void CLoggerScreen::TexGenLog(std::string FileName, int iLineNumber, std::string Message)
 {
-	int i;
-	for (i=0; i<m_iIndent; ++i)
+	for (int i = 0; i < m_iIndent; i++)
+	{
 		std::cout << "  ";
+	}
 	std::cout << Message << std::endl;
 }
 
@@ -46,12 +47,3 @@ namespace TexGen
 		return TEXGEN.GetLogger();
 	}
 }
-
-
-
-
-
-
-
-
-

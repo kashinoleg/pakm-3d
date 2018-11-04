@@ -40,7 +40,7 @@ distribution.
 // Note tha "PutString" hardcodes the same list. This
 // is less flexible than it appears. Changing the entries
 // or order will break putstring.	
-TiXmlEntity TiXmlBase::entity[TiXmlBase::NUM_ENTITY] =
+TiXmlBase::Entity TiXmlBase::entity[TiXmlBase::NUM_ENTITY] =
 {
 	{ "&amp;",  5, '&' },
 	{ "&lt;",   4, '<' },
@@ -365,7 +365,8 @@ const char* TiXmlBase::SkipWhiteSpace(const char* p, TiXmlEncoding encoding)
 	return p;
 }
 
-bool TiXmlBase::StreamWhiteSpace(std::istream * in, std::string * tag)
+#ifdef TIXML_USE_STL
+/*static*/ bool TiXmlBase::StreamWhiteSpace(std::istream * in, TIXML_STRING * tag)
 {
 	for (;; )
 	{
@@ -380,7 +381,7 @@ bool TiXmlBase::StreamWhiteSpace(std::istream * in, std::string * tag)
 	}
 }
 
-bool TiXmlBase::StreamTo(std::istream * in, int character, std::string * tag)
+/*static*/ bool TiXmlBase::StreamTo(std::istream * in, int character, TIXML_STRING * tag)
 {
 	//assert( character > 0 && character < 128 );	// else it won't work in utf-8
 	while (in->good())
@@ -396,11 +397,12 @@ bool TiXmlBase::StreamTo(std::istream * in, int character, std::string * tag)
 	}
 	return false;
 }
+#endif
 
 // One of TinyXML's more performance demanding functions. Try to keep the memory overhead down. The
 // "assign" optimization removes over 10% of the execution time.
 //
-const char* TiXmlBase::ReadName(const char* p, std::string * name, TiXmlEncoding encoding)
+const char* TiXmlBase::ReadName(const char* p, TIXML_STRING * name, TiXmlEncoding encoding)
 {
 	// Oddly, not supported on some comilers,
 	//name->clear();
@@ -440,7 +442,7 @@ const char* TiXmlBase::ReadName(const char* p, std::string * name, TiXmlEncoding
 const char* TiXmlBase::GetEntity(const char* p, char* value, int* length, TiXmlEncoding encoding)
 {
 	// Presume an entity, and pull it out.
-	std::string ent;
+	TIXML_STRING ent;
 	int i;
 	*length = 0;
 
@@ -533,8 +535,11 @@ const char* TiXmlBase::GetEntity(const char* p, char* value, int* length, TiXmlE
 }
 
 
-bool TiXmlBase::StringEqual(const char* p, const char* tag,
-	bool ignoreCase, TiXmlEncoding encoding) {
+bool TiXmlBase::StringEqual(const char* p,
+	const char* tag,
+	bool ignoreCase,
+	TiXmlEncoding encoding)
+{
 	assert(p);
 	assert(tag);
 	if (!p || !*p)
@@ -571,7 +576,7 @@ bool TiXmlBase::StringEqual(const char* p, const char* tag,
 }
 
 const char* TiXmlBase::ReadText(const char* p,
-	std::string * text,
+	TIXML_STRING * text,
 	bool trimWhiteSpace,
 	const char* endTag,
 	bool caseInsensitive,
@@ -635,7 +640,9 @@ const char* TiXmlBase::ReadText(const char* p,
 	return (p && *p) ? p : 0;
 }
 
-void TiXmlDocument::StreamIn(std::istream * in, std::string * tag)
+#ifdef TIXML_USE_STL
+
+void TiXmlDocument::StreamIn(std::istream * in, TIXML_STRING * tag)
 {
 	// The basic issue with a document is that we don't know what we're
 	// streaming. Read something presumed to be a tag (and hope), then
@@ -695,6 +702,8 @@ void TiXmlDocument::StreamIn(std::istream * in, std::string * tag)
 	// We should have returned sooner.
 	SetError(TIXML_ERROR, 0, 0, TIXML_ENCODING_UNKNOWN);
 }
+
+#endif
 
 const char* TiXmlDocument::Parse(const char* p, TiXmlParsingData* prevData, TiXmlEncoding encoding)
 {
@@ -764,7 +773,7 @@ const char* TiXmlDocument::Parse(const char* p, TiXmlParsingData* prevData, TiXm
 			&& node->ToDeclaration())
 		{
 			TiXmlDeclaration* dec = node->ToDeclaration();
-			const char* enc = dec->Encoding().c_str();
+			const char* enc = dec->Encoding();
 			assert(enc);
 
 			if (*enc == 0)
@@ -790,11 +799,11 @@ const char* TiXmlDocument::Parse(const char* p, TiXmlParsingData* prevData, TiXm
 	return p;
 }
 
-void TiXmlDocument::SetError(TiXmlError err, const char* pError, TiXmlParsingData* data, TiXmlEncoding encoding) {
+void TiXmlDocument::SetError(int err, const char* pError, TiXmlParsingData* data, TiXmlEncoding encoding)
+{
 	// The first error in a chain is more accurate - don't set again!
-	if (error) {
+	if (error)
 		return;
-	}
 
 	assert(err > 0 && err < TIXML_ERROR_STRING_COUNT);
 	error = true;
@@ -802,7 +811,8 @@ void TiXmlDocument::SetError(TiXmlError err, const char* pError, TiXmlParsingDat
 	errorDesc = errorString[errorId];
 
 	errorLocation.Clear();
-	if (pError && data) {
+	if (pError && data)
+	{
 		data->Stamp(pError, encoding);
 		errorLocation = data->Cursor();
 	}
@@ -892,9 +902,10 @@ TiXmlNode* TiXmlNode::Identify(const char* p, TiXmlEncoding encoding)
 	return returnNode;
 }
 
-void TiXmlElement::StreamIn(std::istream * in, std::string * tag)
+#ifdef TIXML_USE_STL
+
+void TiXmlElement::StreamIn(std::istream * in, TIXML_STRING * tag)
 {
-	const static TiXmlEncoding TIXML_DEFAULT_ENCODING = TIXML_ENCODING_UNKNOWN;
 	// We're called with some amount of pre-parsing. That is, some of "this"
 	// element is in "tag". Go ahead and stream to the closing ">"
 	while (in->good())
@@ -1031,6 +1042,7 @@ void TiXmlElement::StreamIn(std::istream * in, std::string * tag)
 		}
 	}
 }
+#endif
 
 const char* TiXmlElement::Parse(const char* p, TiXmlParsingData* data, TiXmlEncoding encoding)
 {
@@ -1067,7 +1079,7 @@ const char* TiXmlElement::Parse(const char* p, TiXmlParsingData* data, TiXmlEnco
 		return 0;
 	}
 
-	std::string endTag("</");
+	TIXML_STRING endTag("</");
 	endTag += value;
 
 	// Check for and read attributes. Also look for an empty
@@ -1149,7 +1161,11 @@ const char* TiXmlElement::Parse(const char* p, TiXmlParsingData* data, TiXmlEnco
 			}
 
 			// Handle the strange case of double attributes:
+#ifdef TIXML_USE_STL
+			TiXmlAttribute* node = attributeSet.Find(attrib->NameTStr());
+#else
 			TiXmlAttribute* node = attributeSet.Find(attrib->Name());
+#endif
 			if (node)
 			{
 				if (document) document->SetError(TIXML_ERROR_PARSING_ELEMENT, pErr, data, encoding);
@@ -1234,7 +1250,9 @@ const char* TiXmlElement::ReadValue(const char* p, TiXmlParsingData* data, TiXml
 	return p;
 }
 
-void TiXmlUnknown::StreamIn(std::istream * in, std::string * tag)
+
+#ifdef TIXML_USE_STL
+void TiXmlUnknown::StreamIn(std::istream * in, TIXML_STRING * tag)
 {
 	while (in->good())
 	{
@@ -1255,6 +1273,8 @@ void TiXmlUnknown::StreamIn(std::istream * in, std::string * tag)
 		}
 	}
 }
+#endif
+
 
 const char* TiXmlUnknown::Parse(const char* p, TiXmlParsingData* data, TiXmlEncoding encoding)
 {
@@ -1290,7 +1310,8 @@ const char* TiXmlUnknown::Parse(const char* p, TiXmlParsingData* data, TiXmlEnco
 	return p;
 }
 
-void TiXmlComment::StreamIn(std::istream * in, std::string * tag)
+#ifdef TIXML_USE_STL
+void TiXmlComment::StreamIn(std::istream * in, TIXML_STRING * tag)
 {
 	while (in->good())
 	{
@@ -1314,6 +1335,8 @@ void TiXmlComment::StreamIn(std::istream * in, std::string * tag)
 		}
 	}
 }
+#endif
+
 
 const char* TiXmlComment::Parse(const char* p, TiXmlParsingData* data, TiXmlEncoding encoding)
 {
@@ -1443,7 +1466,8 @@ const char* TiXmlAttribute::Parse(const char* p, TiXmlParsingData* data, TiXmlEn
 	return p;
 }
 
-void TiXmlText::StreamIn(std::istream * in, std::string * tag)
+#ifdef TIXML_USE_STL
+void TiXmlText::StreamIn(std::istream * in, TIXML_STRING * tag)
 {
 	while (in->good())
 	{
@@ -1472,6 +1496,7 @@ void TiXmlText::StreamIn(std::istream * in, std::string * tag)
 		}
 	}
 }
+#endif
 
 const char* TiXmlText::Parse(const char* p, TiXmlParsingData* data, TiXmlEncoding encoding)
 {
@@ -1508,7 +1533,7 @@ const char* TiXmlText::Parse(const char* p, TiXmlParsingData* data, TiXmlEncodin
 			++p;
 		}
 
-		std::string dummy;
+		TIXML_STRING dummy;
 		p = ReadText(p, &dummy, false, endTag, false, encoding);
 		return p;
 	}
@@ -1524,7 +1549,8 @@ const char* TiXmlText::Parse(const char* p, TiXmlParsingData* data, TiXmlEncodin
 	}
 }
 
-void TiXmlDeclaration::StreamIn(std::istream * in, std::string * tag)
+#ifdef TIXML_USE_STL
+void TiXmlDeclaration::StreamIn(std::istream * in, TIXML_STRING * tag)
 {
 	while (in->good())
 	{
@@ -1545,6 +1571,7 @@ void TiXmlDeclaration::StreamIn(std::istream * in, std::string * tag)
 		}
 	}
 }
+#endif
 
 const char* TiXmlDeclaration::Parse(const char* p, TiXmlParsingData* data, TiXmlEncoding _encoding)
 {

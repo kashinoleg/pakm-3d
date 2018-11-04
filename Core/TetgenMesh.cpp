@@ -310,9 +310,9 @@ void CTetgenMesh::SaveTetgenMesh( CTextile &Textile, string OutputFilename, stri
 	char* TetgenOutput = new char[size];
 	strOutput = RemoveExtension( OutputFilename, ".inp" );
 	strcpy(TetgenOutput, strOutput.c_str());
-	
+	/*
 	m_in.save_poly(TetgenOutput);
-
+	
 	// Check the input mesh first
 	try
 	{
@@ -334,13 +334,13 @@ void CTetgenMesh::SaveTetgenMesh( CTextile &Textile, string OutputFilename, stri
 		TGERROR(Parameters);
 		return;
 	}
-			
+		
 	// Output mesh to files 'barout.node', 'barout.ele' and 'barout.face'.
 	m_out.save_nodes(TetgenOutput);
 	m_out.save_elements(TetgenOutput);
 	delete [] TetgenOutput;
 	m_out.save_faces(TetgenOutput);
-
+	//*/
 	SaveToAbaqus( OutputFilename, Textile );
 }
 

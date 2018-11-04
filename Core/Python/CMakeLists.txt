@@ -24,9 +24,9 @@ IF(BUILD_PYTHON_INTERFACE)
 	set_target_properties(Core.Python PROPERTIES SUFFIX ".pyd")
 
 
-	include_directories(../../Tetgen)
-	include_directories(../../Octree)
-	include_directories(../../TinyXML)
+	#include_directories(../../Tetgen)
+	#include_directories(../../Octree)
+	#include_directories(../../TinyXML)
 	target_link_libraries(Core.Python Core.Core)
 
 	FIND_PACKAGE(PythonLibs REQUIRED)

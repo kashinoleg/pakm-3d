@@ -1,5 +1,6 @@
 #pragma once
 #include <ctime>
+#include <string>
 #include <iostream>
 #include <iomanip>
 #include "Logger.h"
@@ -55,12 +56,14 @@ namespace TexGen {
 	inline void CTimer::start(const char* msg)
 	{
 		// Print an optional message, something like "Starting timer t";
-		if (msg) {
+		if (msg)
+		{
 			TGLOG(msg);
 		}
 
 		// Return immediately if the timer is already running
-		if (running) {
+		if (running)
+		{
 			return;
 		}
 
@@ -88,7 +91,10 @@ namespace TexGen {
 	inline void CTimer::stop(const char* msg)
 	{
 		// Print an optional message, something like "Stopping timer t";
-		if (msg) TGLOG(msg);
+		if (msg)
+		{
+			TGLOG(msg);
+		}
 
 		// Compute accumulated running time and set timer status to not running
 		if (running) acc_time += elapsed_time();

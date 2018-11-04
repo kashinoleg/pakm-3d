@@ -1,5 +1,8 @@
 #pragma once
 #include "Misc.h"
+#include <string>
+#include <sstream>
+#include <iostream>
 
 namespace TexGen {
 	/// Macros used to report the file name and line number to the TexGenError and TexGenLog functions
@@ -96,7 +99,12 @@ namespace TexGen {
 		CLogger *Copy() const { return new CLoggerNull(*this); }
 		void TexGenError(std::string FileName, int iLineNumber, std::string Message) {;}
 		void TexGenLog(std::string FileName, int iLineNumber, std::string Message) {;}
-
+		void TexGenLog(std::string message)
+		{
+			std::ostringstream o;
+			o << message;
+			TexGenLog(__FILE__, __LINE__, o.str());
+		}
 	protected:
 	};
 

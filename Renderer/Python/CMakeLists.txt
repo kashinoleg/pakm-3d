@@ -21,9 +21,9 @@ IF(BUILD_PYTHON_INTERFACE)
 		set_target_properties(Renderer.Python PROPERTIES OUTPUT_NAME "_Renderer")
 		set_target_properties(Renderer.Python PROPERTIES SUFFIX ".pyd")
 
-		FIND_PACKAGE(VTK REQUIRED)
-		INCLUDE(${VTK_USE_FILE})
-		target_link_libraries(Renderer.Python ${VTK_LIBRARIES})
+		#FIND_PACKAGE(VTK REQUIRED)
+		#INCLUDE(${VTK_USE_FILE})
+		#target_link_libraries(Renderer.Python ${VTK_LIBRARIES})
 
 		FIND_PACKAGE(PythonLibs REQUIRED)
 		include_directories(${PYTHON_INCLUDE_PATH})

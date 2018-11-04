@@ -253,6 +253,8 @@ set(SOURCE_LIB
 	YarnSectionInterpPosition.h
 )
 
+#file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/packages.config DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
+
 ADD_DEFINITIONS(-DEXPORT)
 IF(BUILD_SHARED)
 	ADD_LIBRARY(Core.Core SHARED
@@ -264,17 +266,17 @@ ELSE(BUILD_SHARED)
 	)
 ENDIF(BUILD_SHARED)
 
-include_directories(../Tetgen)
-target_link_libraries(Core.Core Tetgen.Core)
+#include_directories(../Tetgen)
+#target_link_libraries(Core.Core Tetgen.Core)
 
-include_directories(../Octree)
-target_link_libraries(Core.Core Octree.Core)
+#include_directories(../Octree)
+#target_link_libraries(Core.Core Octree.Core)
 
-include_directories(../TinyXML)
-target_link_libraries(Core.Core TinyXML.Core)
+#include_directories(../TinyXML)
+#target_link_libraries(Core.Core TinyXML.Core)
 
-include_directories(../CSparse)
-target_link_libraries(Core.Core CSparse.Core)
+#include_directories(../CSparse)
+#target_link_libraries(Core.Core CSparse.Core)
 
 INSTALL(TARGETS
 	Core.Core RUNTIME
@@ -282,4 +284,4 @@ DESTINATION
 	${CMAKE_INSTALL_PREFIX}
 )
 
-add_subdirectory(Test)
+#add_subdirectory(Test)

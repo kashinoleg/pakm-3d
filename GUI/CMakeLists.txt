@@ -96,9 +96,9 @@ ADD_EXECUTABLE(GUI
 	GUI.rc
 )
 
-FIND_PACKAGE(VTK REQUIRED)
-INCLUDE(${VTK_USE_FILE})
-target_link_libraries(GUI ${VTK_LIBRARIES})
+#FIND_PACKAGE(VTK REQUIRED)
+#INCLUDE(${VTK_USE_FILE})
+#target_link_libraries(GUI ${VTK_LIBRARIES})
 
 SET(wxWidgets_USE_LIBS base core aui adv xrc xml html)
 find_package(wxWidgets COMPONENTS core base REQUIRED)

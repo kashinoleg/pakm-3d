@@ -20,10 +20,10 @@ ENDIF(BUILD_GUI)
 
 SUBDIRS(
   Core
-  CSparse
-  Octree
-  Tetgen
-  TinyXML
+#  CSparse
+#  Octree
+#  Tetgen
+#  TinyXML
 )
 
 IF(BUILD_RENDERER)

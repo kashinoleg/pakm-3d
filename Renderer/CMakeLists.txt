@@ -13,9 +13,9 @@ add_library(Renderer.Core STATIC
 	${SOURCE_LIB}
 )
 
-FIND_PACKAGE(VTK REQUIRED)
-INCLUDE(${VTK_USE_FILE})
-target_link_libraries(Renderer.Core ${VTK_LIBRARIES})
+#FIND_PACKAGE(VTK REQUIRED)
+#INCLUDE(${VTK_USE_FILE})
+#target_link_libraries(Renderer.Core ${VTK_LIBRARIES})
 
 #include_directories(../TinyXML)
 #include_directories(../Tetgen)

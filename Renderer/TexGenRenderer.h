@@ -5,6 +5,7 @@
 #include "vtkGlyph3D.h"
 #include "vtkSphereSource.h"
 #include "vtkArrowSource.h"
+#include "vtkPolyData.h"
 #include "vtkPolyDataMapper.h"
 #include "vtkRenderWindow.h"
 #include "vtkProperty.h"

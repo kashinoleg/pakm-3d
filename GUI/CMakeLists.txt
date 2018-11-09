@@ -111,12 +111,14 @@ find_package(PythonLibs REQUIRED)
 include_directories(${PYTHON_INCLUDE_PATH})
 target_link_libraries(GUI ${PYTHON_LIBRARIES})
 
-FIND_PACKAGE(SWIG REQUIRED)
-ADD_CUSTOM_COMMAND(OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/Embedded_wrap.cxx"
-COMMAND "${SWIG_EXECUTABLE}" -c++ -python -outdir "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/Embedded.i"
-MAIN_DEPENDENCY "${CMAKE_CURRENT_SOURCE_DIR}/Embedded.i"
-DEPENDS "EmbeddedPythonFunctions.h"
-COMMENT "Generating SWIG wrapper code...")
+IF(BUILD_PYTHON_INTERFACE)
+	FIND_PACKAGE(SWIG REQUIRED)
+	ADD_CUSTOM_COMMAND(OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/Embedded_wrap.cxx"
+	COMMAND "${SWIG_EXECUTABLE}" -c++ -python -outdir "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/Embedded.i"
+	MAIN_DEPENDENCY "${CMAKE_CURRENT_SOURCE_DIR}/Embedded.i"
+	DEPENDS "EmbeddedPythonFunctions.h"
+	COMMENT "Generating SWIG wrapper code...")
+ENDIF(BUILD_PYTHON_INTERFACE)
 
 #include_directories(../TinyXML)
 #include_directories(../Tetgen)

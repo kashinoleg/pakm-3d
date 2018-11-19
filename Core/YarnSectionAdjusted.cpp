@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "YarnSectionAdjusted.h"
 
 using namespace TexGen;

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "ShearedTextileWeave2D.h"
 
 using namespace TexGen;
@@ -259,10 +260,10 @@ void CShearedTextileWeave2D::Refine() const
 bool CShearedTextileWeave2D::AdjustSectionsForRotation() const
 {
 	int i, j;
-	vector<vector<int> > *pTransverseYarns;
+	vector<vector<int> > *pTransverseYarns = nullptr;
 	vector<vector<int> > *pLongitudinalYarns;
-	vector<YarnData> *pTransverseData;
-	vector<YarnData> *pLongitudinalData;
+	vector<YarnData> *pTransverseData = nullptr;
+	vector<YarnData> *pLongitudinalData = nullptr;
 	int iTransverseNum;
 	int iLongitudinalNum;
 	bool iTransversePattern;
@@ -522,9 +523,9 @@ void CShearedTextileWeave2D::CorrectInterference( bool bMaxCorrection ) const
 	TGLOGINDENT("Correcting interference for \"" << GetName() << 
 		"\" with gap size of " << m_dGapSize);
 
-	vector<vector<int> > *pTransverseYarns;
-	vector<vector<int> > *pLongitudinalYarns;
-	vector<YarnData> *pTransverseData;
+	vector<vector<int> > *pTransverseYarns = nullptr;
+	vector<vector<int> > *pLongitudinalYarns = nullptr;
+	vector<YarnData> *pTransverseData = nullptr;
 	int iTransverseNum;
 	int iLongitudinalNum;
 	int iDir;

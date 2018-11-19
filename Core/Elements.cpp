@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Elements.h"
 
 using namespace TexGen;

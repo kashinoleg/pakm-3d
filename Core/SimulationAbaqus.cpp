@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "SimulationAbaqus.h"
 #include "AdjustMeshInterference.h"
 #include "TexGen.h"

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Textile3DWeave.h"
 #include "SectionPolygon.h"
 #include "SectionHybrid.h"
@@ -430,12 +431,14 @@ bool CTextile3DWeave::BuildTextile() const {
 	// Add repeats and set interpolation
 	dWidth = GetWidth();
 	dHeight = GetHeight();
-	for (CYarn yarn : m_Yarns) {
-		yarn.AssignInterpolation(CInterpolationBezier());
-		yarn.SetResolution(m_iResolution);
-		yarn.AddRepeat(XYZ(dWidth, 0, 0));
-		if (m_bWeftRepeat) {
-			yarn.AddRepeat(XYZ(0, dHeight, 0));
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->AssignInterpolation(CInterpolationBezier());
+		yarn->SetResolution(m_iResolution);
+		yarn->AddRepeat(XYZ(dWidth, 0, 0));
+		if (m_bWeftRepeat)
+		{
+			yarn->AddRepeat(XYZ(0, dHeight, 0));
 		}
 	}
 	return true;

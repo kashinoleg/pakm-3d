@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "AdjustMeshInterference.h"
 
 #define	FIRST_HALF	0

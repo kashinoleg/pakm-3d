@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "TextileWeave.h"
 #include "SectionEllipse.h"
 
@@ -369,8 +370,8 @@ void CTextileWeave::CorrectYarnWidths() const
 {
 	TGLOGINDENT("Adjusting yarn widths for \"" << GetName() << "\" with gap size of " << m_dGapSize);
 
-	vector<vector<int> > *pTransverseYarns;
-	vector<vector<int> > *pLongitudinalYarns;
+	vector<vector<int> > *pTransverseYarns = nullptr;
+	vector<vector<int> > *pLongitudinalYarns = nullptr;
 	int iTransverseNum;
 	int iLongitudinalNum;
 	int iDir;
@@ -578,8 +579,8 @@ void CTextileWeave::CorrectInterference() const
 	TGLOGINDENT("Correcting interference for \"" << GetName() << 
 		"\" with gap size of " << m_dGapSize);
 
-	vector<vector<int> > *pTransverseYarns;
-	vector<vector<int> > *pLongitudinalYarns;
+	vector<vector<int> > *pTransverseYarns = nullptr;
+	vector<vector<int> > *pLongitudinalYarns = nullptr;
 	int iTransverseNum;
 	int iLongitudinalNum;
 	CMesh TransverseYarnsMesh;
@@ -1100,7 +1101,7 @@ int CTextileWeave::GetYarnIndex(int x, int y, int z) const
 
 void CTextileWeave::CorrectEdgeInterference()
 {
-	vector<vector<int> > *pTransverseYarns;
+	vector<vector<int> > *pTransverseYarns = nullptr;
 	vector<vector<int> > *pLongitudinalYarns;
 	int iTransverseNum;
 	int iLongitudinalNum;
@@ -1129,14 +1130,14 @@ void CTextileWeave::CorrectEdgeInterference()
 	
 		for ( int i = 0; i < iTransverseNum-1; ++i )
 		{
-			CYarn TransverseYarn1 = m_Yarns[(*pTransverseYarns)[i][0]];
-			CYarn TransverseYarn2 = m_Yarns[(*pTransverseYarns)[i+1][0]];
+			CYarn* TransverseYarn1 = &m_Yarns[(*pTransverseYarns)[i][0]];
+			CYarn* TransverseYarn2 = &m_Yarns[(*pTransverseYarns)[i+1][0]];
 			vector<CNode> TransverseNodes1, TransverseNodes2;
-			TransverseNodes1 = TransverseYarn1.GetMasterNodes();
-			TransverseNodes2 = TransverseYarn2.GetMasterNodes();
+			TransverseNodes1 = TransverseYarn1->GetMasterNodes();
+			TransverseNodes2 = TransverseYarn2->GetMasterNodes();
 			
-			CYarnSectionInterpNode* pYarnSections1 = (CYarnSectionInterpNode*)TransverseYarn1.GetYarnSection()->Copy();
-			CYarnSectionInterpNode* pYarnSections2 = (CYarnSectionInterpNode*)TransverseYarn2.GetYarnSection()->Copy();
+			CYarnSectionInterpNode* pYarnSections1 = (CYarnSectionInterpNode*)TransverseYarn1->GetYarnSection()->Copy();
+			CYarnSectionInterpNode* pYarnSections2 = (CYarnSectionInterpNode*)TransverseYarn2->GetYarnSection()->Copy();
 			
 			CYarnSectionInterpNode NewYarnSections1, NewYarnSections2;
 			

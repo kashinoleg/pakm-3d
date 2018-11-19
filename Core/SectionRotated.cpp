@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "SectionRotated.h"
 
 using namespace TexGen;

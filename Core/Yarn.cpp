@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Yarn.h"
 
 using namespace TexGen;

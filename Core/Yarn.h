@@ -108,6 +108,7 @@ namespace TexGen {
 
 	public:
 		CYarn(void);
+		//CYarn(CYarn const& yarn) = delete;
 		CYarn(TiXmlElement &Element);
 		~CYarn(void) {};
 
@@ -501,19 +502,19 @@ namespace TexGen {
 		double GetFibreYarnVolumeFraction() const;
 
 		/// Get number of section points
-		int GetNumSectionPoints() const { return m_iNumSectionPoints; }
+		inline int GetNumSectionPoints() const { return m_iNumSectionPoints; }
 
 		/// Get number of slave nodes
-		int GetNumSlaveNodes() const { return m_iNumSlaveNodes; }
+		inline int GetNumSlaveNodes() const { return m_iNumSlaveNodes; }
 
 		// Accessor methods
-		const vector<CNode> &GetMasterNodes() const { return m_MasterNodes; }
-		const vector<XYZ> &GetRepeats() const { return m_Repeats; }
-		const CYarnSection* GetYarnSection() const { return m_pYarnSection; }
-		const CInterpolation* GetInterpolation() const { return m_pInterpolation; }
-		const CFibreDistribution* GetFibreDistribution() const { return m_pFibreDistribution;}
-		int GetNumNodes() const { return (int)m_MasterNodes.size(); }
-		vector<double> GetSectionLengths() const { return m_SectionLengths; }
+		inline const vector<CNode> &GetMasterNodes() const { return m_MasterNodes; }
+		inline const vector<XYZ> &GetRepeats() const { return m_Repeats; }
+		inline const CYarnSection* GetYarnSection() const { return m_pYarnSection; }
+		inline const CInterpolation* GetInterpolation() const { return m_pInterpolation; }
+		inline const CFibreDistribution* GetFibreDistribution() const { return m_pFibreDistribution;}
+		inline int GetNumNodes() const { return (int)m_MasterNodes.size(); }
+		inline vector<double> GetSectionLengths() const { return m_SectionLengths; }
 
 
 		YARN_TYPE GetType();

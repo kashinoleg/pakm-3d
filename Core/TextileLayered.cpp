@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "TextileLayered.h"
 
 using namespace TexGen;
@@ -98,12 +99,11 @@ void CTextileLayered::AddLayer( vector<CYarn> &Yarns, XYZ& Offset )
 	XY LayerOffset(Offset.x, Offset.y);
 
 	// Add each yarn with specified offset
-	for ( itYarn = Yarns.begin(); itYarn != Yarns.end(); ++itYarn )
+	for (auto yarn = Yarns.begin(); yarn != Yarns.end(); yarn++)
 	{
-		CYarn Yarn = *itYarn;
-		Yarn.Translate( Offset );
+		yarn->Translate( Offset );
 
-		int index = AddYarn( Yarn );
+		int index = AddYarn( *yarn );
 		YarnIndices.push_back( index );  
 	}
 	m_LayerYarnIndices.push_back( YarnIndices );

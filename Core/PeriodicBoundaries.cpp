@@ -1,4 +1,5 @@
-﻿#include "TexGen.h"
+﻿#include "stdafx.h"
+#include "TexGen.h"
 #include "PeriodicBoundaries.h"
 #include "SimulationAbaqus.h"
 

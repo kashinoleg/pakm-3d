@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Misc.h"
 #include "units.h"
 #include "Logger.h"

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "YarnSectionConstant.h"
 #include "SectionEllipse.h"
 

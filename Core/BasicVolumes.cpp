@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "BasicVolumes.h"
 #include "TexGen.h"
 extern "C"

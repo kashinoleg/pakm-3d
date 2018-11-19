@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "InterpolationCubic.h"
 #include "Matrix.h"
 

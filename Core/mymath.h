@@ -5,8 +5,9 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <ostream>
-#include <istream>
 #include <algorithm>
+#include <iostream>
+#include <string>
 
 #define PI 3.1415926535897932384626433832795
 /// Namespace containing a series of customised math operations not found in the standard c++ library
@@ -1296,9 +1297,12 @@ namespace TexGen {
 	{
 		XYZ vert0p = P1 - P; XYZ vert1p = P2 - P;
 		XYZ vert2p = P3 - P;
-		double dMin = DotProduct(CrossProduct(vert0p, vert1p), N);
-		dMin = std::min(dMin, DotProduct(CrossProduct(vert1p, vert2p), N));
-		dMin = std::min(dMin, DotProduct(CrossProduct(vert2p, vert0p), N));
+		double value01 = DotProduct(CrossProduct(vert0p, vert1p), N);
+		double value12 = DotProduct(CrossProduct(vert1p, vert2p), N);
+		double value20 = DotProduct(CrossProduct(vert2p, vert0p), N);
+
+		double dMin = ((value01 < value12) ? value01 : value12);
+		dMin = ((dMin < value20) ? dMin : value20);
 		return dMin;
 	}
 

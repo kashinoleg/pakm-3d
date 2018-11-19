@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "SectionMeshRectangleSection.h"
 
 using namespace TexGen;

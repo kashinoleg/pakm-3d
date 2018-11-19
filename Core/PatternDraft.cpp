@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "PatternDraft.h"
 
 using namespace TexGen;

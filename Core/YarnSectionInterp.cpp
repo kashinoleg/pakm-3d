@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "YarnSectionInterp.h"
 
 using namespace TexGen;

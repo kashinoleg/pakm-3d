@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "SectionScaled.h"
 
 using namespace TexGen;

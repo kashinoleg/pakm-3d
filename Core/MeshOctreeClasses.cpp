@@ -6,7 +6,7 @@ using namespace TexGen;
 bool COctreeAgentNode::isOverlappingCell(const pair<int, XYZ>& item, const OctreeVector& lowerCorner, const OctreeVector& upperCorner) const
 {
 	return (item.second.x >= lowerCorner.getX() - m_dTolerance && item.second.y >= lowerCorner.getY() - m_dTolerance && item.second.z >= lowerCorner.getZ() - m_dTolerance &&
-			item.second.x <= upperCorner.getX() + m_dTolerance && item.second.y <= upperCorner.getY() + m_dTolerance && item.second.z <= upperCorner.getZ() + m_dTolerance);
+		item.second.x <= upperCorner.getX() + m_dTolerance && item.second.y <= upperCorner.getY() + m_dTolerance && item.second.z <= upperCorner.getZ() + m_dTolerance);
 }
 
 int COctreeAgentNode::getSubcellOverlaps(const pair<int, XYZ>& item, const OctreeVector& lower, const OctreeVector& middle, const OctreeVector& upper) const
@@ -17,18 +17,18 @@ int COctreeAgentNode::getSubcellOverlaps(const pair<int, XYZ>& item, const Octre
 
 	int flags = 0;
 
-	const OctreeVector* lowMidPoints[]  = { &lower, &middle };
+	const OctreeVector* lowMidPoints[] = { &lower, &middle };
 	const OctreeVector* midHighPoints[] = { &middle, &upper };
 
-	for (int i = 8;  i-- > 0; )
+	for (int i = 8; i-- > 0; )
 	{
-		OctreeVector lowerCorner( lowMidPoints[ i       & 1]->getX(),
-		                      lowMidPoints[(i >> 1) & 1]->getY(),
-		                      lowMidPoints[(i >> 2) & 1]->getZ() );
-		OctreeVector upperCorner( midHighPoints[ i       & 1]->getX(),
-		                      midHighPoints[(i >> 1) & 1]->getY(),
-		                      midHighPoints[(i >> 2) & 1]->getZ() );
-		flags |= int(isOverlappingCell( item, lowerCorner, upperCorner )) << i;
+		OctreeVector lowerCorner(lowMidPoints[i & 1]->getX(),
+			lowMidPoints[(i >> 1) & 1]->getY(),
+			lowMidPoints[(i >> 2) & 1]->getZ());
+		OctreeVector upperCorner(midHighPoints[i & 1]->getX(),
+			midHighPoints[(i >> 1) & 1]->getY(),
+			midHighPoints[(i >> 2) & 1]->getZ());
+		flags |= int(isOverlappingCell(item, lowerCorner, upperCorner)) << i;
 	}
 
 	return flags;
@@ -40,13 +40,13 @@ void COctreeVisitorMergeNodes::visitRoot(const OctreeCell* pRootCell, const Octr
 	if (pRootCell != 0)
 	{
 		m_Mesh.GetNodeElementReferences(m_NodeElementReferences);
-//		m_DeletedNodes.resize(m_Mesh.GetNumNodes(), false);
+		//		m_DeletedNodes.resize(m_Mesh.GetNumNodes(), false);
 
 		pRootCell->visit(octreeData, *this);
 
-//		cout << "Num nodes removed " << 
+		//		cout << "Num nodes removed " << 
 		m_Mesh.DeleteNodes(m_DeletedNodes);
-//		cout << endl;
+		//		cout << endl;
 	}
 }
 
@@ -55,7 +55,7 @@ void COctreeVisitorMergeNodes::visitBranch(const OctreeCell* subCells[8], const 
 	for (int i = 0; i < 8; ++i)
 	{
 		const OctreeCell* pSubCell = subCells[i];
-		if(pSubCell != 0)
+		if (pSubCell != 0)
 		{
 			const OctreeData subCellData(octreeData, i);
 			pSubCell->visit(subCellData, *this);
@@ -67,10 +67,10 @@ void COctreeVisitorMergeNodes::visitLeaf(const OctreeArray<const pair<int, XYZ>*
 {
 	int i, j;
 	int iNumItems = items.getLength();
-	for (i=0; i<iNumItems; ++i)
+	for (i = 0; i < iNumItems; ++i)
 	{
 		// A possible optimisation would be j = i+1. However this causes nodes not to be merged correctly in rare cases, please leave it like this!
-		for (j=0; j<iNumItems; ++j)
+		for (j = 0; j < iNumItems; ++j)
 		{
 			if (i == j)
 				continue;
@@ -80,13 +80,13 @@ void COctreeVisitorMergeNodes::visitLeaf(const OctreeArray<const pair<int, XYZ>*
 				if (items[i]->first < items[j]->first)
 				{
 					m_Mesh.ChangeNodeIndices(items[i]->first, items[j]->first, m_NodeElementReferences);
-//					m_DeletedNodes[items[j]->first] = true;
+					//					m_DeletedNodes[items[j]->first] = true;
 					m_DeletedNodes.insert(items[j]->first);
 				}
 				else if (items[i]->first > items[j]->first)
 				{
 					m_Mesh.ChangeNodeIndices(items[j]->first, items[i]->first, m_NodeElementReferences);
-//					m_DeletedNodes[items[i]->first] = true;
+					//					m_DeletedNodes[items[i]->first] = true;
 					m_DeletedNodes.insert(items[i]->first);
 				}
 				else
@@ -112,7 +112,7 @@ bool COctreeAgentElement::isOverlappingCell(const MESH_ELEMENT& item, const Octr
 		}
 	}
 	return (Max.x >= lowerCorner.getX() && Max.y >= lowerCorner.getY() && Max.z >= lowerCorner.getZ() &&
-			Min.x <= upperCorner.getX() && Min.y <= upperCorner.getY() && Min.z <= upperCorner.getZ());
+		Min.x <= upperCorner.getX() && Min.y <= upperCorner.getY() && Min.z <= upperCorner.getZ());
 }
 
 int COctreeAgentElement::getSubcellOverlaps(const MESH_ELEMENT& item, const OctreeVector& lower, const OctreeVector& middle, const OctreeVector& upper) const
@@ -133,23 +133,23 @@ int COctreeAgentElement::getSubcellOverlaps(const MESH_ELEMENT& item, const Octr
 
 	int flags = 0;
 
-	const OctreeVector* lowMidPoints[]  = { &lower, &middle };
+	const OctreeVector* lowMidPoints[] = { &lower, &middle };
 	const OctreeVector* midHighPoints[] = { &middle, &upper };
 
-	for (int i = 8;  i-- > 0; )
+	for (int i = 8; i-- > 0; )
 	{
-		OctreeVector lowerCorner( lowMidPoints[ i       & 1]->getX(),
-		                      lowMidPoints[(i >> 1) & 1]->getY(),
-		                      lowMidPoints[(i >> 2) & 1]->getZ() );
-		OctreeVector upperCorner( midHighPoints[ i       & 1]->getX(),
-		                      midHighPoints[(i >> 1) & 1]->getY(),
-		                      midHighPoints[(i >> 2) & 1]->getZ() );
+		OctreeVector lowerCorner(lowMidPoints[i & 1]->getX(),
+			lowMidPoints[(i >> 1) & 1]->getY(),
+			lowMidPoints[(i >> 2) & 1]->getZ());
+		OctreeVector upperCorner(midHighPoints[i & 1]->getX(),
+			midHighPoints[(i >> 1) & 1]->getY(),
+			midHighPoints[(i >> 2) & 1]->getZ());
 		if (Max.x >= lowerCorner.getX() && Max.y >= lowerCorner.getY() && Max.z >= lowerCorner.getZ() &&
 			Min.x <= upperCorner.getX() && Min.y <= upperCorner.getY() && Min.z <= upperCorner.getZ())
 		{
 			flags |= 1 << i;
 		}
-//		flags |= int(isOverlappingCell( item, lowerCorner, upperCorner )) << i;
+		//		flags |= int(isOverlappingCell( item, lowerCorner, upperCorner )) << i;
 	}
 
 	return flags;
@@ -186,16 +186,16 @@ void COctreeVisitorElementNearLine::visitBranch(const OctreeCell* subCells[8], c
 	/////////
 
 	// i represents the plane direction (0 - x, 1 - y, 2 - z)
-	for (i=0; i<3; ++i)
+	for (i = 0; i < 3; ++i)
 	{
 		x = i;
-		y = (i+1)%3;
-		z = (i+2)%3;
+		y = (i + 1) % 3;
+		z = (i + 2) % 3;
 		// j represents the plane distance (0 - min, 1 - mid, 2 - max)
 		dDenom = m_P2[x] - m_P1[x];
 		if (abs(dDenom) > 1e-6)
 		{
-			for (j=0; j<3; ++j)
+			for (j = 0; j < 3; ++j)
 			{
 				u = (Bounds[j][x] - m_P1[x]) / dDenom;
 				if (u < 0 && m_TrimLine.first)
@@ -209,22 +209,22 @@ void COctreeVisitorElementNearLine::visitBranch(const OctreeCell* subCells[8], c
 					{
 						if (j <= 2)
 						{
-							IntersectingCells[(0<<x) | (0<<y) | (0<<z)] = true;
+							IntersectingCells[(0 << x) | (0 << y) | (0 << z)] = true;
 						}
 						if (j >= 0)
 						{
-							IntersectingCells[(1<<x) | (0<<y) | (0<<z)] = true;
+							IntersectingCells[(1 << x) | (0 << y) | (0 << z)] = true;
 						}
 					}
 					else if (Bounds[1][z] <= P[z] && P[z] <= Bounds[2][z])
 					{
 						if (j <= 2)
 						{
-							IntersectingCells[(0<<x) | (0<<y) | (1<<z)] = true;
+							IntersectingCells[(0 << x) | (0 << y) | (1 << z)] = true;
 						}
 						if (j >= 0)
 						{
-							IntersectingCells[(1<<x) | (0<<y) | (1<<z)] = true;
+							IntersectingCells[(1 << x) | (0 << y) | (1 << z)] = true;
 						}
 					}
 				}
@@ -234,22 +234,22 @@ void COctreeVisitorElementNearLine::visitBranch(const OctreeCell* subCells[8], c
 					{
 						if (j <= 2)
 						{
-							IntersectingCells[(0<<x) | (1<<y) | (0<<z)] = true;
+							IntersectingCells[(0 << x) | (1 << y) | (0 << z)] = true;
 						}
 						if (j >= 0)
 						{
-							IntersectingCells[(1<<x) | (1<<y) | (0<<z)] = true;
+							IntersectingCells[(1 << x) | (1 << y) | (0 << z)] = true;
 						}
 					}
 					else if (Bounds[1][z] <= P[z] && P[z] <= Bounds[2][z])
 					{
 						if (j <= 2)
 						{
-							IntersectingCells[(0<<x) | (1<<y) | (1<<z)] = true;
+							IntersectingCells[(0 << x) | (1 << y) | (1 << z)] = true;
 						}
 						if (j >= 0)
 						{
-							IntersectingCells[(1<<x) | (1<<y) | (1<<z)] = true;
+							IntersectingCells[(1 << x) | (1 << y) | (1 << z)] = true;
 						}
 					}
 				}
@@ -281,7 +281,7 @@ void COctreeVisitorElementNearLine::visitBranch(const OctreeCell* subCells[8], c
 	for (int i = 0; i < 8; ++i)
 	{
 		const OctreeCell* pSubCell = subCells[i];
-		if(IntersectingCells[i] == true && pSubCell != 0)
+		if (IntersectingCells[i] == true && pSubCell != 0)
 		{
 			const OctreeData subCellData(octreeData, i);
 			pSubCell->visit(subCellData, *this);
@@ -293,12 +293,12 @@ void COctreeVisitorElementNearLine::visitLeaf(const OctreeArray<const MESH_ELEME
 {
 	int i;
 	int iNumItems = items.getLength();
-	for (i=0; i<iNumItems; ++i)
+	for (i = 0; i < iNumItems; ++i)
 	{
 		const MESH_ELEMENT &Element = *items[i];
 		if (Element.iIndex >= (int)m_Used.size())
 		{
-			m_Used.resize(Element.iIndex+1, false);
+			m_Used.resize(Element.iIndex + 1, false);
 		}
 		if (m_Used[Element.iIndex] == false)
 		{

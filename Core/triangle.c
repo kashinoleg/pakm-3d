@@ -9267,7 +9267,7 @@ void formskeleton(struct mesh *m, struct behavior *b, int *segmentlist,
 		if (!b->quiet) {
 			printf("Recovering segments in Delaunay triangulation.\n");
 		}
-		strcpy(polyfilename, "input");
+		strcpy_s(polyfilename, 6, "input");
 		m->insegments = numberofsegments;
 		segmentmarkers = segmentmarkerlist != (int *)NULL;
 		index = 0;

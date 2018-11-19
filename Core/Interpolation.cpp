@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Interpolation.h"
 #include "InterpolationBezier.h"
 #include "InterpolationCubic.h"

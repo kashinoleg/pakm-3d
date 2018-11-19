@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "SectionMesh.h"
 #include "SectionMeshTriangulate.h"
 #include "SectionMeshRectangular.h"

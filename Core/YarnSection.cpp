@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "YarnSectionConstant.h"
 #include "YarnSectionInterpNode.h"
 #include "YarnSectionInterpPosition.h"

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Property.h"
 
 using namespace TexGen;
@@ -18,9 +19,13 @@ void CProperty::WriteAttribute(TiXmlElement &Element, string AttributeName) {
 void CProperty::ReadAttribute(TiXmlElement &Element, string AttributeName) {
 	double dValue = 0;
 	const string* pUnits;
-	if (Element.Attribute(AttributeName+"Value", &dValue) &&
-		(pUnits = Element.Attribute(AttributeName+"Units"))) {
-		SetValue(dValue, *pUnits);
+	if (Element.Attribute(AttributeName + "Value", &dValue))
+	{
+		pUnits = Element.Attribute(AttributeName + "Units");
+		if (pUnits)
+		{
+			SetValue(dValue, *pUnits);
+		}
 	}
 }
 

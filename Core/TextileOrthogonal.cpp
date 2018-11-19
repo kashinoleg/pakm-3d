@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "TextileOrthogonal.h"
 #include "SectionHybrid.h"
 #include "SectionPolygon.h"

@@ -9,7 +9,8 @@ namespace TexGen {
 	template<> CMyClass CSingleton<CMyClass>::m_SingleInstance = CMyClass();
 	*/
 	template< typename T >
-	class CLASS_DECLSPEC CSingleton {
+	class CLASS_DECLSPEC CSingleton
+	{
 	public:
 		CSingleton()
 		{
@@ -21,7 +22,6 @@ namespace TexGen {
 		{
 			return m_SingleInstance;
 		}
-	protected:
 		static T m_SingleInstance;
 	};
 }

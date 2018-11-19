@@ -46,7 +46,7 @@ namespace TexGen {
 		/// Derived class should return the class name
 		virtual string GetType() const = 0;
 		/// Get the mesh representing the domain as a surface mesh
-		const CMesh &GetMesh() const { return m_Mesh; }
+		const CMesh &GetMesh() const;
 		/// Get the volume of the domain
 		virtual double GetVolume() const;
 		/// Make the domain larger (used mainly for rendering purposes)

@@ -44,7 +44,7 @@
 #include "AdjustMeshInterference.h"
 
 /// Helper macro to get the texgen instance
-#define TEXGEN (CTexGen::GetInstance())
+#define TEXGEN (CTexGen::Instance())
 
 namespace TexGen {
 	class CLogger;
@@ -52,7 +52,25 @@ namespace TexGen {
 	using namespace std;
 
 	/// Singleton class holding the Textiles in a database
-	class CLASS_DECLSPEC CTexGen : public CSingleton<CTexGen> {
+	class CLASS_DECLSPEC CTexGen //: public CSingleton<CTexGen>
+	{
+	public:
+		static CTexGen& Instance()
+		{
+			// согласно стандарту, этот код ленивый и потокобезопасный
+			static CTexGen s;
+			return s;
+		}
+
+	private:
+		//CTexGen() {}// { ... }  // конструктор недоступен
+		//~CTexGen() {}// { ... } // и деструктор
+
+		// необходимо также запретить копирование
+		CTexGen(CTexGen const&) = delete; // реализация не нужна
+		CTexGen& operator= (CTexGen const&) = delete;  // и тут
+
+
 	public:
 		CTexGen(void);
 		~CTexGen(void);

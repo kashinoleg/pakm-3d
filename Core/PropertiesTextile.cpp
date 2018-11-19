@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "PropertiesTextile.h"
 #include "DefaultProperties.h"
 

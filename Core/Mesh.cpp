@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Mesh.h"
 #include "Plane.h"
 #include "MeshOctreeClasses.h"
@@ -340,9 +341,9 @@ int CMesh::MergeNodes(const double TOL)
 
 	XYZ Avg = 0.5*(AABB.second + AABB.first);
 	dSize *= 1.1;
-	Octree<pair<int, XYZ> > Octree(OctreeVector(float(Avg.x-0.5*dSize), float(Avg.y-0.5*dSize), float(Avg.z-0.5*dSize)), (float)dSize, 10, 10);
+	Octree<pair<int, XYZ> > Octree(OctreeVector(float(Avg.x - 0.5*dSize), float(Avg.y - 0.5*dSize), float(Avg.z - 0.5*dSize)), (float)dSize, 10, 10);
 	COctreeAgentNode Agent(TOL);
-	
+
 	// Add the nodes to the octree, the indices of the nodes need to be stored with the nodes because
 	// the elements refer to the nodes by their index.
 
@@ -362,34 +363,34 @@ int CMesh::MergeNodes(const double TOL)
 	Octree.visit(Visitor);
 	return Visitor.GetNumMerged();
 
-/*
-	// UNOPTIMISED VERSION (worth keeping for debuging purposes)
+	/*
+		// UNOPTIMISED VERSION (worth keeping for debuging purposes)
 
-	vector<bool> DeletedNodes;
-	DeletedNodes.resize(m_Nodes.size(), false);
-	map<ELEMENT_TYPE, list<int> >::iterator itType;
-	vector<XYZ>::iterator itNode1;
-	vector<XYZ>::iterator itNode2;
-	int iNode1, iNode2;
-	int iNumMerged = 0;
-	for (itNode1 = m_Nodes.begin(), iNode1=0; itNode1 != m_Nodes.end(); ++itNode1, ++iNode1)
-	{
-		for (itNode2 = itNode1+1, iNode2 = iNode1+1; itNode2 != m_Nodes.end(); ++itNode2, ++iNode2)
+		vector<bool> DeletedNodes;
+		DeletedNodes.resize(m_Nodes.size(), false);
+		map<ELEMENT_TYPE, list<int> >::iterator itType;
+		vector<XYZ>::iterator itNode1;
+		vector<XYZ>::iterator itNode2;
+		int iNode1, iNode2;
+		int iNumMerged = 0;
+		for (itNode1 = m_Nodes.begin(), iNode1=0; itNode1 != m_Nodes.end(); ++itNode1, ++iNode1)
 		{
-			if (GetLengthSquared(*itNode2, *itNode1) < TOL*TOL)
+			for (itNode2 = itNode1+1, iNode2 = iNode1+1; itNode2 != m_Nodes.end(); ++itNode2, ++iNode2)
 			{
-				++iNumMerged;
-				ChangeNodeIndices(iNode1, iNode2);
-				DeletedNodes[iNode2] = true;
+				if (GetLengthSquared(*itNode2, *itNode1) < TOL*TOL)
+				{
+					++iNumMerged;
+					ChangeNodeIndices(iNode1, iNode2);
+					DeletedNodes[iNode2] = true;
+				}
 			}
 		}
-	}
 
-	DeleteNodes(DeletedNodes);
+		DeleteNodes(DeletedNodes);
 
-	cout << "Num Merged Nodes: " << iNumMerged << endl;
+		cout << "Num Merged Nodes: " << iNumMerged << endl;
 
-	return iNumMerged;*/
+		return iNumMerged;*/
 }
 
 vector<pair<int, int> > CMesh::GetNodePairs(XYZ Vector, const double TOL) const

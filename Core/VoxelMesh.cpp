@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "VoxelMesh.h"
 #include "TexGen.h"
 #include "PeriodicBoundaries.h"

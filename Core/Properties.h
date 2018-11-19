@@ -129,23 +129,23 @@ namespace TexGen {
 		*/
 		void SetFibreArea(double dValue, string Units = "m^2");
 
-		void ResetYarnLinearDensity() { m_YarnLinearDensity.Reset(); }
-		void ResetFibreDensity() { m_FibreDensity.Reset(); }
-		void ResetFibreDiameter() { m_FibreDiameter.Reset(); }
-		void ResetFibresPerYarn() { m_iFibresPerYarn = 0; }
-		void ResetFibreArea() { m_FibreArea.Reset(); }
-		void ResetYoungsModulusX() { m_YoungsModulusX.Reset(); }
-		void ResetYoungsModulusY() { m_YoungsModulusY.Reset(); }
-		void ResetYoungsModulusZ() { m_YoungsModulusZ.Reset(); }
-		void ResetShearModulusXY() { m_ShearModulusXY.Reset(); }
-		void ResetShearModulusXZ() { m_ShearModulusXZ.Reset(); }
-		void ResetShearModulusYZ() { m_ShearModulusYZ.Reset(); }
-		void ResetAlphaX() { m_AlphaX.Reset(); }
-		void ResetAlphaY() { m_AlphaY.Reset(); }
-		void ResetAlphaZ() { m_AlphaZ.Reset(); }
-		void ResetPoissonsRatioX() { m_PoissonsRatioX = 0.0; }
-		void ResetPoissonsRatioY() { m_PoissonsRatioY = 0.0; }
-		void ResetPoissonsRatioZ() { m_PoissonsRatioZ = 0.0; }
+		inline void ResetYarnLinearDensity() { m_YarnLinearDensity.Reset(); }
+		inline void ResetFibreDensity() { m_FibreDensity.Reset(); }
+		inline void ResetFibreDiameter() { m_FibreDiameter.Reset(); }
+		inline void ResetFibresPerYarn() { m_iFibresPerYarn = 0; }
+		inline void ResetFibreArea() { m_FibreArea.Reset(); }
+		inline void ResetYoungsModulusX() { m_YoungsModulusX.Reset(); }
+		inline void ResetYoungsModulusY() { m_YoungsModulusY.Reset(); }
+		inline void ResetYoungsModulusZ() { m_YoungsModulusZ.Reset(); }
+		inline void ResetShearModulusXY() { m_ShearModulusXY.Reset(); }
+		inline void ResetShearModulusXZ() { m_ShearModulusXZ.Reset(); }
+		inline void ResetShearModulusYZ() { m_ShearModulusYZ.Reset(); }
+		inline void ResetAlphaX() { m_AlphaX.Reset(); }
+		inline void ResetAlphaY() { m_AlphaY.Reset(); }
+		inline void ResetAlphaZ() { m_AlphaZ.Reset(); }
+		inline void ResetPoissonsRatioX() { m_PoissonsRatioX = 0.0; }
+		inline void ResetPoissonsRatioY() { m_PoissonsRatioY = 0.0; }
+		inline void ResetPoissonsRatioZ() { m_PoissonsRatioZ = 0.0; }
 		
 
 		double GetYarnLinearDensity(string Units = "kg/m") const;

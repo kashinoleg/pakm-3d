@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "SectionMeshTriangulate.h"
 #include "Section.h"
 
@@ -31,7 +32,7 @@ bool CSectionMeshTriangulate::CreateMesh(const vector<XY> &Section) const {
 	char szSwitches[128];
 	double dSectionArea = CSection::GetArea(Section);
 	double dMaxArea = dSectionArea*m_dMaxArea;
-	sprintf(szSwitches, "pzQPBq%fa%f", m_dMinAngle, dMaxArea);
+	sprintf_s(szSwitches, "pzQPBq%fa%f", m_dMinAngle, dMaxArea);
 	triangulateio TriangleInput;
 	triangulateio TriangleOutput;
 	memset(&TriangleInput, 0, sizeof(TriangleInput));

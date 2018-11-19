@@ -1,8 +1,11 @@
+#include "stdafx.h"
 #include "Domain.h"
 #include "TexGen.h"
 #include "Yarn.h"
 
 using namespace TexGen;
+
+const CMesh &CDomain::GetMesh() const { return m_Mesh; }
 
 CDomain::CDomain(TiXmlElement &Element)
 {

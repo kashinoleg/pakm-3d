@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "PropertiesYarn.h"
 
 using namespace TexGen;

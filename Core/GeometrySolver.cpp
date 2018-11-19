@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "GeometrySolver.h"
 #include "TexGen.h"
 #include <iterator>

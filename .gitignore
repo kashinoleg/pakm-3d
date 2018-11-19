@@ -1,0 +1,10 @@
+.vs/
+core/Debug/
+core/Release/
+core/x64/
+packages/
+Debug/
+export/Release/
+pakm-3d/Release/
+pakm-3d/x64/
+Release/

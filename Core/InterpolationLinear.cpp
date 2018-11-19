@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "InterpolationLinear.h"
 
 using namespace TexGen;

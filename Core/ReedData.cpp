@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "ReedData.h"
 
 using namespace TexGen;

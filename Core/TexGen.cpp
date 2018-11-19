@@ -1,9 +1,10 @@
+#include "stdafx.h"
 #include "TexGen.h"
 
 using namespace TexGen;
 
 // Create the single instance on program start
-template<> CLASS_DECLSPEC CTexGen CSingleton<CTexGen>::m_SingleInstance = CTexGen();
+//template<> CLASS_DECLSPEC CTexGen CSingleton<CTexGen>::m_SingleInstance = CTexGen();
 
 CTexGen::CTexGen(void)
 : m_pLogger(NULL)

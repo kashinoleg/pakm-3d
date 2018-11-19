@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Section.h"
 #include "TexGen.h"
 #include <limits>
@@ -128,7 +129,7 @@ bool CSection::CreateEquiSpacedSection(int iNumPoints) const
 	double dAvgLength;
 	int IncreaseStdDevCount = 0;
 	double PrevStdDev = 0.0;
-	double MinDouble = std::numeric_limits<double>::min();
+	double MinDouble = DBL_MIN;
 	vector<double> dLengths;
 	dLengths.resize(iNumPoints);
 

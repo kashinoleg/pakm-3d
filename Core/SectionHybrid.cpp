@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "SectionHybrid.h"
 
 using namespace TexGen;

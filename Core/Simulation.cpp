@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Simulation.h"
 
 using namespace TexGen;

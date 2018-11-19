@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Textile.h"
 #include "TexGen.h"
 
@@ -6,23 +7,24 @@ using namespace TexGen;
 #define TOL 1e-10
 
 CTextile::CTextile(void)
-: m_bNeedsBuilding(true) {
-}
+: m_bNeedsBuilding(true) {}
 
 CTextile::CTextile(const vector<CYarn> &Yarns)
-: m_Yarns(Yarns.size()) {
+: m_Yarns(Yarns.size())
+{
 	copy(Yarns.begin(), Yarns.end(), m_Yarns.begin());
 }
 
 CTextile::CTextile(const CTextile &CopyMe)
-: CPropertiesTextile(CopyMe) {
+: CPropertiesTextile(CopyMe)
+{
 	*this = CopyMe;
 }
 
-CTextile::~CTextile(void) {
-}
+CTextile::~CTextile(void) {}
 
-CTextile &CTextile::operator=(const CTextile& CopyMe) {
+CTextile &CTextile::operator=(const CTextile& CopyMe)
+{
 	m_Yarns = CopyMe.m_Yarns;
 	m_bNeedsBuilding = CopyMe.m_bNeedsBuilding;
 	m_pDomain = CopyMe.m_pDomain;
@@ -30,24 +32,30 @@ CTextile &CTextile::operator=(const CTextile& CopyMe) {
 }
 
 CTextile::CTextile(TiXmlElement &Element)
-:CPropertiesTextile(Element),m_bNeedsBuilding(true) {
+:CPropertiesTextile(Element),m_bNeedsBuilding(true)
+{
 	TiXmlElement* pDomain = Element.FirstChildElement("Domain");
-	if (pDomain) {
+	if (pDomain)
+	{
 		const string* pType = pDomain->Attribute(string("type"));
-		if (pType && *pType == "CDomainPlanes") {
+		if (pType && *pType == "CDomainPlanes")
+		{
 			m_pDomain = CDomainPlanes(*pDomain);
 		}
 	}
 	m_bNeedsBuilding = valueify<bool>(Element.Attribute("NeedsBuilding"));
-	FOR_EACH_TIXMLELEMENT(pYarn, Element, "Yarn") {
+	FOR_EACH_TIXMLELEMENT(pYarn, Element, "Yarn")
+	{
 		AddYarn(CYarn(*pYarn));
 	}
 }
 
-void CTextile::PopulateTiXmlElement(TiXmlElement &Element, OUTPUT_TYPE OutputType) {
+void CTextile::PopulateTiXmlElement(TiXmlElement &Element, OUTPUT_TYPE OutputType)
+{
 	CPropertiesTextile::PopulateTiXmlElement(Element, OutputType);
 	Element.SetAttribute("type", GetType());
-	if (m_pDomain) {
+	if (m_pDomain)
+	{
 		TiXmlElement Domain("Domain");
 		m_pDomain->PopulateTiXmlElement(Domain, OutputType);
 		Element.InsertEndChild(Domain);
@@ -55,22 +63,26 @@ void CTextile::PopulateTiXmlElement(TiXmlElement &Element, OUTPUT_TYPE OutputTyp
 	// Output the yarns if minimal output hasn't been selected or
 	// if this instance of the textile is not derived from (otherwise
 	// the output file will be useless)
-	if (OutputType != OUTPUT_MINIMAL || GetType() == "CTextile") {
+	if (OutputType != OUTPUT_MINIMAL || GetType() == "CTextile")
+	{
 		Element.SetAttribute("NeedsBuilding", 0);
 		BuildTextileIfNeeded();
-		for (size_t i = 0; i < m_Yarns.size(); i++) {
+		for (size_t i = 0; i < m_Yarns.size(); i++)
+		{
 			TiXmlElement Yarn("Yarn");
 			Yarn.SetAttribute("index", i);
 			m_Yarns[i].PopulateTiXmlElement(Yarn, OutputType);
 			Element.InsertEndChild(Yarn);
 		}
 	}
-	else {
+	else
+	{
 		Element.SetAttribute("NeedsBuilding", 1);
 	}
 }
 
-int CTextile::AddYarn(const CYarn &Yarn) {
+int CTextile::AddYarn(const CYarn &Yarn)
+{
 	// This call may result in the CYarn copy constructor being invoked
 	// This is not effecient but more importantly all the parent pointers
 	// are reset to NULL
@@ -78,7 +90,8 @@ int CTextile::AddYarn(const CYarn &Yarn) {
 	return m_Yarns.size()-1;
 }
 
-int CTextile::AddYarn(const CYarn &Yarn) const {
+int CTextile::AddYarn(const CYarn &Yarn) const
+{
 	// This call may result in the CYarn copy constructor being invoked
 	// This is not effecient but more importantly all the parent pointers
 	// are reset to NULL
@@ -86,55 +99,71 @@ int CTextile::AddYarn(const CYarn &Yarn) const {
 	return m_Yarns.size()-1;
 }
 
-bool CTextile::DeleteYarn(int iIndex) {
-	if (iIndex < 0 || iIndex >= (int)m_Yarns.size()) {
+bool CTextile::DeleteYarn(int iIndex)
+{
+	if (iIndex < 0 || iIndex >= (int)m_Yarns.size())
+	{
 		return false;
 	}
 	m_Yarns.erase(m_Yarns.begin()+iIndex);
 	return true;
 }
 
-void CTextile::DeleteYarns() {
+void CTextile::DeleteYarns()
+{
 	m_Yarns.clear();
 }
 
-void CTextile::AddNodesToMesh(CMesh &Mesh) {
-	if (!BuildTextileIfNeeded()) {
+void CTextile::AddNodesToMesh(CMesh &Mesh)
+{
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		yarn.AddNodesToMesh(Mesh);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->AddNodesToMesh(Mesh);
 	}
 }
 
-void CTextile::AddPathToMesh(CMesh &Mesh) {
-	if (!BuildTextileIfNeeded()) {
+void CTextile::AddPathToMesh(CMesh &Mesh)
+{
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		yarn.AddPathToMesh(Mesh);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->AddPathToMesh(Mesh);
 	}
 }
 
-void CTextile::AddSurfaceToMesh(CMesh &Mesh, bool bTrimToDomain) {
-	if (!BuildTextileIfNeeded()) {
+void CTextile::AddSurfaceToMesh(CMesh &Mesh, bool bTrimToDomain)
+{
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		if (bTrimToDomain && m_pDomain) {
-			yarn.AddSurfaceToMesh(Mesh, *m_pDomain);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		if (bTrimToDomain && m_pDomain)
+		{
+			yarn->AddSurfaceToMesh(Mesh, *m_pDomain);
 		}
-		else {
-			yarn.AddSurfaceToMesh(Mesh);
+		else
+		{
+			yarn->AddSurfaceToMesh(Mesh);
 		}
 	}
 }
 
 bool CTextile::AddSurfaceToMesh(CMesh &Mesh, vector<CMesh> &DomainMeshes, bool bTrimToDomain) {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return false;
 	}
-	if ( !m_pDomain ) {
+	if (!m_pDomain)
+	{
 		TGERROR("Textile has no domain assigned");
 		return false;
 	}
@@ -143,14 +172,18 @@ bool CTextile::AddSurfaceToMesh(CMesh &Mesh, vector<CMesh> &DomainMeshes, bool b
 	DomainMesh.ConvertTriToQuad();
 
 	// Save each domain face as separate mesh & add to DomainMeshes vector
-	for ( int i = 0; i < CMesh::NUM_ELEMENT_TYPES; ++i) {
+	for ( int i = 0; i < CMesh::NUM_ELEMENT_TYPES; ++i)
+	{
 		const list<int> &Indices = DomainMesh.GetIndices((CMesh::ELEMENT_TYPE)i);
 		int iNumNodes = CMesh::GetNumNodes((CMesh::ELEMENT_TYPE)i);
-		for (list<int>::const_iterator itIter = Indices.begin(); itIter != Indices.end(); ){
-			if (i != CMesh::POLYGON) {
+		for (list<int>::const_iterator itIter = Indices.begin(); itIter != Indices.end(); )
+		{
+			if (i != CMesh::POLYGON)
+			{
 				CMesh FaceMesh;
 				vector<int> index;
-				for ( int j = 0; j < iNumNodes; ++j ) {
+				for ( int j = 0; j < iNumNodes; ++j )
+				{
 					FaceMesh.AddNode( DomainMesh.GetNode(*(itIter++)));
 					index.push_back(j);
 				}
@@ -159,14 +192,18 @@ bool CTextile::AddSurfaceToMesh(CMesh &Mesh, vector<CMesh> &DomainMeshes, bool b
 			}
 		}
 	}
-	for (CYarn yarn : m_Yarns) {
-		if (bTrimToDomain && m_pDomain) {
-			if (!yarn.AddSurfaceToMesh(Mesh, *m_pDomain, DomainMeshes)) {
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		if (bTrimToDomain && m_pDomain)
+		{
+			if (!yarn->AddSurfaceToMesh(Mesh, *m_pDomain, DomainMeshes))
+			{
 				return false;
 			}
 		}
-		else {
-			yarn.AddSurfaceToMesh(Mesh);
+		else
+		{
+			yarn->AddSurfaceToMesh(Mesh);
 		}
 	}
 	return true;
@@ -176,12 +213,15 @@ void CTextile::AddVolumeToMesh(CMesh &Mesh, bool bTrimToDomain) {
 	if (!BuildTextileIfNeeded()) {
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		if (bTrimToDomain && m_pDomain) {
-			yarn.AddVolumeToMesh(Mesh, *m_pDomain);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		if (bTrimToDomain && m_pDomain)
+		{
+			yarn->AddVolumeToMesh(Mesh, *m_pDomain);
 		}
-		else {
-			yarn.AddVolumeToMesh(Mesh);
+		else
+		{
+			yarn->AddVolumeToMesh(Mesh);
 		}
 	}
 }
@@ -190,43 +230,55 @@ void CTextile::AddCentrePlaneToMesh(CMesh &Mesh, bool bTrimToDomain) {
 	if (!BuildTextileIfNeeded()) {
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		if (bTrimToDomain && m_pDomain) {
-			yarn.AddCentrePlaneToMesh(Mesh, *m_pDomain);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		if (bTrimToDomain && m_pDomain)
+		{
+			yarn->AddCentrePlaneToMesh(Mesh, *m_pDomain);
 		}
-		else {
-			yarn.AddCentrePlaneToMesh(Mesh);
+		else
+		{
+			yarn->AddCentrePlaneToMesh(Mesh);
 		}
 	}
 }
 
 void CTextile::Rotate(WXYZ Rotation, XYZ Origin) {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		yarn.Rotate(Rotation, Origin);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->Rotate(Rotation, Origin);
 	}
 }
 
-void CTextile::Translate(XYZ Vector) {
-	if (!BuildTextileIfNeeded()) {
+void CTextile::Translate(XYZ Vector)
+{
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		yarn.Translate(Vector);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->Translate(Vector);
 	}
 }
 
-string CTextile::GetName() const {
+string CTextile::GetName() const
+{
 	return TEXGEN.GetName(this);
 }
 
-void CTextile::GetPointInformation(const vector<XYZ> &Points, vector<POINT_INFO> &PointsInfo, double dTolerance) {
-	if (Points.empty()) {
+void CTextile::GetPointInformation(const vector<XYZ> &Points, vector<POINT_INFO> &PointsInfo, double dTolerance)
+{
+	if (Points.empty())
+	{
 		return;
 	}
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
 	PointsInfo.clear();
@@ -241,11 +293,13 @@ void CTextile::GetPointInformation(const vector<XYZ> &Points, vector<POINT_INFO>
 	vector<XYZ>::const_iterator itPoint;
 	for (itPoint = Points.begin(); itPoint != Points.end(); ++itPoint)
 	{
-		if (itPoint == Points.begin()) {
+		if (itPoint == Points.begin())
+		{
 			Min = *itPoint;
 			Max = *itPoint;
 		}
-		else {
+		else
+		{
 			Min = ::Min(Min, *itPoint);
 			Max = ::Max(Max, *itPoint);
 		}
@@ -278,10 +332,12 @@ void CTextile::GetPointInformation(const vector<XYZ> &Points, vector<POINT_INFO>
 }
 
 void CTextile::GetPointInformation(const vector<XYZ> &Points, vector<POINT_INFO> &PointsInfo, int iYarn, double dTolerance) {
-	if (Points.empty()) {
+	if (Points.empty())
+	{
 		return;
 	}
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
 	PointsInfo.clear();
@@ -293,12 +349,15 @@ void CTextile::GetPointInformation(const vector<XYZ> &Points, vector<POINT_INFO>
 
 	XYZ Min;
 	XYZ Max;
-	for (itPoint = Points.begin(); itPoint != Points.end(); ++itPoint) {
-		if (itPoint == Points.begin()) {
+	for (itPoint = Points.begin(); itPoint != Points.end(); ++itPoint)
+	{
+		if (itPoint == Points.begin())
+		{
 			Min = *itPoint;
 			Max = *itPoint;
 		}
-		else {
+		else
+		{
 			Min = ::Min(Min, *itPoint);
 			Max = ::Max(Max, *itPoint);
 		}
@@ -364,13 +423,16 @@ void CTextile::SavePointInformationToVTK(string Filename, const CMesh &Mesh, dou
 }
 
 double CTextile::GetApproximateSize() {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return 0;
 	}
 	XYZ Min;
 	XYZ Max;
-	for (CYarn yarn : m_Yarns) {
-		for (CNode node : yarn.GetMasterNodes()) {
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		for (CNode node : yarn->GetMasterNodes())
+		{
 			XYZ Pos = node.GetPosition();
 			Min = ::Min(Min, Pos);
 			Max = ::Max(Max, Pos);
@@ -510,101 +572,122 @@ bool CTextile::BuildTextileIfNeeded() const {
 	}
 }
 
-void CTextile::AssignDomain(const CDomain &Domain) {
+void CTextile::AssignDomain(const CDomain &Domain)
+{
 	m_pDomain = Domain;
 }
 
-void CTextile::RemoveDomain() {
+void CTextile::RemoveDomain()
+{
 	m_pDomain.Clear();
 }
 
-double CTextile::GetYarnLength(string Units) {
-	if (!BuildTextileIfNeeded()) {
+double CTextile::GetYarnLength(string Units)
+{
+	if (!BuildTextileIfNeeded())
+	{
 		return 0;
 	}
 	double dYarnLength = 0;
-	for (CYarn yarn : m_Yarns) {
-		dYarnLength += yarn.GetRealYarnLength(Units);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		dYarnLength += yarn->GetRealYarnLength(Units);
 	}
 	return dYarnLength;
 }
 
-double CTextile::GetYarnLengthPerUnitArea(string Units) {
-	if (!BuildTextileIfNeeded()) {
+double CTextile::GetYarnLengthPerUnitArea(string Units)
+{
+	if (!BuildTextileIfNeeded())
+	{
 		return 0;
 	}
 	double dYarnLength = 0;
-	for (CYarn yarn : m_Yarns) {
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
 		// If one of the yarns doesn't have correct repeat vectors then we
 		// cannot calculate an accurate value of length per unit area for the
 		// whole textile
-		if (yarn.GetRawRepeatArea() == 0) {
+		if (yarn->GetRawRepeatArea() == 0)
+		{
 			return 0;
 		}
-		dYarnLength += yarn.GetYarnLengthPerUnitArea(Units);
+		dYarnLength += yarn->GetYarnLengthPerUnitArea(Units);
 	}
 	return dYarnLength;
 }
 
 double CTextile::GetYarnVolume(string Units) {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return 0;
 	}
 	double dVolume = 0;
-	for (CYarn yarn : m_Yarns) {
-		dVolume += yarn.GetRealYarnVolume(Units);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		dVolume += yarn->GetRealYarnVolume(Units);
 	}
 	return dVolume;
 }
 
 double CTextile::GetYarnVolumePerUnitArea(string Units) {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return 0;
 	}
 	double dVolPerUnitArea = 0;
-	for (CYarn yarn : m_Yarns) {
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
 		// If one of the yarns doesn't have correct repeat vectors then we
 		// cannot calculate an accurate value of volume per unit area for the
 		// whole textile
-		if (yarn.GetRawRepeatArea() == 0) {
+		if (yarn->GetRawRepeatArea() == 0)
+		{
 			return 0;
 		}
-		dVolPerUnitArea += yarn.GetYarnVolumePerUnitArea(Units);
+		dVolPerUnitArea += yarn->GetYarnVolumePerUnitArea(Units);
 	}
 	return dVolPerUnitArea;
 }
 
-double CTextile::GetFibreVolume(string Units) {
-	if (!BuildTextileIfNeeded()) {
+double CTextile::GetFibreVolume(string Units)
+{
+	if (!BuildTextileIfNeeded())
+	{
 		return 0;
 	}
 	double dVolume = 0;
-	for (CYarn yarn : m_Yarns) {
-		dVolume += yarn.GetFibreVolume(Units);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		dVolume += yarn->GetFibreVolume(Units);
 	}
 	return dVolume;
 }
 
-double CTextile::GetFibreVolumePerUnitArea(string Units) {
-	if (!BuildTextileIfNeeded()) {
+double CTextile::GetFibreVolumePerUnitArea(string Units)
+{
+	if (!BuildTextileIfNeeded())
+	{
 		return 0;
 	}
 	// Try to calculate the fibre volume per unit area based on areal density
-	if (m_ArealDensity.IsSet() && m_FibreDensity.IsSet()) {
+	if (m_ArealDensity.IsSet() && m_FibreDensity.IsSet())
+	{
 		double dVolPerUnitArea = m_ArealDensity.GetSIValue()/m_FibreDensity.GetSIValue();
 		return ConvertUnits(dVolPerUnitArea, "m", Units);
 	}
 	// If areal density is missing then calculate it based on linear density of the yarns
 	else {
 		double dVolPerUnitArea = 0;
-		for (CYarn yarn : m_Yarns) {
+		for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+		{
 			// If one of the yarns doesn't have correct repeat vectors then we
 			// cannot calculate an accurate value fibre volume per unit area for the
 			// whole textile
-			if (yarn.GetRawRepeatArea() == 0) {
+			if (yarn->GetRawRepeatArea() == 0) {
 				return 0;
 			}
-			dVolPerUnitArea += yarn.GetFibreVolumePerUnitArea(Units);
+			dVolPerUnitArea += yarn->GetFibreVolumePerUnitArea(Units);
 		}
 		return dVolPerUnitArea;
 	}
@@ -645,110 +728,135 @@ CTextileLayerToLayer* CTextile::GetLayerToLayerWeave() {
 }
 
 void CTextile::SetAllYarnsYoungsModulusX(double dValue, string Units) {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn :m_Yarns) {
-		yarn.SetYoungsModulusX(dValue, Units);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->SetYoungsModulusX(dValue, Units);
 	}
 }
 
 void CTextile::SetAllYarnsYoungsModulusY(double dValue, string Units) {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		yarn.SetYoungsModulusY(dValue, Units);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->SetYoungsModulusY(dValue, Units);
 	}
 }
 
 void CTextile::SetAllYarnsYoungsModulusZ( double dValue, string Units) {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		yarn.SetYoungsModulusZ(dValue, Units);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->SetYoungsModulusZ(dValue, Units);
 	}
 }
 
 void CTextile::SetAllYarnsShearModulusXY(double dValue, string Units) {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn :m_Yarns) {
-		yarn.SetShearModulusXY(dValue, Units);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->SetShearModulusXY(dValue, Units);
 	}
 }
 
-void CTextile::SetAllYarnsShearModulusXZ(double dValue, string Units) {
-	if (!BuildTextileIfNeeded()) {
+void CTextile::SetAllYarnsShearModulusXZ(double dValue, string Units)
+{
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		yarn.SetShearModulusXZ(dValue, Units);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->SetShearModulusXZ(dValue, Units);
 	}
 }
 
 void CTextile::SetAllYarnsShearModulusYZ(double dValue, string Units) {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		yarn.SetShearModulusYZ(dValue, Units);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->SetShearModulusYZ(dValue, Units);
 	}
 }
 
 void CTextile::SetAllYarnsAlphaX(double dValue, string Units) {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		yarn.SetAlphaX(dValue, Units);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->SetAlphaX(dValue, Units);
 	}
 }
 
 void CTextile::SetAllYarnsAlphaY(double dValue, string Units) {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		yarn.SetAlphaY( dValue, Units );
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->SetAlphaY( dValue, Units );
 	}
 }
 
 void CTextile::SetAllYarnsAlphaZ(double dValue, string Units) {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		yarn.SetAlphaZ(dValue, Units);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->SetAlphaZ(dValue, Units);
 	}
 }
 
 void CTextile::SetAllYarnsPoissonsRatioX(double dValue) {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		yarn.SetPoissonsRatioX( dValue );
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->SetPoissonsRatioX( dValue );
 	}
 }
 
 void CTextile::SetAllYarnsPoissonsRatioY(double dValue) {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn m_Yarns : m_Yarns) {
-		m_Yarns.SetPoissonsRatioY(dValue);
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->SetPoissonsRatioY(dValue);
 	}
 }
 
 void CTextile::SetAllYarnsPoissonsRatioZ(double dValue) {
-	if (!BuildTextileIfNeeded()) {
+	if (!BuildTextileIfNeeded())
+	{
 		return;
 	}
-	for (CYarn yarn : m_Yarns) {
-		yarn.SetPoissonsRatioZ( dValue );
+	for (auto yarn = m_Yarns.begin(); yarn != m_Yarns.end(); yarn++)
+	{
+		yarn->SetPoissonsRatioZ( dValue );
 	}
 }
 

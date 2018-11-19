@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "DomainPlanes.h"
 #include "Yarn.h"
 

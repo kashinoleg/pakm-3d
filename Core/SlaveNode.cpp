@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "SlaveNode.h"
 
 using namespace TexGen;

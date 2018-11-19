@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "TextileWeave3D.h"
 
 using namespace TexGen;

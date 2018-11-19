@@ -1,20 +1,23 @@
+#include "stdafx.h"
 #include "units.h"
 
 
 	/*  Define a few useful constants  */
-static char *unitNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-static char *separators = " \t*-";
-static char *validchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789. \t*^/+-";
+const char *unitNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const char *separators = " \t*-";
+const char *validchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789. \t*^/+-";
 
 /*  head of lists  */
 static Unit *uroot = NULL;
 
  /*  Make a new copy of a string  */
  /*  string to copy  */
-char * UnitConvert::stringcopy(const char *string) {
-	char *copy = (char *)malloc(strlen(string) + 1);
-	strcpy(copy, string);
-	return(copy);
+char * UnitConvert::stringcopy(const char *string)
+{
+	int length = strlen(string) + 1;
+	char *copy = (char *)malloc(length);
+	strcpy_s(copy, length, string);
+	return copy;
 }
 
 /*  Append a string, allocating more memory  */
@@ -23,7 +26,7 @@ char * UnitConvert::stringcopy(const char *string) {
 char * UnitConvert::stringappend(char *target, const char *source) {
 	size_t newsize = (size_t)strlen(target) + strlen(source) + 1;
 	target = (char *)realloc(target, newsize);
-	strcat(target, source);
+	strcat_s(target, newsize, source);
 	return(target);
 }
 
@@ -275,10 +278,12 @@ Unit * UnitConvert::reduceUnit(const char *unitString) {
 		This same style is used for processing recursively
 		reduced subunits
 	*/
-	for (subunit = strtok(tokenString, separators); subunit != NULL; subunit = strtok(NULL, separators)) {
-
+	char *next_token = NULL;
+	for (subunit = strtok_s(tokenString, separators, &next_token); subunit != NULL; subunit = strtok_s(NULL, separators, &next_token))
+	{
 		/* check for null subunit  */
-		if (strlen(subunit) == 0) {
+		if (strlen(subunit) == 0)
+		{
 			continue;
 		}
 
@@ -713,7 +718,7 @@ void UnitConvert::cancelUnitList(Unit **numerator, Unit **denominator) {
 
 
 /*  SI Derived Units with Special Names  */
-static char *derivedUnits[] = {
+const char *derivedUnits[] = {
   "radian",	"meter/meter",
   "steradian",	"meter^2/meter^2",
   "hertz",	"/second",
@@ -737,7 +742,7 @@ static char *derivedUnits[] = {
   NULL,         NULL };
 
 /*  Non-SI units  */
-static char *nonSIUnits[] = {
+const char *nonSIUnits[] = {
   "angstrom",	"1.0E-10meter",
   "astronomicalUnit",	"1.495979E11meter",
   "atmosphere",	"1.01325E5pascal",
@@ -777,7 +782,7 @@ static char *nonSIUnits[] = {
 
 
 /*  Abbreviations  */
-static char *abbreviations[] = {
+const char *abbreviations[] = {
   "m",	"meter",
   "g",	"gram",
   "s",	"second",
@@ -806,7 +811,7 @@ static char *abbreviations[] = {
   "Sv",	"sievert",
   NULL, NULL };
 
-static char *nonSIabbreviations[] = {
+const char *nonSIabbreviations[] = {
   "AU",	"astronomicalUnit",
   "ft",	"foot",
   "gr",	"grain",
@@ -847,8 +852,10 @@ static char *nonSIabbreviations[] = {
  *------------------------------------------------------------*/
 
 bool UnitConvert::unitInitialize() {
-	Unit *u, *up;
-	char **name, **value;
+	Unit *u;
+	Unit *up = nullptr;
+	const char **name;
+	const char **value;
 
 	/*  Load Units List with Base (primitive) units  */
 	/* SI Base Units */
@@ -861,15 +868,19 @@ bool UnitConvert::unitInitialize() {
 		"kelvin",
 		"mole",
 		"candela"};
-	for (string base : baseUnits) {
+	for (string base : baseUnits)
+	{
 		Unit *unit = new Unit();
 		unit->name = base;
 		unit->primitive = true;
-		if (uroot == NULL) {
+		if (uroot == NULL)
+		{
 			uroot = unit;        /* start new uroot */
 			up = unit;
 		}
-		else {
+		else if (up != nullptr)
+		{
+			
 			up->next = unit;     /* append to end of list */
 			up = unit;
 		}

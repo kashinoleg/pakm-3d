@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "FibreDistributionConst.h"
 #include "Section.h"
 

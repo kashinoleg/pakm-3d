@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "TextileOffsetAngleInterlock.h"
 
 using namespace TexGen;

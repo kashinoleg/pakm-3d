@@ -28,7 +28,7 @@ namespace TexGen {
 	class COctreeVisitorMergeNodes : public OctreeVisitor<pair<int, XYZ> >
 	{
 	public:
-		COctreeVisitorMergeNodes(CMesh &Mesh, double dTolerance = 0) : 
+		COctreeVisitorMergeNodes(CMesh &Mesh, double dTolerance = 0) :
 			m_Mesh(Mesh), m_iNumMerged(0), m_dToleranceSquared(dTolerance*dTolerance) {};
 		~COctreeVisitorMergeNodes() {};
 
@@ -43,7 +43,7 @@ namespace TexGen {
 		int m_iNumMerged;
 		double m_dToleranceSquared;
 		vector<vector<int*> > m_NodeElementReferences;
-//		vector<bool> m_DeletedNodes;
+		//		vector<bool> m_DeletedNodes;
 		set<int> m_DeletedNodes;
 	};
 

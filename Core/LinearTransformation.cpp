@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "LinearTransformation.h"
 
 using namespace TexGen;

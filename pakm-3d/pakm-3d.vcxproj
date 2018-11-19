@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{A113703D-78F7-4A73-9C27-3EB6659DFD82}</ProjectGuid>
+    <RootNamespace>pakm3d</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>C:\Python27\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Python27\libs;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Python27\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Python27\libs;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\Program Files\Python27\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\Python27\libs;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ProjectReference />
+    <Link>
+      <AdditionalDependencies>C:\Python27\libs\python27_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;C:\Python27\libs\python27.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <CustomBuildStep />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;C:\Python27\libs\python27.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="CircleRangeCtrl.cpp" />
+    <ClCompile Include="CompleteDialog.cpp" />
+    <ClCompile Include="ControlsWindow.cpp" />
+    <ClCompile Include="CustomInteractorStyle.cpp" />
+    <ClCompile Include="CustomWidget.cpp" />
+    <ClCompile Include="DomainPlanesDialog.cpp" />
+    <ClCompile Include="DropTarget.cpp" />
+    <ClCompile Include="EmbeddedPythonFunctions.cpp" />
+    <ClCompile Include="Embedded_wrap.cxx" />
+    <ClCompile Include="latin_random.cpp" />
+    <ClCompile Include="LayersOffsetDialog.cpp" />
+    <ClCompile Include="Modeller.cpp" />
+    <ClCompile Include="PatternDraftDialog.cpp" />
+    <ClCompile Include="PythonConsole.cpp" />
+    <ClCompile Include="PythonConverter.cpp" />
+    <ClCompile Include="PythonWrapper.cpp" />
+    <ClCompile Include="RangeValidator.cpp" />
+    <ClCompile Include="SectionSelect.cpp" />
+    <ClCompile Include="TexGenApp.cpp" />
+    <ClCompile Include="TexGenMainFrame.cpp" />
+    <ClCompile Include="TexGenRenderer.cpp" />
+    <ClCompile Include="TexGenRenderWindow.cpp" />
+    <ClCompile Include="TextileLayersDialog.cpp" />
+    <ClCompile Include="WeavePatternCtrl.cpp" />
+    <ClCompile Include="WeavePatternCtrl3D.cpp" />
+    <ClCompile Include="WeaveWizard.cpp" />
+    <ClCompile Include="WeaveWizard3D.cpp" />
+    <ClCompile Include="wxVTKRenderWindowInteractor.cxx" />
+    <ClCompile Include="YarnSectionSelect.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CircleRangeCtrl.h" />
+    <ClInclude Include="CompleteDialog.h" />
+    <ClInclude Include="ControlsWindow.h" />
+    <ClInclude Include="Convert.h" />
+    <ClInclude Include="CustomInteractorStyle.h" />
+    <ClInclude Include="CustomWidget.h" />
+    <ClInclude Include="DomainPlanesDialog.h" />
+    <ClInclude Include="DropTarget.h" />
+    <ClInclude Include="EmbeddedPythonFunctions.h" />
+    <ClInclude Include="latin_random.hpp" />
+    <ClInclude Include="LayersOffsetDialog.h" />
+    <ClInclude Include="LoggerGUI.h" />
+    <ClInclude Include="Modeller.h" />
+    <ClInclude Include="PatternDraftDialog.h" />
+    <ClInclude Include="PythonConsole.h" />
+    <ClInclude Include="PythonConverter.h" />
+    <ClInclude Include="PythonWrapper.h" />
+    <ClInclude Include="RangeValidator.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SectionSelect.h" />
+    <ClInclude Include="TexGenApp.h" />
+    <ClInclude Include="TexGenMainFrame.h" />
+    <ClInclude Include="TexGenRenderer.h" />
+    <ClInclude Include="TexGenRenderWindow.h" />
+    <ClInclude Include="TextileLayersDialog.h" />
+    <ClInclude Include="WeavePatternCtrl.h" />
+    <ClInclude Include="WeavePatternCtrl3D.h" />
+    <ClInclude Include="WeaveWizard.h" />
+    <ClInclude Include="WeaveWizard3D.h" />
+    <ClInclude Include="WindowIDs.h" />
+    <ClInclude Include="wxVTKRenderWindowInteractor.h" />
+    <ClInclude Include="YarnSectionSelect.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Embedded.i" />
+    <None Include="LayerToLayer.xpm" />
+    <None Include="packages.config" />
+    <None Include="TexGen.xrc">
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="wx\msw\blank.cur" />
+    <None Include="wx\msw\bullseye.cur" />
+    <None Include="wx\msw\cross.cur" />
+    <None Include="wx\msw\hand.cur" />
+    <None Include="wx\msw\magnif1.cur" />
+    <None Include="wx\msw\pbrush.cur" />
+    <None Include="wx\msw\pencil.cur" />
+    <None Include="wx\msw\pntleft.cur" />
+    <None Include="wx\msw\pntright.cur" />
+    <None Include="wx\msw\rightarr.cur" />
+    <None Include="wx\msw\roller.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\core\core.vcxproj">
+      <Project>{9c32ab86-4d58-48b2-820b-84b1b839e79f}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Icon.ico" />
+    <Image Include="wx\msw\cdrom.ico" />
+    <Image Include="wx\msw\colours.bmp" />
+    <Image Include="wx\msw\computer.ico" />
+    <Image Include="wx\msw\csquery.bmp" />
+    <Image Include="wx\msw\drive.ico" />
+    <Image Include="wx\msw\file1.ico" />
+    <Image Include="wx\msw\floppy.ico" />
+    <Image Include="wx\msw\folder1.ico" />
+    <Image Include="wx\msw\folder2.ico" />
+    <Image Include="wx\msw\removble.ico" />
+    <Image Include="wx\msw\std.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GUI.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\TinyXml.SilverHorn.2.6.2\build\TinyXml.SilverHorn.targets" Condition="Exists('..\packages\TinyXml.SilverHorn.2.6.2\build\TinyXml.SilverHorn.targets')" />
+    <Import Project="..\packages\Tetgen.SilverHorn.1.5.2\build\Tetgen.SilverHorn.targets" Condition="Exists('..\packages\Tetgen.SilverHorn.1.5.2\build\Tetgen.SilverHorn.targets')" />
+    <Import Project="..\packages\Octree.SilverHorn.2.0.1\build\Octree.SilverHorn.targets" Condition="Exists('..\packages\Octree.SilverHorn.2.0.1\build\Octree.SilverHorn.targets')" />
+    <Import Project="..\packages\CSparse.SilverHorn.3.1.3\build\CSparse.SilverHorn.targets" Condition="Exists('..\packages\CSparse.SilverHorn.3.1.3\build\CSparse.SilverHorn.targets')" />
+    <Import Project="..\packages\VTK.SilverHorn.6.3.0.2\build\VTK.SilverHorn.targets" Condition="Exists('..\packages\VTK.SilverHorn.6.3.0.2\build\VTK.SilverHorn.targets')" />
+    <Import Project="..\packages\wxWidgets.SilverHorn.2.8.12\build\wxWidgets.SilverHorn.targets" Condition="Exists('..\packages\wxWidgets.SilverHorn.2.8.12\build\wxWidgets.SilverHorn.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\TinyXml.SilverHorn.2.6.2\build\TinyXml.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\TinyXml.SilverHorn.2.6.2\build\TinyXml.SilverHorn.targets'))" />
+    <Error Condition="!Exists('..\packages\Tetgen.SilverHorn.1.5.2\build\Tetgen.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Tetgen.SilverHorn.1.5.2\build\Tetgen.SilverHorn.targets'))" />
+    <Error Condition="!Exists('..\packages\Octree.SilverHorn.2.0.1\build\Octree.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Octree.SilverHorn.2.0.1\build\Octree.SilverHorn.targets'))" />
+    <Error Condition="!Exists('..\packages\CSparse.SilverHorn.3.1.3\build\CSparse.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CSparse.SilverHorn.3.1.3\build\CSparse.SilverHorn.targets'))" />
+    <Error Condition="!Exists('..\packages\VTK.SilverHorn.6.3.0.2\build\VTK.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\VTK.SilverHorn.6.3.0.2\build\VTK.SilverHorn.targets'))" />
+    <Error Condition="!Exists('..\packages\wxWidgets.SilverHorn.2.8.12\build\wxWidgets.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\wxWidgets.SilverHorn.2.8.12\build\wxWidgets.SilverHorn.targets'))" />
+  </Target>
+</Project>

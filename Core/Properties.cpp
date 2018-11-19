@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Properties.h"
 #include "DefaultProperties.h"
 

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "TexGen.h"
 #include "TetgenMesh.h"
 
@@ -309,7 +310,7 @@ void CTetgenMesh::SaveTetgenMesh( CTextile &Textile, string OutputFilename, stri
 	
 	char* TetgenOutput = new char[size];
 	strOutput = RemoveExtension( OutputFilename, ".inp" );
-	strcpy(TetgenOutput, strOutput.c_str());
+	strcpy_s(TetgenOutput, size, strOutput.c_str());
 	/*
 	m_in.save_poly(TetgenOutput);
 	

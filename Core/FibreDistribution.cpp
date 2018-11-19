@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "FibreDistribution.h"
 
 using namespace TexGen;

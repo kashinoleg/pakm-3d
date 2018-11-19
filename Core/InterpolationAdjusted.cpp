@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "InterpolationAdjusted.h"
 
 using namespace TexGen;

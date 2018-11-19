@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "TexGen.h"
 #include "StaggeredPeriodicBoundaries.h"
 

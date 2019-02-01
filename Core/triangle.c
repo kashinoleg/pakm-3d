@@ -11391,7 +11391,8 @@ void triangulate(char *triswitches, struct triangulateio *in, struct triangulate
 	parsecommandline(1, &triswitches, &b);
 	m.steinerleft = b.steiner;
 	transfernodes(&m, &b, in->pointlist, in->pointattributelist, in->pointmarkerlist, in->numberofpoints, in->numberofpointattributes);
-	if (b.refine) {
+	if (b.refine)
+	{
 		/* Read and reconstruct a mesh. */
 		m.hullsize = reconstruct(&m, &b, in->trianglelist,
 			in->triangleattributelist, in->trianglearealist,
@@ -11400,7 +11401,8 @@ void triangulate(char *triswitches, struct triangulateio *in, struct triangulate
 			in->segmentlist, in->segmentmarkerlist,
 			in->numberofsegments);
 	}
-	else {
+	else
+	{
 		m.hullsize = delaunay(&m, &b);              /* Triangulate the vertices. */
 	}
 

@@ -1,4 +1,5 @@
 #pragma once
+#define vtkRenderingCore_AUTOINIT 3(vtkRenderingOpenGL, vtkInteractionStyle, vtkRenderingFreeType)
 #include <wx/stdpaths.h>
 #include <wx/cmdline.h>
 #include <wx/config.h>

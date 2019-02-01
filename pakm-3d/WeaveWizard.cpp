@@ -291,7 +291,9 @@ bool CWeaveWizard::GetPatternCell(int i, int j)
 string CWeaveWizard::GetCreateTextileCommand(string ExistingTextile)
 {
 	if (!m_pWeavePatternCtrl->bHasWeave())
+	{
 		return "";
+	}
 	stringstream StringStream;
 	int iWidth = m_pWeavePatternCtrl->GetWeaveWidth();
 	int iHeight = m_pWeavePatternCtrl->GetWeaveHeight();
@@ -310,7 +312,11 @@ string CWeaveWizard::GetCreateTextileCommand(string ExistingTextile)
 		{
 			StringStream << "weave = CShearedTextileWeave2D(" << iWidth << ", " << iHeight << ", " << dYarnSpacing << ", " << dFabricThickness << ", " << dShearAngle*PI/180.0 << ", " << m_bRefine << "," << m_bInPlaneTangents << ")" << endl;
 		}
-		else {
+		else
+		{
+			auto weave = new CTextileWeave2D(iWidth, iHeight, dYarnSpacing, dFabricThickness, m_bRefine, m_bInPlaneTangents);
+
+
 			StringStream << "weave = CTextileWeave2D(" << iWidth << ", " << iHeight << ", " << dYarnSpacing << ", " << dFabricThickness;
 			if (m_bRefine) {
 				StringStream << ", True, ";
@@ -331,14 +337,15 @@ string CWeaveWizard::GetCreateTextileCommand(string ExistingTextile)
 		}
 	}
 	else
+	{
 		StringStream << "weave = CTextileWeave3D(" << iWidth << ", " << iHeight << ", " << dYarnSpacing << ", " << dFabricThickness << ")" << endl;
+	}
 	StringStream << "weave.SetYarnWidths(" << m_YarnWidth << ")" << endl;
-	int i, j;
 	if (!m_b3DWeave )
 	{
-		for (i=0; i<iWidth; ++i)
+		for (int i = 0; i < iWidth; i++)
 		{
-			for (j=0; j<iHeight; ++j)
+			for (int j = 0; j < iHeight; j++)
 			{
 				if (GetPatternCell(i, j))
 				{

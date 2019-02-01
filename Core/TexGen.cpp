@@ -204,7 +204,9 @@ bool CTexGen::LoadTiXmlElement(TiXmlElement &Element)
 	return true;
 }
 
-void CTexGen::SaveToXML(string FileName, string TextileName, OUTPUT_TYPE OutputType) {
+void CTexGen::SaveToXML(string FileName, string TextileName, OUTPUT_TYPE OutputType)
+{
+	TGLOG("CTexGen::SaveToXML");
 	TiXmlDocument doc(FileName);
 	TiXmlDeclaration Declaration("1.0", "", "");
 	doc.InsertEndChild(Declaration);

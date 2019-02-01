@@ -262,21 +262,8 @@ CTexGenMainFrame::~CTexGenMainFrame(void)
 	m_Manager.UnInit();
 }
 
-void CTexGenMainFrame::OnInit()
+void CTexGenMainFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
-	SendPythonCode("from _Embedded import *");
-	SendPythonCode("from TexGen.Core import *");
-	SendPythonCode("from TexGen.Renderer import *");
-	SendPythonCode("from TexGen.Export import *");
-	SendPythonCode("from TexGen.Abaqus import *");
-	SendPythonCode("from TexGen.WeavePattern import *");
-	SendPythonCode("from TexGen.WiseTex import *");
-	SendPythonCode("from TexGen.FlowTex import *");
-	SendPythonCode("import math");
-	//m_pPythonConsole->SetFocus();
-}
-
-void CTexGenMainFrame::OnQuit(wxCommandEvent& WXUNUSED(event)) {
 	Close(TRUE);
 }
 
@@ -356,6 +343,7 @@ void CTexGenMainFrame::ReceiveOutput(string Text, OUTPUT_TYPE OutputType, bool b
 
 void CTexGenMainFrame::OnOpen(wxCommandEvent& event)
 {
+	TGLOG("CTexGenMainFrame::OnOpen");
 	wxFileDialog dialog
 	(
 		this,
@@ -368,20 +356,20 @@ void CTexGenMainFrame::OnOpen(wxCommandEvent& event)
 	dialog.CentreOnParent();
 	if (dialog.ShowModal() == wxID_OK)
 	{
-		string path = ConvertString(dialog.GetPath());
-		TGLOG("ReadFromXML(r\"" << path << "\")");
+		auto path = ConvertString(dialog.GetPath());
 		CTexGen::Instance().ReadFromXML(path);
 	}
 }
 
 void CTexGenMainFrame::OnSave(wxCommandEvent& event)
 {
+	TGLOG("CTexGenMainFrame::OnSave");
 	wxArrayString Options;
 	Options.Add(wxT("Minimal (Textile data only)"));
 	Options.Add(wxT("Standard (Textile and yarn data)"));
 	Options.Add(wxT("Full (Textile, yarn and mesh data)"));
 	wxSingleChoiceDialog SaveTypeDialog(this, wxT("Please select how much data to save."), wxT("Save dialog"), Options);
-	SaveTypeDialog.SetSelection(1);
+	SaveTypeDialog.SetSelection(OUTPUT_STANDARD);
 	if (SaveTypeDialog.ShowModal() == wxID_OK)
 	{
 		wxFileDialog dialog
@@ -396,23 +384,16 @@ void CTexGenMainFrame::OnSave(wxCommandEvent& event)
 		dialog.CentreOnParent();
 		if (dialog.ShowModal() == wxID_OK)
 		{
-			string Command;
-			Command = "SaveToXML(r\"";
-			Command += ConvertString(dialog.GetPath());
-			Command += "\", \"" + GetTextileSelection();
+			auto path = ConvertString(dialog.GetPath());
 			switch (SaveTypeDialog.GetSelection())
 			{
-			case 0:
-				Command += "\", OUTPUT_MINIMAL)";
-				break;
-			case 1:
-				Command += "\", OUTPUT_STANDARD)";
-				break;
-			case 2:
-				Command += "\", OUTPUT_FULL)";
-				break;
+			case OUTPUT_MINIMAL:
+				CTexGen::Instance().SaveToXML(path, GetTextileSelection(), OUTPUT_MINIMAL); break;
+			case OUTPUT_STANDARD:
+				CTexGen::Instance().SaveToXML(path, GetTextileSelection(), OUTPUT_STANDARD); break;
+			case OUTPUT_FULL:
+				CTexGen::Instance().SaveToXML(path, GetTextileSelection(), OUTPUT_FULL); break;
 			}
-			SendPythonCode(Command);
 		}
 	}
 }
@@ -420,7 +401,6 @@ void CTexGenMainFrame::OnSave(wxCommandEvent& event)
 void CTexGenMainFrame::OnSaveScreenshot(wxCommandEvent& event)
 {
 	wxDialog ScreenShot;
-	
 	if (wxXmlResource::Get()->LoadDialog(&ScreenShot, this, wxT("ScreenShot")))
 	{
 		if ( ScreenShot.ShowModal() == wxID_OK )
@@ -704,11 +684,13 @@ void CTexGenMainFrame::OnSaveSTL(wxCommandEvent& event) {
 	bool bExportDomain = false;
 	bool bTrimSurface = true;
 	wxDialog MeshOptions;
-	if (wxXmlResource::Get()->LoadDialog(&MeshOptions, this, wxT("SurfaceMeshOptions"))) {
+	if (wxXmlResource::Get()->LoadDialog(&MeshOptions, this, wxT("SurfaceMeshOptions")))
+	{
 		XRCCTRL(MeshOptions, "TrimSurface", wxCheckBox)->SetValidator(wxGenericValidator(&bTrimSurface));
 		XRCCTRL(MeshOptions, "ExportDomain", wxCheckBox)->SetValidator(wxGenericValidator(&bExportDomain));
 
-		if (MeshOptions.ShowModal() == wxID_OK) {
+		if (MeshOptions.ShowModal() == wxID_OK)
+		{
 			wxFileDialog dialog
 			(
 				this,
@@ -798,7 +780,8 @@ void CTexGenMainFrame::OnSaveSurfaceMesh(wxCommandEvent& event)
 	}
 }
 
-void CTexGenMainFrame::OnSaveIGES(wxCommandEvent& event) {
+void CTexGenMainFrame::OnSaveIGES(wxCommandEvent& event)
+{
 	string TextileName = GetTextileSelection();
 	bool bExportDomain = true;
 	bool bSubtractYarns = false;
@@ -1049,13 +1032,7 @@ void CTexGenMainFrame::OnPeriodicBoundaries(wxCommandEvent& event)
 
 void CTexGenMainFrame::OnSaveTetgenMesh( wxCommandEvent& event )
 {
-	string TextileName = GetTextileSelection();
-	stringstream Command;
-
-	wxString params = wxT("pqAY");
-	wxString seed = wxT("0.1");
-	bool bPeriodic = true;
-
+	TGLOG("CTexGenMainFrame::OnSaveTetgenMesh");
 	wxFileDialog dialog
 	(
 		this,
@@ -1067,21 +1044,23 @@ void CTexGenMainFrame::OnSaveTetgenMesh( wxCommandEvent& event )
 	);
 	dialog.CentreOnParent();
 
+	wxString params = wxT("pqAY");
+	wxString seed = wxT("0.1");
+	bool bPeriodic = true;
 	wxDialog TetgenInput;
 	if (wxXmlResource::Get()->LoadDialog(&TetgenInput, this, wxT("TetgenOptions")))
 	{
 		XRCCTRL(TetgenInput, "Param", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NONE, &params));
 		XRCCTRL(TetgenInput, "SeedSize", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &seed));
 		XRCCTRL(TetgenInput, "Periodic", wxCheckBox)->SetValidator(wxGenericValidator(&bPeriodic));
-		if (TetgenInput.ShowModal() == wxID_OK)
+		if (TetgenInput.ShowModal() == wxID_OK && dialog.ShowModal() == wxID_OK)
 		{
-			if (dialog.ShowModal() == wxID_OK)
-			{
-				Command << "TetMesh = CTetgenMesh(" + ConvertString(seed) + ")" << endl;
-				Command << "TetMesh.SaveTetgenMesh(GetTextile('" + TextileName + "'), r\'" << ConvertString(dialog.GetPath())<< "', '" + ConvertString(params) + "'," << bPeriodic << + ")" << endl;
-
-				SendPythonCode(Command.str());
-			}
+			string textileName = GetTextileSelection();
+			auto tetMesh = new CTetgenMesh(0.1);
+			auto textile = CTexGen::Instance().GetTextile(textileName);
+			auto path = ConvertString(dialog.GetPath());
+			auto prms = ConvertString(params);
+			tetMesh->SaveTetgenMesh(*textile, path, prms, bPeriodic);
 		}
 	}
 }
@@ -1230,23 +1209,44 @@ void CTexGenMainFrame::SendPythonCode(string Code)
 	}//*/
 }
 
+void CTexGenMainFrame::OnCreateEmptyTextile()
+{
+	wxTextEntryDialog dlg(this, wxT("Please enter the name of the textile to create (or leave blank for default):"), wxT("Textile name"));
+	if (dlg.ShowModal() == wxID_OK)
+	{
+		auto textileName = ConvertString(dlg.GetValue());
+		if (textileName.empty())
+		{
+			TGLOG("AddTextile(CTextile())");
+			CTexGen::Instance().AddTextile(CTextile());
+		}
+		else
+		{
+			TGLOG("AddTextile('" << textileName << "', CTextile())");
+			CTexGen::Instance().AddTextile(textileName, CTextile());
+		}
+	}
+}
+
+void CTexGenMainFrame::OnDeleteTextile()
+{
+	auto textileName = GetTextileSelection();
+	if (!textileName.empty())
+	{
+		if (wxMessageBox(wxT("Do you wish to delete the textile?"), wxT("Delete textile"), wxNO_DEFAULT | wxYES_NO | wxICON_INFORMATION, this) == wxYES)
+		{
+			TGLOG("DeleteTextile('" + textileName + "')");
+			CTexGen::Instance().DeleteTextile(textileName);
+		}
+	}
+}
+
 void CTexGenMainFrame::OnTextiles(wxCommandEvent& event)
 {
 	switch (event.GetId())
 	{
 	case ID_DeleteTextile:
-		{
-			string TextileName = GetTextileSelection();
-			if (!TextileName.empty())
-			{
-				if ( wxMessageBox( wxT("Do you wish to delete the textile?"), wxT("Delete textile"), wxNO_DEFAULT|wxYES_NO|wxICON_INFORMATION, this ) == wxYES )
-				{
-					string Command = "DeleteTextile('" + TextileName + "')";
-					SendPythonCode(Command);	
-				}
-			}
-		}
-		break;
+		OnDeleteTextile(); break;
 	case ID_EditTextile:
 		{
 			string TextileName = GetTextileSelection();
@@ -1291,24 +1291,7 @@ void CTexGenMainFrame::OnTextiles(wxCommandEvent& event)
 		}
 		break;
 	case ID_CreateEmptyTextile:
-		{
-			wxTextEntryDialog dlg(this, wxT("Please enter the name of the textile to create (or leave blank for default):"), wxT("Textile name"));
-			if (dlg.ShowModal() != wxID_OK)
-				return;
-			wxString TextileName = dlg.GetValue();
-
-			stringstream StringStream; 
-			if (TextileName.IsEmpty())
-				StringStream << "AddTextile(CTextile())" << endl;
-			else
-				StringStream << "AddTextile('" << ConvertString(TextileName) << "', CTextile())" << endl;
-			SendPythonCode(StringStream.str());
-			/*else if (!TEXGEN.AddTextile(ConvertString(TextileName), CTextile()))
-			{
-				wxMessageBox(wxT("Textile with name \"") + TextileName + wxT("\" already exists!"), wxT("Error"), wxOK | wxICON_EXCLAMATION);
-			}*/
-		}
-		break;
+		OnCreateEmptyTextile(); break;
 	case ID_Create2DWeave:
 		{
 			CWeaveWizard Wizard(this, wxID_ANY); 
@@ -1733,7 +1716,6 @@ void CTexGenMainFrame::EditDomain()
 	}
 }
 
-
 void CTexGenMainFrame::OnDomains(wxCommandEvent& event)
 {
 	switch (event.GetId())
@@ -1809,7 +1791,9 @@ void CTexGenMainFrame::OnRendering(wxCommandEvent& event)
 		if (event.IsChecked())
 			Command = "GetRenderWindow('" + TextileName + "').RenderNodes('" + TextileName + "')";
 		else
+		{
 			Command = "GetRenderWindow('" + TextileName + "').RemoveNodes()";
+		}
 		break;
 	case ID_RenderPaths:
 		if (event.IsChecked())
@@ -1888,9 +1872,13 @@ void CTexGenMainFrame::OnRendering(wxCommandEvent& event)
 		break;
 	case ID_ParallelProjection:
 		if (event.IsChecked())
+		{
 			Command = "GetRenderWindow('" + TextileName + "').SetParallelProjection(True)\n";
+		}
 		else
+		{
 			Command = "GetRenderWindow('" + TextileName + "').SetParallelProjection(False)\n";
+		}
 /*		{
 			CTexGenRenderWindow* pRenderWindow = GetRenderWindow(TextileName);
 			if (pRenderWindow)
@@ -2113,16 +2101,14 @@ void CTexGenMainFrame::OnViewerNotebookPageChanged(wxAuiNotebookEvent& event)
 
 void CTexGenMainFrame::OnViewerNotebookClose(wxAuiNotebookEvent& event)
 {
-	// Prevent the event from actually deleting the window, this will be done automagically
-	// when the textile is deleted
+	// Prevent the event from actually deleting the window, this will be done automagically when the textile is deleted
 	event.Veto();
 	// Delete the textile...
-	string TextileName = ConvertString(m_pViewerNotebook->GetPageText(event.GetSelection()));
-//	string TextileName = GetTextileSelection();
-	if (!TextileName.empty())
+	auto textileName = ConvertString(m_pViewerNotebook->GetPageText(event.GetSelection()));
+	if (!textileName.empty())
 	{
-		string Command = "DeleteTextile('" + TextileName + "')";
-		SendPythonCode(Command);
+		TGLOG("DeleteTextile('" + textileName + "')");
+		CTexGen::Instance().DeleteTextile(textileName);
 	}
 }
 
@@ -2448,7 +2434,8 @@ void CTexGenMainFrame::OnPatternDraft(wxCommandEvent& event) {
 	}
 }
 
-void CTexGenMainFrame::OnDomainVolumeFraction(wxCommandEvent& event) {
+void CTexGenMainFrame::OnDomainVolumeFraction(wxCommandEvent& event)
+{
 	string TextileName = GetTextileSelection();
 	CTextile* Textile = TEXGEN.GetTextile(TextileName);
 	if (!Textile)
@@ -2611,9 +2598,9 @@ void CSurveyDialog::OnClickTakeSurvey( wxHyperlinkEvent& event )
 	countFile << count;
 	countFile.close();
 	wxString url = event.GetURL();
-    
-    if (!wxLaunchDefaultBrowser(url))
-        wxLogWarning(wxT("Could not launch the default browser with url '%s' !"), url.c_str());
-
+	if (!wxLaunchDefaultBrowser(url))
+	{
+		wxLogWarning(wxT("Could not launch the default browser with url '%s' !"), url.c_str());
+	}
 	this->EndModal(wxID_CANCEL);
 }

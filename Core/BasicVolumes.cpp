@@ -18,12 +18,15 @@ CBasicVolumes::CBasicVolumes(void)
 CBasicVolumes::~CBasicVolumes(void) {
 }
 
-bool CBasicVolumes::CreateBasicVolumes(string TextileName) {
+bool CBasicVolumes::CreateBasicVolumes(string TextileName)
+{
 	CTextile* pTextile = TEXGEN.GetTextile(TextileName);
-	if (pTextile) {
+	if (pTextile)
+	{
 		return CreateBasicVolumes(*pTextile);
 	}
-	else {
+	else
+	{
 		return false;
 	}
 }
@@ -175,7 +178,8 @@ void CBasicVolumes::SaveProjectedAreasToVTK(string Filename)
 	CMeshData<unsigned char> NumYarns("NumYarns", CMeshDataBase::ELEMENT);
 
 	ostringstream ProjectedAreaIndexData;
-	for (int region : m_TriangleRegions) {
+	for (int region : m_TriangleRegions)
+	{
 		AreaIndex.m_Data.push_back(region);
 		Area.m_Data.push_back(m_ProjectedRegions[region].dArea);
 		NumYarns.m_Data.push_back(m_ProjectedRegions[region].YarnIndices.size());
@@ -192,16 +196,18 @@ void CBasicVolumes::SaveProjectedAreasToVTK(string Filename)
 
 bool CBasicVolumes::GetCommonEdgeIndices(int Indices1[3], int Indices2[3], int Common[2])
 {
-	int i, j, k=0;
-	for (i=0; i<3; ++i)
+	int k = 0;
+	for (int i = 0; i < 3; i++)
 	{
-		for (j=0; j<3; ++j)
+		for (int j = 0; j < 3; j++)
 		{
 			if (Indices1[i] == Indices2[j])
 			{
 				Common[k++] = Indices1[i];	// == Indices2[j]
 				if (k == 2)
+				{
 					return true;
+				}
 			}
 		}
 	}
@@ -279,21 +285,17 @@ int CBasicVolumes::MergeStraightLines(CMesh &Mesh)
 
 int CBasicVolumes::RemoveDuplicateSegments(CMesh &Mesh)
 {
-	list<int>::iterator itIndex, itStart;
-	list<int>::iterator itCompareIndex;
 	list<int> &Indices = Mesh.GetIndices(CMesh::LINE);
-	int i1, i2;
-	int j1, j2;
 	int iDuplicateCount = 0;
-	for (itIndex = Indices.begin(); itIndex != Indices.end(); )
+	for (list<int>::iterator itIndex = Indices.begin(); itIndex != Indices.end(); )
 	{
-		itStart = itIndex;
-		i1 = *(itIndex++);
-		i2 = *(itIndex++);
-		for (itCompareIndex = itIndex; itCompareIndex != Indices.end(); )
+		list<int>::iterator itStart = itIndex;
+		int i1 = *(itIndex++);
+		int i2 = *(itIndex++);
+		for (list<int>::iterator itCompareIndex = itIndex; itCompareIndex != Indices.end(); )
 		{
-			j1 = *(itCompareIndex++);
-			j2 = *(itCompareIndex++);
+			int j1 = *(itCompareIndex++);
+			int j2 = *(itCompareIndex++);
 			if ((i1 == j1 && i2 == j2) || (i1 == j2 && i2 == j1))
 			{
 				Indices.erase(itStart, itIndex);
@@ -776,13 +778,8 @@ void CBasicVolumes::CalculateYarnIndices() {
 	}
 }
 
-bool CBasicVolumes::MeshProjectedAreas() {
-//	char szSwitches[128];
-	stringstream Switches;
-
-	double dMaxArea = 0.5*m_dSeed*m_dSeed;
-	double dMinAngle = 20;
-
+bool CBasicVolumes::MeshProjectedAreas()
+{
 	// These are the switches to be used with triangle
 	// http://www-2.cs.cmu.edu/~quake/triangle.switch.html
 	// -p Triangulates a Planar Straight Line Graph (.poly file).
@@ -798,10 +795,15 @@ bool CBasicVolumes::MeshProjectedAreas() {
 
 	// Triangle has trouble parsing values given in scientific format so use fixed format with a
 	// redicilously high precision to get around the problem
+	stringstream Switches;
+	double dMaxArea = 0.5*m_dSeed*m_dSeed;
+	double dMinAngle = 20;
 	Switches << "pzAPBq" << setiosflags(ios::fixed) << setprecision(20) << dMinAngle << "a" << dMaxArea;
-
 	if (m_bCreatePeriodic)
+	{
 		Switches << "Y";
+	}
+		
 
 	triangulateio TriangleInput;
 	triangulateio TriangleOutput;
@@ -812,35 +814,37 @@ bool CBasicVolumes::MeshProjectedAreas() {
 	TriangleInput.pointlist = new double [m_ProjectedMesh.GetNumNodes()*2];
 	TriangleInput.numberofpoints = (int)m_ProjectedMesh.GetNumNodes();
 
-	int i;
-	for (i=0; i<TriangleInput.numberofpoints; ++i) {
+	for (int i = 0; i < TriangleInput.numberofpoints; i++)
+	{
 		TriangleInput.pointlist[i*2] = m_ProjectedMesh.GetNode(i).x;
 		TriangleInput.pointlist[i*2+1] = m_ProjectedMesh.GetNode(i).y;
 	}
 
 	// Input Segments
-	list<int>::iterator itIndex;
 	list<int> &Indices = m_ProjectedMesh.GetIndices(CMesh::LINE);
 
 	TriangleInput.segmentlist = new int [Indices.size()];
 	TriangleInput.numberofsegments = (int)Indices.size()/2;
 
-	for (itIndex = Indices.begin(), i = 0; itIndex != Indices.end(); ++itIndex, ++i) {
-		TriangleInput.segmentlist[i] = *itIndex;
+	int ind = 0;
+	for (list<int>::iterator itIndex = Indices.begin(); itIndex != Indices.end(); ++itIndex)
+	{
+		TriangleInput.segmentlist[ind] = *itIndex;
+		ind++;
 	}
 
 	// Input regions
 	TriangleInput.regionlist = new double[m_ProjectedRegions.size()*4];
 	TriangleInput.numberofregions = m_ProjectedRegions.size();
 
-	for (i=0; i<TriangleInput.numberofregions; ++i) {
+	for (int i = 0; i < TriangleInput.numberofregions; i++)
+	{
 		TriangleInput.regionlist[i*4] = m_ProjectedRegions[i].Center.x;
 		TriangleInput.regionlist[i*4+1] = m_ProjectedRegions[i].Center.y;
 		TriangleInput.regionlist[i*4+2] = i;
 		TriangleInput.regionlist[i*4+3] = 0;	// this is unused
 	}
 
-//	triangulate(szSwitches, &TriangleInput, &TriangleOutput, NULL);
 	triangulate((char*)Switches.str().c_str(), &TriangleInput, &TriangleOutput, NULL);
 
 
@@ -851,13 +855,15 @@ bool CBasicVolumes::MeshProjectedAreas() {
 	m_ProjectedMesh.Clear();
 
 	XYZ Point;
-	for (i=0; i<TriangleOutput.numberofpoints; ++i) {
+	for (int i = 0; i < TriangleOutput.numberofpoints; i++)
+	{
 		Point.x = TriangleOutput.pointlist[i*2];
 		Point.y = TriangleOutput.pointlist[i*2+1];
 		m_ProjectedMesh.AddNode(Point);
 	}
 	m_TriangleRegions.clear();
-	for (i=0; i<TriangleOutput.numberoftriangles; ++i) {
+	for (int i = 0; i < TriangleOutput.numberoftriangles; i++)
+	{
 		m_ProjectedMesh.GetIndices(CMesh::TRI).push_back(TriangleOutput.trianglelist[i*3]);
 		m_ProjectedMesh.GetIndices(CMesh::TRI).push_back(TriangleOutput.trianglelist[i*3+1]);
 		m_ProjectedMesh.GetIndices(CMesh::TRI).push_back(TriangleOutput.trianglelist[i*3+2]);

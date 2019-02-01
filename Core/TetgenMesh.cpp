@@ -19,7 +19,7 @@ CTetgenMesh::~CTetgenMesh(void)
 {
 }
 
-void CTetgenMesh::SaveTetgenMesh( CTextile &Textile, string OutputFilename, string Parameters, bool bPeriodic )
+void CTetgenMesh::SaveTetgenMesh(CTextile &Textile, string OutputFilename, string Parameters, bool bPeriodic )
 {
 	tetgenio::facet *f;
 	tetgenio::polygon *p;

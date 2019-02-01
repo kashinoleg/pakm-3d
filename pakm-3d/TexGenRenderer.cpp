@@ -80,9 +80,13 @@ void CTexGenRenderer::SetBackgroundColor(COLOR Color)
 void CTexGenRenderer::SetParallelProjection(bool bParallelProjection)
 {
 	if (bParallelProjection)
+	{
 		m_pRenderer->GetActiveCamera()->ParallelProjectionOn();
+	}
 	else
+	{
 		m_pRenderer->GetActiveCamera()->ParallelProjectionOff();
+	}
 	RefreshView();
 }
 
@@ -1169,13 +1173,16 @@ void CTexGenRenderer::RefreshView()
 //	vtkCamera *camera = m_pRenderer->GetActiveCamera();
 //	camera->ResetCameraClippingRange();
 	if (m_iBatchCount != 0)
+	{
 		return;
-
+	}
 	m_pRenderer->Render();
 	m_pRenderWindowInteractor->Render();
 
 	if (m_pCallback)
+	{
 		m_pCallback();
+	}
 }
 
 void CTexGenRenderer::RenderAxes()

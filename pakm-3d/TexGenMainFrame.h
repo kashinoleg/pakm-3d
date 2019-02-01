@@ -28,7 +28,7 @@ public:
 	CTexGenMainFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 	~CTexGenMainFrame(void);
 
-	void OnInit();
+	void OnInit() {}
 
 	enum OUTPUT_TYPE
 	{
@@ -82,6 +82,11 @@ protected:
 	void OnChar(wxKeyEvent& event);
 	void OnRendering(wxCommandEvent& event);
 	void OnTextiles(wxCommandEvent& event);
+
+	void OnCreateEmptyTextile();
+	void OnDeleteTextile();
+
+
 	void OnGeometrySolve(wxCommandEvent& event);
 	void OnModeller(wxCommandEvent& event);
 	void OnDomains(wxCommandEvent& event);

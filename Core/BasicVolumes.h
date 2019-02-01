@@ -2,7 +2,8 @@
 #include "Mesh.h"
 #include "Misc.h"
 
-namespace TexGen {
+namespace TexGen
+{
 	using namespace std;
 
 	class CTextile;

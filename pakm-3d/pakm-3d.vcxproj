@@ -247,8 +247,8 @@
     <Import Project="..\packages\Tetgen.SilverHorn.1.5.2\build\Tetgen.SilverHorn.targets" Condition="Exists('..\packages\Tetgen.SilverHorn.1.5.2\build\Tetgen.SilverHorn.targets')" />
     <Import Project="..\packages\Octree.SilverHorn.2.0.1\build\Octree.SilverHorn.targets" Condition="Exists('..\packages\Octree.SilverHorn.2.0.1\build\Octree.SilverHorn.targets')" />
     <Import Project="..\packages\CSparse.SilverHorn.3.1.3\build\CSparse.SilverHorn.targets" Condition="Exists('..\packages\CSparse.SilverHorn.3.1.3\build\CSparse.SilverHorn.targets')" />
+    <Import Project="..\packages\wxWidgets.SilverHorn.2.8.12-opengl\build\wxWidgets.SilverHorn.targets" Condition="Exists('..\packages\wxWidgets.SilverHorn.2.8.12-opengl\build\wxWidgets.SilverHorn.targets')" />
     <Import Project="..\packages\VTK.SilverHorn.6.3.0.2\build\VTK.SilverHorn.targets" Condition="Exists('..\packages\VTK.SilverHorn.6.3.0.2\build\VTK.SilverHorn.targets')" />
-    <Import Project="..\packages\wxWidgets.SilverHorn.2.8.12\build\wxWidgets.SilverHorn.targets" Condition="Exists('..\packages\wxWidgets.SilverHorn.2.8.12\build\wxWidgets.SilverHorn.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -258,7 +258,7 @@
     <Error Condition="!Exists('..\packages\Tetgen.SilverHorn.1.5.2\build\Tetgen.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Tetgen.SilverHorn.1.5.2\build\Tetgen.SilverHorn.targets'))" />
     <Error Condition="!Exists('..\packages\Octree.SilverHorn.2.0.1\build\Octree.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Octree.SilverHorn.2.0.1\build\Octree.SilverHorn.targets'))" />
     <Error Condition="!Exists('..\packages\CSparse.SilverHorn.3.1.3\build\CSparse.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CSparse.SilverHorn.3.1.3\build\CSparse.SilverHorn.targets'))" />
+    <Error Condition="!Exists('..\packages\wxWidgets.SilverHorn.2.8.12-opengl\build\wxWidgets.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\wxWidgets.SilverHorn.2.8.12-opengl\build\wxWidgets.SilverHorn.targets'))" />
     <Error Condition="!Exists('..\packages\VTK.SilverHorn.6.3.0.2\build\VTK.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\VTK.SilverHorn.6.3.0.2\build\VTK.SilverHorn.targets'))" />
-    <Error Condition="!Exists('..\packages\wxWidgets.SilverHorn.2.8.12\build\wxWidgets.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\wxWidgets.SilverHorn.2.8.12\build\wxWidgets.SilverHorn.targets'))" />
   </Target>
 </Project>

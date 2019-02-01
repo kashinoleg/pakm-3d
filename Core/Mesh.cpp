@@ -7,11 +7,6 @@
 
 using namespace TexGen;
 
-extern "C"
-{
-#include "triangle.h"
-}
-
 CMesh::CMesh(TiXmlElement &Element)
 {
 	FOR_EACH_TIXMLELEMENT(pNode, Element, "Node")

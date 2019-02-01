@@ -1,12 +1,9 @@
 #include "stdafx.h"
 #include "TexGen.h"
 #include "TetgenMesh.h"
+#include "triangulate.h"
 
-extern "C"
-{
-#include "triangle.h"
-}
-
+using namespace trg;
 using namespace TexGen;
 using namespace std;
 
@@ -986,7 +983,7 @@ bool CTetgenMesh::Triangulate( vector<vector<XY> > &PolygonPoints, CMesh& Output
 	}*/
 
 //	triangulate(szSwitches, &TriangleInput, &TriangleOutput, NULL);
-	triangulate((char*)Switches.str().c_str(), &TriangleInput, &TriangleOutput, NULL);
+	CTriangulate::triangulate((char*)Switches.str().c_str(), &TriangleInput, &TriangleOutput, NULL);
 
 
 	delete [] TriangleInput.pointlist;
@@ -1021,8 +1018,8 @@ bool CTetgenMesh::Triangulate( vector<vector<XY> > &PolygonPoints, CMesh& Output
 		//m_TriangleRegions.push_back((int)TriangleOutput.triangleattributelist[i]);
 	}
 
-	trifree(TriangleOutput.pointlist);
-	trifree(TriangleOutput.trianglelist);
+	CTriangulate::trifree(TriangleOutput.pointlist);
+	CTriangulate::trifree(TriangleOutput.trianglelist);
 	//trifree(TriangleOutput.triangleattributelist);
 //	trifree(TriangleOutput.neighborlist);
 	return true;

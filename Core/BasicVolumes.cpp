@@ -1,12 +1,11 @@
 #include "stdafx.h"
 #include "BasicVolumes.h"
 #include "TexGen.h"
-extern "C"
-{
-#include "triangle.h"
-}
+#include "triangulate.h"
 
+using namespace trg;
 using namespace TexGen;
+
 CBasicVolumes::CBasicVolumes(void)
 : m_dTolerance(1e-6)
 , m_pTextile(NULL)
@@ -845,7 +844,7 @@ bool CBasicVolumes::MeshProjectedAreas()
 		TriangleInput.regionlist[i*4+3] = 0;	// this is unused
 	}
 
-	triangulate((char*)Switches.str().c_str(), &TriangleInput, &TriangleOutput, NULL);
+	CTriangulate::triangulate((char*)Switches.str().c_str(), &TriangleInput, &TriangleOutput, NULL);
 
 
 	delete [] TriangleInput.pointlist;
@@ -869,9 +868,9 @@ bool CBasicVolumes::MeshProjectedAreas()
 		m_ProjectedMesh.GetIndices(CMesh::TRI).push_back(TriangleOutput.trianglelist[i*3+2]);
 		m_TriangleRegions.push_back((int)TriangleOutput.triangleattributelist[i]);
 	}
-	trifree(TriangleOutput.pointlist);
-	trifree(TriangleOutput.trianglelist);
-	trifree(TriangleOutput.triangleattributelist);
+	CTriangulate::trifree(TriangleOutput.pointlist);
+	CTriangulate::trifree(TriangleOutput.trianglelist);
+	CTriangulate::trifree(TriangleOutput.triangleattributelist);
 //	trifree(TriangleOutput.neighborlist);
 	return true;
 }

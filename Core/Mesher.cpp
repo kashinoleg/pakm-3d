@@ -3,11 +3,6 @@
 #include "TexGen.h"
 #include "PeriodicBoundaries.h"
 
-extern "C"
-{
-#include "triangle.h"
-}
-
 using namespace TexGen;
 
 CMesher::CMesher( int iBoundaryConditions )
@@ -33,13 +28,16 @@ CMesher::CMesher( int iBoundaryConditions )
 	}
 }
 
-CMesher::~CMesher(void) {
-	if ( m_PeriodicBoundaries != NULL ) {
+CMesher::~CMesher(void)
+{
+	if ( m_PeriodicBoundaries != NULL )
+	{
 		delete m_PeriodicBoundaries;
 	}
 }
 
-bool CMesherBase::CreateMesh(string TextileName) {
+bool CMesherBase::CreateMesh(string TextileName)
+{
 	CTextile* pTextile = TEXGEN.GetTextile(TextileName);
 	return pTextile && CreateMesh(*pTextile);
 }

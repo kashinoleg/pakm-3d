@@ -1,4 +1,5 @@
-#include "triangle.h"
+#include "triangulate.h"
+using namespace trg;
 
 /* For efficiency, a variety of data structures are allocated in bulk.  The  */
 /*   following constants determine how many of each structure is allocated   */
@@ -1107,7 +1108,8 @@ void *trimalloc(int size) {
 	return(memptr);
 }
 
-void trifree(void *memptr) {
+void CTriangulate::trifree(void *memptr)
+{
 	free(memptr);
 }
 
@@ -1650,10 +1652,12 @@ void poolinit(struct memorypool *pool, int bytecount, int itemcount,
 /*                                                                           */
 /*****************************************************************************/
 
-void pooldeinit(struct memorypool *pool) {
-	while (pool->firstblock != (void **)NULL) {
+void pooldeinit(struct memorypool *pool)
+{
+	while (pool->firstblock != (void **)NULL)
+	{
 		pool->nowblock = (void **) *(pool->firstblock);
-		trifree((void *)pool->firstblock);
+		CTriangulate::trifree((void *)pool->firstblock);
 		pool->firstblock = pool->nowblock;
 	}
 }
@@ -2148,10 +2152,11 @@ vertex getvertex(struct mesh *m, struct behavior *b, int number) {
 
 void triangledeinit(struct mesh *m, struct behavior *b) {
 	pooldeinit(&m->triangles);
-	trifree((void *)m->dummytribase);
-	if (b->usesegments) {
+	CTriangulate::trifree((void *)m->dummytribase);
+	if (b->usesegments)
+	{
 		pooldeinit(&m->subsegs);
-		trifree((void *)m->dummysubbase);
+		CTriangulate::trifree((void *)m->dummysubbase);
 	}
 	pooldeinit(&m->vertices);
 	if (b->quality) {
@@ -7349,7 +7354,7 @@ long divconqdelaunay(struct mesh *m, struct behavior *b) {
 
 	/* Form the Delaunay triangulation. */
 	divconqrecurse(m, b, sortarray, i, 0, &hullleft, &hullright);
-	trifree((void *)sortarray);
+	CTriangulate::trifree((void *)sortarray);
 
 	return removeghosts(m, b, &hullleft);
 }
@@ -7499,9 +7504,9 @@ long removebox(struct mesh *m, struct behavior *b) {
 	}
 	triangledealloc(m, finaledge.tri);
 
-	trifree((void *)m->infvertex1);  /* Deallocate the bounding box vertices. */
-	trifree((void *)m->infvertex2);
-	trifree((void *)m->infvertex3);
+	CTriangulate::trifree((void *)m->infvertex1);  /* Deallocate the bounding box vertices. */
+	CTriangulate::trifree((void *)m->infvertex2);
+	CTriangulate::trifree((void *)m->infvertex3);
 
 	return hullsize;
 }
@@ -8489,7 +8494,7 @@ int reconstruct(struct mesh *m, struct behavior *b, int *trianglelist,
 		}
 	}
 
-	trifree((void *)vertexarray);
+	CTriangulate::trifree((void *)vertexarray);
 	return hullsize;
 }
 
@@ -9898,8 +9903,9 @@ void carveholes(struct mesh *m, struct behavior *b, double *holelist, int holes,
 	if (((holes > 0) && !b->noholes) || !b->convex || (regions > 0)) {
 		pooldeinit(&m->viri);
 	}
-	if (regions > 0) {
-		trifree((void *)regiontris);
+	if (regions > 0)
+	{
+		CTriangulate::trifree((void *)regiontris);
 	}
 }
 
@@ -11382,7 +11388,7 @@ void statistics(struct mesh *m, struct behavior *b) {
 /*                                                                           */
 /*****************************************************************************/
 
-void triangulate(char *triswitches, struct triangulateio *in, struct triangulateio *out, struct triangulateio *vorout) {
+void CTriangulate::triangulate(char *triswitches, struct triangulateio *in, struct triangulateio *out, struct triangulateio *vorout) {
 	struct mesh m;
 	struct behavior b;
 	double *holearray;                                        /* Array of holes. */

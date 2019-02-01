@@ -1,12 +1,9 @@
 #include "stdafx.h"
 #include "SectionMeshTriangulate.h"
 #include "Section.h"
+#include "triangulate.h"
 
-extern "C"
-{
-#include "triangle.h"
-}
-
+using namespace trg;
 using namespace TexGen;
 
 CSectionMeshTriangulate::CSectionMeshTriangulate(double dMinAngle, double dMaxArea)
@@ -57,7 +54,7 @@ bool CSectionMeshTriangulate::CreateMesh(const vector<XY> &Section) const {
 		TriangleInput.segmentlist[i*2+1] = (i+1)%Section.size();
 	}
 
-	triangulate(szSwitches, &TriangleInput, &TriangleOutput, NULL);
+	CTriangulate::triangulate(szSwitches, &TriangleInput, &TriangleOutput, NULL);
 
 	delete [] TriangleInput.pointlist;
 	delete [] TriangleInput.segmentlist;
@@ -79,8 +76,8 @@ bool CSectionMeshTriangulate::CreateMesh(const vector<XY> &Section) const {
 		m_Mesh.GetIndices(CMesh::TRI).push_back(TriangleOutput.trianglelist[i*3+2]);
 	}
 
-	trifree(TriangleOutput.pointlist);
-	trifree(TriangleOutput.trianglelist);
+	CTriangulate::trifree(TriangleOutput.pointlist);
+	CTriangulate::trifree(TriangleOutput.trianglelist);
 	return true;
 }
 

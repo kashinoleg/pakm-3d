@@ -23,7 +23,7 @@
     <ProjectGuid>{9C32AB86-4D58-48B2-820B-84B1B839E79F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>core</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -92,6 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>EXPORT;WIN32;NDEBUG;CORE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\triangulate;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -108,6 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>EXPORT;WIN32;NDEBUG;CORE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\triangulate;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -122,6 +124,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;CORE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\triangulate;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -138,6 +141,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>EXPORT;AMD64;NDEBUG;CORE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\triangulate;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -219,7 +223,6 @@
     <ClCompile Include="TextileWeave.cpp" />
     <ClCompile Include="TextileWeave2D.cpp" />
     <ClCompile Include="TextileWeave3D.cpp" />
-    <ClCompile Include="triangle.c" />
     <ClCompile Include="units.cpp" />
     <ClCompile Include="VoxelMesh.cpp" />
     <ClCompile Include="Yarn.cpp" />
@@ -309,7 +312,6 @@
     <ClInclude Include="TextileWeave2D.h" />
     <ClInclude Include="TextileWeave3D.h" />
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="triangle.h" />
     <ClInclude Include="units.h" />
     <ClInclude Include="VoxelMesh.h" />
     <ClInclude Include="Yarn.h" />
@@ -320,6 +322,11 @@
     <ClInclude Include="YarnSectionInterp.h" />
     <ClInclude Include="YarnSectionInterpNode.h" />
     <ClInclude Include="YarnSectionInterpPosition.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\triangulate\triangulate.vcxproj">
+      <Project>{f218c2b7-4657-43b9-b418-59181308c049}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

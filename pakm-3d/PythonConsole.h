@@ -2,7 +2,8 @@
 #include "PythonWrapper.h"
 #include "CompleteDialog.h"
 
-class CPythonConsole : public wxTextCtrl {
+/*class CPythonConsole : public wxTextCtrl
+{
 private:
 	bool m_bUseCompleteWindow;
 	long m_iInputPosition;
@@ -26,3 +27,4 @@ private:
 
 	DECLARE_EVENT_TABLE()
 };
+//*/

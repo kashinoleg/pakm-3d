@@ -92,7 +92,7 @@ CTexGenMainFrame::CTexGenMainFrame(const wxString& title, const wxPoint& pos, co
 : wxFrame(NULL, wxID_ANY, title, pos, size)
 , m_pViewerNotebook(NULL)
 , m_pLogNotebook(NULL)
-, m_pPythonConsole(NULL)
+//, m_pPythonConsole(NULL)
 , m_pPythonOutput(NULL)
 , m_pTexGenOutput(NULL)
 , m_pControls(NULL)
@@ -180,9 +180,9 @@ CTexGenMainFrame::CTexGenMainFrame(const wxString& title, const wxPoint& pos, co
 
 		m_pLogNotebook->AssignImageList(pImageList);*/
 
-		m_pPythonConsole = new CPythonConsole(m_PythonWrapper, m_pLogNotebook, wxID_ANY, wxT(">>> "),
+		/*m_pPythonConsole = new CPythonConsole(m_PythonWrapper, m_pLogNotebook, wxID_ANY, wxT(">>> "),
 			wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_DONTWRAP);
-		m_pPythonConsole->SetFont(ConsoleFont);
+		m_pPythonConsole->SetFont(ConsoleFont);//*/
 
 		m_pPythonOutput = new wxTextCtrl(m_pLogNotebook, wxID_ANY, wxEmptyString,
 			wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP | wxTE_RICH);
@@ -192,7 +192,7 @@ CTexGenMainFrame::CTexGenMainFrame(const wxString& title, const wxPoint& pos, co
 			wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP | wxTE_RICH);
 		m_pTexGenOutput->SetFont(ConsoleFont);
 
-		m_pLogNotebook->AddPage(m_pPythonConsole, wxT("Python Console"), true, wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_OTHER, wxSize(16, 16)));
+		//m_pLogNotebook->AddPage(m_pPythonConsole, wxT("Python Console"), true, wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_OTHER, wxSize(16, 16)));
 		m_pLogNotebook->AddPage(m_pPythonOutput, wxT("Python Output"), false, wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_OTHER, wxSize(16, 16)));
 		m_pLogNotebook->AddPage(m_pTexGenOutput, wxT("Log Output"), false, wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_OTHER, wxSize(16, 16)));
 	}
@@ -273,7 +273,7 @@ void CTexGenMainFrame::OnInit()
 	SendPythonCode("from TexGen.WiseTex import *");
 	SendPythonCode("from TexGen.FlowTex import *");
 	SendPythonCode("import math");
-	m_pPythonConsole->SetFocus();
+	//m_pPythonConsole->SetFocus();
 }
 
 void CTexGenMainFrame::OnQuit(wxCommandEvent& WXUNUSED(event)) {
@@ -316,12 +316,12 @@ void CTexGenMainFrame::ReceiveOutput(string Text, OUTPUT_TYPE OutputType, bool b
 	wxTextCtrl *pOutputWindow;
 	if (OutputType == OUTPUT_PYTHON)
 	{
-		if (bInteractive)
+		/*if (bInteractive)
 		{
 			iPage = 0;
-			pOutputWindow = m_pPythonConsole;
+			//pOutputWindow = m_pPythonConsole;
 		}
-		else
+		else//*/
 		{
 			iPage = 1;
 			pOutputWindow = m_pPythonOutput;
@@ -366,12 +366,11 @@ void CTexGenMainFrame::OnOpen(wxCommandEvent& event)
 		wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR
 	);
 	dialog.CentreOnParent();
-	if (dialog.ShowModal() == wxID_OK) {
-		stringstream Command;
-		Command << "ReadFromXML(r\"";
-		Command << ConvertString(dialog.GetPath());
-		Command << "\")";
-		SendPythonCode(Command.str());
+	if (dialog.ShowModal() == wxID_OK)
+	{
+		string path = ConvertString(dialog.GetPath());
+		TGLOG("ReadFromXML(r\"" << path << "\")");
+		CTexGen::Instance().ReadFromXML(path);
 	}
 }
 
@@ -1225,10 +1224,10 @@ void CTexGenMainFrame::SendPythonCode(string Code)
 		}
 	}
 
-	if (!m_PythonWrapper.SendCodeBlock(Code))
+	/*if (!m_PythonWrapper.SendCodeBlock(Code))
 	{
 		ReceiveOutput("<!> Error compiling code!", OUTPUT_PYTHON, true, false);
-	}
+	}//*/
 }
 
 void CTexGenMainFrame::OnTextiles(wxCommandEvent& event)

@@ -1,5 +1,5 @@
 #include "PythonConsole.h"
-
+/*
 
 BEGIN_EVENT_TABLE(CPythonConsole, wxTextCtrl)
 	EVT_CHAR(CPythonConsole::OnChar)
@@ -234,3 +234,4 @@ void CPythonConsole::HideAutoCompleteWindow()
 {
 	m_CompleteDialog.FakeHide();
 }
+//*/

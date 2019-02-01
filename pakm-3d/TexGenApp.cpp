@@ -27,20 +27,20 @@ void RendererCallback()
 	}	
 }
 
-extern "C" void init_Embedded(void);
+//extern "C" void init_Embedded(void);
 
 CTexGenApp::CTexGenApp()
 : m_pMainFrame(NULL)
 {
-	Py_Initialize();
+	//Py_Initialize();
 
 	CTexGen::Instance().SetMessages( true, CLoggerGUI() );
 	
 	CTexGen::Instance().SetTextileCallback(TextileCallback);
 
 	// Register the swig embedded module with python
-	init_Embedded();
-
+	//init_Embedded();
+	/*
 	// Hook into the standard output of Python
 //	Py_InitModule("emb", EmbMethods);
 	PyRun_SimpleString("import _Embedded");
@@ -56,16 +56,16 @@ CTexGenApp::CTexGenApp()
 	PyRun_SimpleString("sys.stdout = OutputCatcher('script_stdout')");
 	PyRun_SimpleString("sys.stderr = OutputCatcher('script_stderr')");
 //	wxString SetPath = "sys.path.append('" + wxGetCwd() + "')";
-//	PyRun_SimpleString(SetPath.c_str());
+//	PyRun_SimpleString(SetPath.c_str());//*/
 }
 
 CTexGenApp::~CTexGenApp()
 {
 	// Restore output to original state
-	PyRun_SimpleString("sys.stdout = sys.__stdout__");
-	PyRun_SimpleString("sys.stderr = sys.__stderr__");
+	//PyRun_SimpleString("sys.stdout = sys.__stdout__");
+	//PyRun_SimpleString("sys.stderr = sys.__stderr__");
 
-	Py_Finalize();
+	//Py_Finalize();
 }
 
 bool CTexGenApp::OnInit()

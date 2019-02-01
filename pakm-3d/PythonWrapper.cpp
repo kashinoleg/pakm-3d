@@ -1,7 +1,7 @@
 #include "PythonWrapper.h"
 #include "LoggerGUI.h"
 
-CPythonWrapper::CPythonWrapper(void)
+/*CPythonWrapper::CPythonWrapper(void)
 : m_pConsoleInstance(NULL)
 , m_pCompleterInstance(NULL)
 , m_iHistoryPosition(-1)
@@ -35,15 +35,15 @@ CPythonWrapper::CPythonWrapper(void)
 	}
 
 	PyRun_SimpleString("");		// Seems to force the exceptions to be shown...
-}
+}//*/
 
-CPythonWrapper::~CPythonWrapper(void)
+/*CPythonWrapper::~CPythonWrapper(void)
 {
 	DeleteInstance(m_pConsoleInstance);
 	DeleteInstance(m_pCompleterInstance);
-}
+}//*/
 
-PyObject *CPythonWrapper::CreateInstance(char szModule[], char szClass[], PyObject *pArgs)
+/*PyObject *CPythonWrapper::CreateInstance(char szModule[], char szClass[], PyObject *pArgs)
 {
 	PyObject *pName, *pModule, *pClass;
 	pName = PyString_FromString(szModule);		// new ref
@@ -65,18 +65,18 @@ PyObject *CPythonWrapper::CreateInstance(char szModule[], char szClass[], PyObje
 	Py_DECREF(pClass);
 
 	return pInstance;
-}
+}//*/
 
-void CPythonWrapper::DeleteInstance(PyObject *pInstance)
+/*void CPythonWrapper::DeleteInstance(PyObject *pInstance)
 {
 	if (pInstance)
 	{
 		Py_DECREF(pInstance);
 		pInstance = NULL;
 	}
-}
+}//*/
 
-string CPythonWrapper::GetPrevHistoryCommand()
+/*string CPythonWrapper::GetPrevHistoryCommand()
 {
 	++m_iHistoryPosition;
 	if (m_iHistoryPosition >= (int)m_CommandHistory.size())
@@ -84,9 +84,9 @@ string CPythonWrapper::GetPrevHistoryCommand()
 	if (m_iHistoryPosition >= 0)
 		return m_CommandHistory[m_iHistoryPosition];
 	return "";
-}
+}//*/
 
-string CPythonWrapper::GetNextHistoryCommand()
+/*string CPythonWrapper::GetNextHistoryCommand()
 {
 	--m_iHistoryPosition;
 	if (m_iHistoryPosition < -1)
@@ -94,9 +94,9 @@ string CPythonWrapper::GetNextHistoryCommand()
 	if (m_iHistoryPosition >= 0)
 		return m_CommandHistory[m_iHistoryPosition];
 	return "";
-}
+}//*/
 
-bool CPythonWrapper::SendCommand(string Command)
+/*bool CPythonWrapper::SendCommand(string Command)
 {
 	if (!m_pConsoleInstance)
 		return false;
@@ -131,9 +131,9 @@ bool CPythonWrapper::SendCommand(string Command)
 		CTexGen::Instance().SetLogger(CLoggerGUI(false));
 
 	return bReturn;
-}
+}//*/
 
-bool CPythonWrapper::SendCodeBlock(string Code)
+/*bool CPythonWrapper::SendCodeBlock(string Code)
 {
 	if (!m_pConsoleInstance)
 		return false;
@@ -153,9 +153,9 @@ bool CPythonWrapper::SendCodeBlock(string Code)
 	Py_DECREF(pValue);
 
 	return true;
-}
+}//*/
 
-string CPythonWrapper::Complete(string Text, long iState)
+/*string CPythonWrapper::Complete(string Text, long iState)
 {
 	if (!m_pCompleterInstance)
 		return "";
@@ -184,9 +184,9 @@ string CPythonWrapper::Complete(string Text, long iState)
 			Py_DECREF(pValue);
 	}
 	return "";
-}
+}//*/
 
-vector<string> CPythonWrapper::GetCompleteOptions(string Text)
+/*vector<string> CPythonWrapper::GetCompleteOptions(string Text)
 {
 	if (!m_pCompleterInstance)
 		return vector<string>();
@@ -226,4 +226,4 @@ vector<string> CPythonWrapper::GetCompleteOptions(string Text)
 			Py_DECREF(pList);
 	}
 	return vector<string>();
-}
+}//*/

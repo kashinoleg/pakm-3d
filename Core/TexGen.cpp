@@ -174,9 +174,13 @@ bool CTexGen::LoadTiXmlElement(TiXmlElement &Element)
 		if (pType)
 		{
 			if (*pType == "CTextileWeave2D")
+			{
 				AddTextile(Name, CTextileWeave2D(*pTextile), bOverwrite);
+			}
 			else if (*pType == "CTextileWeave3D")
+			{
 				AddTextile(Name, CTextileWeave3D(*pTextile), bOverwrite);
+			}
 			else if (*pType == "CTextileWeave") 
 				AddTextile(Name, CTextileWeave(*pTextile), bOverwrite);
 			else if (*pType == "CTextileOrthogonal")
@@ -237,9 +241,7 @@ bool CTexGen::ReadFromXML(string FileName)
 			}
 		}
 	}
-
 	TGERROR("Error loading XML file from \"" << FileName << "\"");
-
 	return false;
 }
 

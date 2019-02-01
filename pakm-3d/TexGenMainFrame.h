@@ -115,10 +115,10 @@ protected:
 	wxAuiManager m_Manager;
 	wxAuiNotebook *m_pViewerNotebook;
 	wxAuiNotebook *m_pLogNotebook;
-	CPythonConsole *m_pPythonConsole;
+	//CPythonConsole *m_pPythonConsole;
     wxTextCtrl *m_pPythonOutput;
     wxTextCtrl *m_pTexGenOutput;
-	CPythonWrapper m_PythonWrapper;
+	//CPythonWrapper m_PythonWrapper;
 	CControlsWindow *m_pControls;
 	wxPanel* m_pOutliner;
 

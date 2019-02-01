@@ -1,11 +1,12 @@
 #pragma once
 #include <deque>
-#include <Python.h>
+//#include <Python.h>
 #include "mymath.h"
 
 using namespace std;
 
-class CPythonWrapper {
+/*class CPythonWrapper
+{
 private:
 	int m_iHistoryPosition;
 	PyObject *m_pConsoleInstance;
@@ -30,3 +31,4 @@ public:
 	bool CompleterInstanceCreated() { return m_pCompleterInstance?true:false; }
 	deque<string> &GetCommandHistory() { return m_CommandHistory; }
 };
+//*/

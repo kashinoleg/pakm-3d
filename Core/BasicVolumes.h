@@ -13,7 +13,7 @@ namespace TexGen
 
 	public:
 		CBasicVolumes(void);
-		~CBasicVolumes(void);
+		~CBasicVolumes(void) {}
 
 		bool CreateBasicVolumes(CTextile &Textile);
 		bool CreateBasicVolumes(string TextileName);

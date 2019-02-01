@@ -293,8 +293,10 @@ void vtkCustomWidget::OnLeftButtonDown()
 	Interactor->Render();
 }
 
-void vtkCustomWidget::OnLeftButtonUp() {
-	if (m_State != START) {
+void vtkCustomWidget::OnLeftButtonUp()
+{
+	if (m_State != START)
+	{
 		m_State = START;
 		EventCallbackCommand->SetAbortFlag(1);
 		EndInteraction();
@@ -326,8 +328,10 @@ void vtkCustomWidget::OnMiddleButtonDown()
 	Interactor->Render();
 }
 
-void vtkCustomWidget::OnMiddleButtonUp() {
-	if (m_State != START) {
+void vtkCustomWidget::OnMiddleButtonUp()
+{
+	if (m_State != START)
+	{
 		m_State = START;
 		EventCallbackCommand->SetAbortFlag(1);
 		EndInteraction();
@@ -336,7 +340,8 @@ void vtkCustomWidget::OnMiddleButtonUp() {
 	}
 }
 
-vector<vtkProp*> vtkCustomWidget::GetProps() {
+vector<vtkProp*> vtkCustomWidget::GetProps()
+{
 	vector<vtkProp*> Props;
 	Props.push_back(m_pXArrow);
 	Props.push_back(m_pYArrow);

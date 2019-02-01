@@ -19,7 +19,7 @@ namespace TexGen {
 		*/
 		CSectionMeshTriangulate(double dMinAngle = 20, double dMaxArea = 1);
 		CSectionMeshTriangulate(TiXmlElement &Element);
-		~CSectionMeshTriangulate(void);
+		~CSectionMeshTriangulate(void) {}
 
 		CSectionMesh* Copy() const { return new CSectionMeshTriangulate(*this); }
 		string GetType() const { return "CSectionMeshTriangulate"; }

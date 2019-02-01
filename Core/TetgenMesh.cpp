@@ -923,8 +923,8 @@ bool CTetgenMesh::Triangulate( vector<vector<XY> > &PolygonPoints, CMesh& Output
 	Switches << "pzAPBq" << setiosflags(ios::fixed) << setprecision(20) << dMinAngle << "a" << dMaxArea;
 	Switches << "YY";
 
-	triangulateio TriangleInput;
-	triangulateio TriangleOutput;
+	CTriangulateIO TriangleInput;
+	CTriangulateIO TriangleOutput;
 	memset(&TriangleInput, 0, sizeof(TriangleInput));
 	memset(&TriangleOutput, 0, sizeof(TriangleOutput));
 

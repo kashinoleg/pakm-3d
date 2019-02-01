@@ -1693,7 +1693,8 @@ bool CYarn::PointInside( const XY &Point, const vector<XY> &Nodes ) const {
 		return false;
 }
 
-double CYarn::FindClosestEdgeDistance( XY &Loc, const vector<XY> &SectionPoints, double dTolerance ) const {
+double CYarn::FindClosestEdgeDistance( XY &Loc, const vector<XY> &SectionPoints, double dTolerance ) const
+{
 	vector<XY>::const_iterator itP1, itP2;
 	XY Edge, EdgeNormal;
 	double dEdgeDistance;
@@ -1702,7 +1703,8 @@ double CYarn::FindClosestEdgeDistance( XY &Loc, const vector<XY> &SectionPoints,
 
 	itP1 = itP2 = SectionPoints.begin();
 	++itP2;
-	while (itP1 != SectionPoints.end()) {
+	while (itP1 != SectionPoints.end())
+	{
 		Edge = *itP2 - *itP1;
 		// Calculate the edge normal as the vector pointing away from the section
 		// This is done by rotating the edge line by 90 degrees clockwise

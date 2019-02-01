@@ -66,55 +66,57 @@ void CTexGenRenderWindow::Initialise()
 
 void CTexGenRenderWindow::AttachModeller(string TextileName)
 {
-	if (m_pModeller)
-		return;
-
-	m_pModeller = new CModeller(m_pRenderer, TextileName);
+	if (!m_pModeller)
+	{
+		m_pModeller = new CModeller(m_pRenderer, TextileName);
+	}
 }
 
 void CTexGenRenderWindow::OnButtonDown(wxMouseEvent &event)
 {
 	SetFocus();
 	if (m_pModeller)
+	{
 		m_pModeller->OnButtonDown(event);
+	}
 	else
+	{
 		event.Skip();
+	}
 }
 
 void CTexGenRenderWindow::OnButtonUp(wxMouseEvent &event)
 {
 	if (m_pModeller)
+	{
 		m_pModeller->OnButtonUp(event);
+	}
 	else
+	{
 		event.Skip();
+	}
 }
 
 void CTexGenRenderWindow::OnKeyDown(wxKeyEvent &event)
 {
 	if (m_pModeller)
+	{
 		m_pModeller->OnKeyDown(event);
+	}
 	else
+	{
 		event.Skip();
+	}
 }
 
 void CTexGenRenderWindow::OnKeyUp(wxKeyEvent &event)
 {
 	if (m_pModeller)
+	{
 		m_pModeller->OnKeyUp(event);
+	}
 	else
+	{
 		event.Skip();
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

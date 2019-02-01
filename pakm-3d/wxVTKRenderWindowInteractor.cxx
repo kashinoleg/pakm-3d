@@ -189,8 +189,10 @@ void wxVTKRenderWindowInteractor::OnSize(wxSizeEvent& WXUNUSED(event)) {
 	InvokeEvent(vtkCommand::ConfigureEvent, NULL);
 }
 
-void wxVTKRenderWindowInteractor::OnMotion(wxMouseEvent &event) {
-	if (!Enabled) {
+void wxVTKRenderWindowInteractor::OnMotion(wxMouseEvent &event)
+{
+	if (!Enabled)
+	{
 		return;
 	}
 	SetEventInformationFlipY(event.GetX(), event.GetY(), event.ControlDown(), event.ShiftDown(), '\0', 0, NULL);
@@ -248,7 +250,8 @@ void wxVTKRenderWindowInteractor::OnKeyUp(wxKeyEvent &event) {
 	event.Skip();
 }
 
-void wxVTKRenderWindowInteractor::OnButtonDown(wxMouseEvent &event) {
+void wxVTKRenderWindowInteractor::OnButtonDown(wxMouseEvent &event)
+{
 	if (!Enabled || (ActiveButton != wxEVT_NULL)) {
 		return;
 	}
@@ -273,7 +276,8 @@ void wxVTKRenderWindowInteractor::OnButtonDown(wxMouseEvent &event) {
 	}
 }
 
-void wxVTKRenderWindowInteractor::OnButtonUp(wxMouseEvent &event) {
+void wxVTKRenderWindowInteractor::OnButtonUp(wxMouseEvent &event)
+{
 	//EVT_xxx_DOWN == EVT_xxx_UP - 1
 	//This is only needed if two mouse buttons are pressed at the same time.
 	//In wxWindows 2.4 and later: better use of wxMOUSE_BTN_RIGHT or 
@@ -283,33 +287,39 @@ void wxVTKRenderWindowInteractor::OnButtonUp(wxMouseEvent &event) {
 	}
 	SetEventInformationFlipY(event.GetX(), event.GetY(), event.ControlDown(), event.ShiftDown(), '\0', 0, NULL);
 
-	if (ActiveButton == wxEVT_RIGHT_DOWN) {
+	if (ActiveButton == wxEVT_RIGHT_DOWN)
+	{
 		InvokeEvent(vtkCommand::RightButtonReleaseEvent, NULL);
 	}
-	else if (ActiveButton == wxEVT_LEFT_DOWN) {
+	else if (ActiveButton == wxEVT_LEFT_DOWN)
+	{
 		InvokeEvent(vtkCommand::LeftButtonReleaseEvent, NULL);
 	}
-	else if (ActiveButton == wxEVT_MIDDLE_DOWN) {
+	else if (ActiveButton == wxEVT_MIDDLE_DOWN)
+	{
 		InvokeEvent(vtkCommand::MiddleButtonReleaseEvent, NULL);
 	}
 	//if the ActiveButton is realeased, then release mouse capture
-	if ((ActiveButton != wxEVT_NULL) && UseCaptureMouse) {
+	if ((ActiveButton != wxEVT_NULL) && UseCaptureMouse)
+	{
 		ReleaseMouse();
 	}
 	ActiveButton = wxEVT_NULL;
 }
 
-void wxVTKRenderWindowInteractor::OnMouseWheel(wxMouseEvent& event) {
+void wxVTKRenderWindowInteractor::OnMouseWheel(wxMouseEvent& event)
+{
 	// Mouse wheel was only added after VTK 4.4 (I think...)
 	  //Set vtk event information ... The numebr of wheel rotations is stored in
 	  //the x varible.  y varible is zero
-	SetEventInformationFlipY(event.GetWheelRotation() / event.GetWheelDelta(), 0,
-		event.ControlDown(), event.ShiftDown(), '\0', 0, NULL);
-	if (event.GetWheelRotation() > 0) {
+	SetEventInformationFlipY(event.GetWheelRotation() / event.GetWheelDelta(), 0, event.ControlDown(), event.ShiftDown(), '\0', 0, NULL);
+	if (event.GetWheelRotation() > 0)
+	{
 		//Send event to VTK
 		InvokeEvent(vtkCommand::MouseWheelForwardEvent, NULL);
 	}
-	else {
+	else
+	{
 		//Send event to VTK
 		InvokeEvent(vtkCommand::MouseWheelBackwardEvent, NULL);
 	}
@@ -374,6 +384,7 @@ void wxVTKRenderWindowInteractor::SetStereo(int capable) {
 	}
 }
 
-void wxVTKRenderWindowInteractor::PrintSelf(ostream& os, vtkIndent indent) {
+void wxVTKRenderWindowInteractor::PrintSelf(ostream& os, vtkIndent indent)
+{
 	this->Superclass::PrintSelf(os, indent);
 }

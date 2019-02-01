@@ -9,7 +9,8 @@ namespace TexGen {
 	using namespace std;
 
 	/// Class to represent a matrix and perform various operations on it
-	class CMatrix {
+	class CMatrix
+	{
 	public:
 		CMatrix();
 		CMatrix(int iHeight, int iWidth);

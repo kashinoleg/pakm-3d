@@ -14,9 +14,6 @@ CBasicVolumes::CBasicVolumes(void)
 , m_bDebug(false) {
 }
 
-CBasicVolumes::~CBasicVolumes(void) {
-}
-
 bool CBasicVolumes::CreateBasicVolumes(string TextileName)
 {
 	CTextile* pTextile = TEXGEN.GetTextile(TextileName);
@@ -503,7 +500,8 @@ bool CBasicVolumes::CreateProjectedAreas() {
 	double dMaxAngle, dAngle;
 	XYZ V1, V2;
 	m_ProjectedRegions.clear();
-	for (int iDir = FORWARD; iDir <= REVERSE; iDir++) {
+	for (int iDir = FORWARD; iDir <= REVERSE; iDir++)
+	{
 		for (itIndex = Indices.begin(), iInitialLineCount = 0; itIndex != Indices.end(); ++iInitialLineCount) {
 			itFollowIndex = itIndex;
 			itStartIndex = itIndex;
@@ -804,8 +802,8 @@ bool CBasicVolumes::MeshProjectedAreas()
 	}
 		
 
-	triangulateio TriangleInput;
-	triangulateio TriangleOutput;
+	CTriangulateIO TriangleInput;
+	CTriangulateIO TriangleOutput;
 	memset(&TriangleInput, 0, sizeof(TriangleInput));
 	memset(&TriangleOutput, 0, sizeof(TriangleOutput));
 

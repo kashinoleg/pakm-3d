@@ -152,9 +152,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="triangulate.h" />
+    <ClInclude Include="triangulateio.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="triangulate.cpp" />
+    <ClCompile Include="triangulateio.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -156,21 +156,17 @@ string ConvertLayeredWeave( string PythonVariableName, string LayeredName, int i
 	return StringStream.str();
 }
 
-string ConvertMultiWeaveLayered( vector<string> &LayerNames )
+string ConvertMultiWeaveLayered(vector<string> &LayerNames)
 {
-	stringstream StringStream;
-	StringStream << "LayeredTextile = CTextileLayered()" << endl;
+	auto LayeredTextile = new CTextileLayered();
 	XYZ Offset;
 	XYZ Min;
 	XYZ Max;
-	vector<string>::reverse_iterator itLayerNames;
-
-	for ( itLayerNames = LayerNames.rbegin(); itLayerNames != LayerNames.rend(); ++itLayerNames )
+	for (vector<string>::reverse_iterator itLayerNames = LayerNames.rbegin(); itLayerNames != LayerNames.rend(); itLayerNames++)
 	{
-		CTextile* pTextile = TEXGEN.GetTextile( *itLayerNames );
-		CDomain* pDomain = pTextile->GetDomain();
+		auto textile = new CTextile(*CTexGen::Instance().GetTextile(*itLayerNames));
+		CDomain* pDomain = textile->GetDomain();
 		pair<XYZ, XYZ> AABB;
-	
 		if ( !pDomain )
 		{
 			string str = "Cannot output textile, " + (*itLayerNames) + ". No domain specified ";
@@ -195,16 +191,20 @@ string ConvertMultiWeaveLayered( vector<string> &LayerNames )
 			Min = AABB.first;
 			Max = AABB.second;
 		}
-		
-		StringStream << "LayeredTextile.AddLayer( GetTextile('" << (*itLayerNames) << "'), XYZ(" << Offset << ") )" << endl;
+		auto offset = XYZ(Offset);
+		LayeredTextile->AddLayer(*textile, offset);
 		Offset.z += AABB.second.z;
 	}
+
 	Max.z = Offset.z;
-	StringStream << "Domain = CDomainPlanes( XYZ(" << Min << "), XYZ(" << Max << ") )" << endl;
-	StringStream << "LayeredTextile.AssignDomain( Domain )" << endl;
+	auto domain = new CDomainPlanes(XYZ(Min), XYZ(Max));
+	LayeredTextile->AssignDomain(*domain);
+	CTexGen::Instance().AddTextile(*LayeredTextile);
+	//StringStream << "Domain = CDomainPlanes( XYZ(" << Min << "), XYZ(" << Max << ") )" << endl;
+	//StringStream << "LayeredTextile.AssignDomain( Domain )" << endl;
 	//StringStream << "LayeredTextile.SetOffsets( XY(0,0) )" << endl;
-	StringStream << "AddTextile(LayeredTextile)" << endl;
-	return( StringStream.str() );
+	//StringStream << "AddTextile(LayeredTextile)" << endl;
+	return "";
 }
 
 string ConvertWeaveLayerPattern(const CTextileWeave2D &Weave, string PythonVariableName, int iNumLayers)

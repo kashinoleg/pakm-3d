@@ -1331,8 +1331,13 @@ wxColour CModeller::ConvertColor(COLOR Color)
 void CModeller::UpdateOutlinerItems()
 {
 	CTexGenMainFrame *pMainFrame = ((CTexGenApp*)wxTheApp)->GetMainFrame();
+	if (pMainFrame == nullptr)
+	{
+		return;
+	}
 	wxPanel* pOutliner = pMainFrame->GetOutliner();
-	if (!pOutliner) {
+	if (!pOutliner)
+	{
 		return;
 	}
 

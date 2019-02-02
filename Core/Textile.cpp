@@ -526,7 +526,8 @@ int CTextile::DetectInterference(vector<float> &DistanceToSurface, vector<int> &
 	return iIntersections;
 }
 
-vector<CYarn> &CTextile::GetYarns() {
+vector<CYarn> &CTextile::GetYarns()
+{
 	BuildTextileIfNeeded();
 	return m_Yarns;
 }

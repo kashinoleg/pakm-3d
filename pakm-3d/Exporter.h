@@ -100,28 +100,29 @@
 using namespace std;
 
 /// Class to re-create geometry in OpenCASCADE and in turn export to IGES or STEP
-namespace TexGen {
-	class CExporter {
+namespace TexGen
+{
+	class CExporter
+	{
 	private:
-		bool m_bExportDomain;
-		bool m_bSubtractYarns;
-	private:
-		opencascade::handle<TDocStd_Document> ShapesToDocument(const vector<TopoDS_Solid> shapes);
-		TopoDS_Solid ShapeToSolid(TopoDS_Shape pShape);
+		static opencascade::handle<TDocStd_Document> ShapesToDocument(const vector<TopoDS_Solid> shapes);
+
+		static TopoDS_Solid ShapeToSolid(TopoDS_Shape pShape);
+
 		/**
 		 * Преобразование нити в твердое тело с учетом повторов в домене.
 		 * @param yarn - исходная нить.
 		 * @param domain - исходный домен матрицы.
 		 * @return - твердотельное представление нити.
 		 */
-		TopoDS_Solid meshToSolid(const CMesh mesh);
+		static TopoDS_Solid meshToSolid(const CMesh mesh);
 
 		/**
 		 * Преобразование текстиля в набор твердых тел.
 		 * @param textile - исходный текстиль.
 		 * @return - набор твердых тел текстиля.
 		 */
-		vector<TopoDS_Solid> TextileToVector(CTextile &Textile);
+		static vector<TopoDS_Solid> TextileToVector(CTextile &Textile, bool ExportDomain, bool SubtractYarns);
 
 		/**
 		 * Подрезка нитей до размера домена.
@@ -129,7 +130,7 @@ namespace TexGen {
 		 * @param domain - исходный домен.
 		 * @return - подрезанные нити.
 		 */
-		vector<TopoDS_Solid> confineYarnsToDomain(const vector<TopoDS_Solid> yarns, const TopoDS_Solid domain);
+		static vector<TopoDS_Solid> confineYarnsToDomain(const vector<TopoDS_Solid> yarns, const TopoDS_Solid domain);
 
 		/**
 		 * Вырезка нитей из домена матрицы.
@@ -137,7 +138,7 @@ namespace TexGen {
 		 * @param yarns - исходные нити.
 		 * @return - домен из которого вырезаны нити.
 		 */
-		TopoDS_Solid subtractYarnsFromDomain(const TopoDS_Solid domain, const vector<TopoDS_Solid> yarns);
+		static TopoDS_Solid subtractYarnsFromDomain(const TopoDS_Solid domain, const vector<TopoDS_Solid> yarns);
 
 		/**
 		* Сохранение твердых тел текстиля файла в формате STEP.
@@ -145,7 +146,7 @@ namespace TexGen {
 		* @param shapes - твердые тела текстиля.
 		* @return - сохранен ли файл.
 		*/
-		bool saveToSTEP(const string fileName, const vector<TopoDS_Solid> shapes);
+		static bool saveToSTEP(const string fileName, const vector<TopoDS_Solid> shapes);
 
 		/**
 		* Сохранение твердых тел текстиля файла в формате IGES.
@@ -153,37 +154,16 @@ namespace TexGen {
 		* @param shapes - твердые тела текстиля.
 		* @return - сохранен ли файл.
 		*/
-		bool saveToIGES(const string fileName, const vector<TopoDS_Solid> shapes);
+		static bool saveToIGES(const string fileName, const vector<TopoDS_Solid> shapes);
 	public:
-		/**
-		 * Конструктор по умолчанию.
-		 */
-		CExporter();
-
-		/**
-		 * Деструктор по умолчанию.
-		 */
-		~CExporter() {}
-
-		/// Output the domain to IGES file format
-		bool OutputDomainToIGES(string fileName, CDomain &Domain);
-		/// Output the domain to STEP file format
-		bool OutputDomainToSTEP(string fileName, CDomain &Domain);
+		/// Output the textile to IGES file format
+		static void TextileToIGES(string fileName, CTextile Textile, bool ExportDomain, bool SubtractYarns);
+		/// Output the textile to STEP file format
+		static void TextileToSTEP(string fileName, CTextile Textile, bool ExportDomain, bool SubtractYarns);
 
 		/// Output the textile to IGES file format
-		bool OutputTextileToIGES(string fileName, CTextile &Textile);
+		static void NameTextileToIGES(string fileName, string TextileName, bool ExportDomain, bool SubtractYarns);
 		/// Output the textile to STEP file format
-		bool OutputTextileToSTEP(string fileName, CTextile &Textile);
-
-		/// Output the textile to IGES file format
-		bool OutputTextileToIGES(string fileName, string TextileName);
-		/// Output the textile to STEP file format
-		bool OutputTextileToSTEP(string fileName, string TextileName);
-
-		bool GetExportDomain() { return m_bExportDomain; }
-		bool GetSubtractYarns() { return m_bSubtractYarns; }
-
-		void SetExportDomain(bool bExportDomain) { m_bExportDomain = bExportDomain; }
-		void SetSubtractYarns(bool bSubtractYarns) { m_bSubtractYarns = bSubtractYarns; }
+		static void NameTextileToSTEP(string fileName, string TextileName, bool ExportDomain, bool SubtractYarns);
 	};
 }

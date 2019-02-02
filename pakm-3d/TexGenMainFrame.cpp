@@ -804,12 +804,9 @@ void CTexGenMainFrame::OnSaveIGES(wxCommandEvent& event)
 			dialog.CentreOnParent();
 			if (dialog.ShowModal() == wxID_OK)
 			{
-				auto Exporter = new CExporter();
-				Exporter->SetExportDomain(bExportDomain);
-				Exporter->SetSubtractYarns(bSubtractYarns);
 				auto path = ConvertString(dialog.GetPath());
 				auto textileName = GetTextileSelection();
-				Exporter->OutputTextileToIGES(path, textileName);
+				CExporter::NameTextileToIGES(path, textileName, bExportDomain, bSubtractYarns);
 			}
 		}
 	}
@@ -837,12 +834,9 @@ void CTexGenMainFrame::OnSaveSTEP(wxCommandEvent& event)
 			dialog.CentreOnParent();
 			if (dialog.ShowModal() == wxID_OK)
 			{
-				auto Exporter = new CExporter();
-				Exporter->SetExportDomain(bExportDomain);
-				Exporter->SetSubtractYarns(bSubtractYarns);
 				auto path = ConvertString(dialog.GetPath());
 				auto textileName = GetTextileSelection();
-				Exporter->OutputTextileToSTEP(path, textileName);
+				CExporter::NameTextileToSTEP(path, textileName, bExportDomain, bSubtractYarns);
 			}
 		}
 	}

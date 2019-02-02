@@ -4,7 +4,7 @@
 #include <wx/grid.h>
 #include "latin_random.hpp"
 #include "TexGen.h"
-#include "Convert.h"
+#include "ConvertString.h"
 #include "WindowIDs.h"
 #include "TexGenApp.h"
 #include "latin_random.hpp"

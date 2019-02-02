@@ -1,22 +1,17 @@
 #pragma once
-//#define wxUSE_UNICODE 1
-#include "wx/wx.h"
-#include "TexGen.h"
-using namespace TexGen;
+#include <string>
+#include <Windows.h>
 
-inline string ConvertString(wxString String)
-{
-	//return string(String);
-	return std::string(String.mb_str(wxConvUTF8));
-}
+using namespace std;
 
-inline wxString ConvertString(string String)
+namespace TexGen
 {
-	//return wxString(String);
-	return wxString(String.c_str(), wxConvUTF8);
-}
-
-inline wxColour ConvertColor(COLOR Color)
-{
-	return wxColour((unsigned char)(Color.r * 255), (unsigned char)(Color.g * 255), (unsigned char)(Color.b * 255));
+	class ConvertUTF
+	{
+	public:
+		// Convert a wide Unicode string to an UTF8 string
+		string utf8_encode(const wstring &wstr);
+		// Convert an UTF8 string to a wide Unicode String
+		wstring utf8_decode(const string &str);
+	};
 }

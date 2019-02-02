@@ -1,4 +1,4 @@
-п»ї#pragma once
+#pragma once
 #include "TexGen.h"
 
 #include <iostream>
@@ -94,7 +94,7 @@
 #include <vector>
 #include <list>
 
-#include "Convert.hpp"
+#include "Convert.h"
 #include <regex>
 
 using namespace std;
@@ -109,62 +109,62 @@ namespace TexGen {
 		opencascade::handle<TDocStd_Document> ShapesToDocument(const vector<TopoDS_Solid> shapes);
 		TopoDS_Solid ShapeToSolid(TopoDS_Shape pShape);
 		/**
-		 * РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РЅРёС‚Рё РІ С‚РІРµСЂРґРѕРµ С‚РµР»Рѕ СЃ СѓС‡РµС‚РѕРј РїРѕРІС‚РѕСЂРѕРІ РІ РґРѕРјРµРЅРµ.
-		 * @param yarn - РёСЃС…РѕРґРЅР°СЏ РЅРёС‚СЊ.
-		 * @param domain - РёСЃС…РѕРґРЅС‹Р№ РґРѕРјРµРЅ РјР°С‚СЂРёС†С‹.
-		 * @return - С‚РІРµСЂРґРѕС‚РµР»СЊРЅРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РЅРёС‚Рё.
+		 * Преобразование нити в твердое тело с учетом повторов в домене.
+		 * @param yarn - исходная нить.
+		 * @param domain - исходный домен матрицы.
+		 * @return - твердотельное представление нити.
 		 */
 		TopoDS_Solid meshToSolid(const CMesh mesh);
 
 		/**
-		 * РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ С‚РµРєСЃС‚РёР»СЏ РІ РЅР°Р±РѕСЂ С‚РІРµСЂРґС‹С… С‚РµР».
-		 * @param textile - РёСЃС…РѕРґРЅС‹Р№ С‚РµРєСЃС‚РёР»СЊ.
-		 * @return - РЅР°Р±РѕСЂ С‚РІРµСЂРґС‹С… С‚РµР» С‚РµРєСЃС‚РёР»СЏ.
+		 * Преобразование текстиля в набор твердых тел.
+		 * @param textile - исходный текстиль.
+		 * @return - набор твердых тел текстиля.
 		 */
 		vector<TopoDS_Solid> TextileToVector(CTextile &Textile);
 
 		/**
-		 * РџРѕРґСЂРµР·РєР° РЅРёС‚РµР№ РґРѕ СЂР°Р·РјРµСЂР° РґРѕРјРµРЅР°.
-		 * @param yarns - РёСЃС…РѕРґРЅС‹Рµ РЅРёС‚Рё.
-		 * @param domain - РёСЃС…РѕРґРЅС‹Р№ РґРѕРјРµРЅ.
-		 * @return - РїРѕРґСЂРµР·Р°РЅРЅС‹Рµ РЅРёС‚Рё.
+		 * Подрезка нитей до размера домена.
+		 * @param yarns - исходные нити.
+		 * @param domain - исходный домен.
+		 * @return - подрезанные нити.
 		 */
 		vector<TopoDS_Solid> confineYarnsToDomain(const vector<TopoDS_Solid> yarns, const TopoDS_Solid domain);
 
 		/**
-		 * Р’С‹СЂРµР·РєР° РЅРёС‚РµР№ РёР· РґРѕРјРµРЅР° РјР°С‚СЂРёС†С‹.
-		 * @param domain - РґРѕРјРµРЅ РјР°С‚СЂРёС†С‹.
-		 * @param yarns - РёСЃС…РѕРґРЅС‹Рµ РЅРёС‚Рё.
-		 * @return - РґРѕРјРµРЅ РёР· РєРѕС‚РѕСЂРѕРіРѕ РІС‹СЂРµР·Р°РЅС‹ РЅРёС‚Рё.
+		 * Вырезка нитей из домена матрицы.
+		 * @param domain - домен матрицы.
+		 * @param yarns - исходные нити.
+		 * @return - домен из которого вырезаны нити.
 		 */
 		TopoDS_Solid subtractYarnsFromDomain(const TopoDS_Solid domain, const vector<TopoDS_Solid> yarns);
 
 		/**
-		* РЎРѕС…СЂР°РЅРµРЅРёРµ С‚РІРµСЂРґС‹С… С‚РµР» С‚РµРєСЃС‚РёР»СЏ С„Р°Р№Р»Р° РІ С„РѕСЂРјР°С‚Рµ STEP.
-		* @param fileName - РёРјСЏ С„Р°Р№Р»Р°.
-		* @param shapes - С‚РІРµСЂРґС‹Рµ С‚РµР»Р° С‚РµРєСЃС‚РёР»СЏ.
-		* @return - СЃРѕС…СЂР°РЅРµРЅ Р»Рё С„Р°Р№Р».
+		* Сохранение твердых тел текстиля файла в формате STEP.
+		* @param fileName - имя файла.
+		* @param shapes - твердые тела текстиля.
+		* @return - сохранен ли файл.
 		*/
 		bool saveToSTEP(const string fileName, const vector<TopoDS_Solid> shapes);
 
 		/**
-		* РЎРѕС…СЂР°РЅРµРЅРёРµ С‚РІРµСЂРґС‹С… С‚РµР» С‚РµРєСЃС‚РёР»СЏ С„Р°Р№Р»Р° РІ С„РѕСЂРјР°С‚Рµ IGES.
-		* @param fileName - РёРјСЏ С„Р°Р№Р»Р°.
-		* @param shapes - С‚РІРµСЂРґС‹Рµ С‚РµР»Р° С‚РµРєСЃС‚РёР»СЏ.
-		* @return - СЃРѕС…СЂР°РЅРµРЅ Р»Рё С„Р°Р№Р».
+		* Сохранение твердых тел текстиля файла в формате IGES.
+		* @param fileName - имя файла.
+		* @param shapes - твердые тела текстиля.
+		* @return - сохранен ли файл.
 		*/
 		bool saveToIGES(const string fileName, const vector<TopoDS_Solid> shapes);
 	public:
 		/**
-		 * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
+		 * Конструктор по умолчанию.
 		 */
 		CExporter();
 
 		/**
-		 * Р”РµСЃС‚СЂСѓРєС‚РѕСЂ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
+		 * Деструктор по умолчанию.
 		 */
 		~CExporter() {}
-		
+
 		/// Output the domain to IGES file format
 		bool OutputDomainToIGES(string fileName, CDomain &Domain);
 		/// Output the domain to STEP file format

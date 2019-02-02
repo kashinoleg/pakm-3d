@@ -1,5 +1,6 @@
 ﻿#include "TexGenMainFrame.h"
 #include "LoggerGUI.h"
+#include "Exporter.h"
 
 #define EVT_BUTTON_MENU_RANGE(id1, id2, func) EVT_COMMAND_RANGE(id1, id2, wxEVT_COMMAND_BUTTON_CLICKED, func) EVT_COMMAND_RANGE(id1, id2, wxEVT_COMMAND_MENU_SELECTED, func)
 #define EVT_CHECKBOX_MENU_RANGE(id1, id2, func) EVT_COMMAND_RANGE(id1, id2, wxEVT_COMMAND_CHECKBOX_CLICKED, func) EVT_COMMAND_RANGE(id1, id2, wxEVT_COMMAND_MENU_SELECTED, func)
@@ -782,14 +783,15 @@ void CTexGenMainFrame::OnSaveSurfaceMesh(wxCommandEvent& event)
 
 void CTexGenMainFrame::OnSaveIGES(wxCommandEvent& event)
 {
-	string TextileName = GetTextileSelection();
 	bool bExportDomain = true;
 	bool bSubtractYarns = false;
 	wxDialog ExportOptions;
-	if (wxXmlResource::Get()->LoadDialog(&ExportOptions, this, wxT("ExportOptions"))) {
+	if (wxXmlResource::Get()->LoadDialog(&ExportOptions, this, wxT("ExportOptions")))
+	{
 		XRCCTRL(ExportOptions, "ExportDomain", wxCheckBox)->SetValidator(wxGenericValidator(&bExportDomain));
 		XRCCTRL(ExportOptions, "SubtractYarns", wxCheckBox)->SetValidator(wxGenericValidator(&bSubtractYarns));
-		if (ExportOptions.ShowModal() == wxID_OK) {
+		if (ExportOptions.ShowModal() == wxID_OK)
+		{
 			wxFileDialog dialog
 			(
 				this,
@@ -800,37 +802,28 @@ void CTexGenMainFrame::OnSaveIGES(wxCommandEvent& event)
 				wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxFD_CHANGE_DIR
 			);
 			dialog.CentreOnParent();
-			if (dialog.ShowModal() == wxID_OK) {
-				stringstream Command;
-				Command << "Exporter = CExporter()" << endl;
-				if (bExportDomain) {
-					Command << "Exporter.SetExportDomain(True)" << endl;
-				}
-				else {
-					Command << "Exporter.SetExportDomain(False)" << endl;
-				}
-				if (bSubtractYarns) {
-					Command << "Exporter.SetSubtractYarns(True)" << endl;
-				}
-				else {
-					Command << "Exporter.SetSubtractYarns(False)" << endl;
-				}
-				Command << "Exporter.OutputTextileToIGES(r'" << ConvertString(dialog.GetPath()) << "', '" << TextileName << "')" << endl;
-				SendPythonCode(Command.str());
+			if (dialog.ShowModal() == wxID_OK)
+			{
+				auto Exporter = new CExporter();
+				Exporter->SetExportDomain(bExportDomain);
+				Exporter->SetSubtractYarns(bSubtractYarns);
+				auto path = ConvertString(dialog.GetPath());
+				auto textileName = GetTextileSelection();
+				Exporter->OutputTextileToIGES(path, textileName);
 			}
 		}
 	}
 }
 
-void CTexGenMainFrame::OnSaveSTEP(wxCommandEvent& event) {
-	string TextileName = GetTextileSelection();
+void CTexGenMainFrame::OnSaveSTEP(wxCommandEvent& event)
+{
 	bool bExportDomain = true;
 	bool bSubtractYarns = false;
 	wxDialog ExportOptions;
-	if (wxXmlResource::Get()->LoadDialog(&ExportOptions, this, wxT("ExportOptions"))) {
+	if (wxXmlResource::Get()->LoadDialog(&ExportOptions, this, wxT("ExportOptions")))
+	{
 		XRCCTRL(ExportOptions, "ExportDomain", wxCheckBox)->SetValidator(wxGenericValidator(&bExportDomain));
 		XRCCTRL(ExportOptions, "SubtractYarns", wxCheckBox)->SetValidator(wxGenericValidator(&bSubtractYarns));
-
 		if (ExportOptions.ShowModal() == wxID_OK) {
 			wxFileDialog dialog
 			(
@@ -842,23 +835,14 @@ void CTexGenMainFrame::OnSaveSTEP(wxCommandEvent& event) {
 				wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxFD_CHANGE_DIR
 			);
 			dialog.CentreOnParent();
-			if (dialog.ShowModal() == wxID_OK) {
-				stringstream Command;
-				Command << "Exporter = CExporter()" << endl;
-				if (bExportDomain) {
-					Command << "Exporter.SetExportDomain(True)" << endl;
-				}
-				else {
-					Command << "Exporter.SetExportDomain(False)" << endl;
-				}
-				if (bSubtractYarns) {
-					Command << "Exporter.SetSubtractYarns(True)" << endl;
-				}
-				else {
-					Command << "Exporter.SetSubtractYarns(False)" << endl;
-				}
-				Command << "Exporter.OutputTextileToSTEP(r'" << ConvertString(dialog.GetPath())<< "', '"<< TextileName << "')" << endl;
-				SendPythonCode(Command.str());
+			if (dialog.ShowModal() == wxID_OK)
+			{
+				auto Exporter = new CExporter();
+				Exporter->SetExportDomain(bExportDomain);
+				Exporter->SetSubtractYarns(bSubtractYarns);
+				auto path = ConvertString(dialog.GetPath());
+				auto textileName = GetTextileSelection();
+				Exporter->OutputTextileToSTEP(path, textileName);
 			}
 		}
 	}

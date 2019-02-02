@@ -1,7 +1,7 @@
 #pragma once
 #include "wx/wx.h"
 #include <vector>
-#include "Convert.h"
+#include "ConvertString.h"
 using namespace std;
 
 class CCompleteDialog : public wxDialog {

@@ -21,6 +21,7 @@
 #include "PythonConverter.h"
 #include "LayersOffsetDialog.h"
 #include "PatternDraftDialog.h"
+#include "ConvertString.h"
 
 class CTexGenMainFrame : public wxFrame
 {

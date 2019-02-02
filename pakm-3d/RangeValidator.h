@@ -1,6 +1,6 @@
 #pragma once
 #include "wx/wx.h"
-#include "Convert.h"
+#include "ConvertString.h"
 
 /// Class to validate a wxTextCtrl input.  Checks input is within upper and lower bounds
 /// Taken from wxWidgets user forum: http://forums.wxwidgets.org/viewtopic.php?t=12582

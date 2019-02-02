@@ -1,5 +1,4 @@
-﻿#include "Exporter.hxx"
-
+#include "Exporter.h"
 using namespace TexGen;
 
 CExporter::CExporter() {
@@ -51,18 +50,21 @@ bool CExporter::OutputTextileToSTEP(string fileName, CTextile &Textile) {
 	return status;
 }
 
-bool CExporter::OutputTextileToIGES(string fileName, string TextileName) {
-	CTextile *pTextile = CTexGen::GetInstance().GetTextile(TextileName);
-	if (!pTextile) {
+bool CExporter::OutputTextileToIGES(string fileName, string TextileName)
+{
+	CTextile *pTextile = CTexGen::Instance().GetTextile(TextileName);
+	if (!pTextile)
+	{
 		return false;
 	}
-	else {
+	else
+	{
 		return OutputTextileToIGES(fileName, *pTextile);
 	}
 }
 
 bool CExporter::OutputTextileToSTEP(string fileName, string TextileName) {
-	CTextile *pTextile = CTexGen::GetInstance().GetTextile(TextileName);
+	CTextile *pTextile = CTexGen::Instance().GetTextile(TextileName);
 	if (!pTextile) {
 		return false;
 	}
@@ -93,7 +95,7 @@ opencascade::handle<TDocStd_Document> CExporter::ShapesToDocument(const vector<T
 		}
 		else {
 			TGLOG("Null " << ++i << " shapes to document from " << solids.size());
-		}	
+		}
 	}
 	return aDoc;
 }
@@ -246,7 +248,7 @@ TopoDS_Solid CExporter::ShapeToSolid(TopoDS_Shape pShape) {
 	TopoDS_Solid lSolid;
 	// make solids
 	lBuilder.MakeSolid(lSolid);
-	
+
 	// explore all faces from source and add it to the target
 	for (TopExp_Explorer lExplorer(pShape, TopAbs_ShapeEnum::TopAbs_FACE); lExplorer.More(); lExplorer.Next())
 		lFaceSewer.Add(TopoDS::Face(lExplorer.Current()));
@@ -259,7 +261,7 @@ TopoDS_Solid CExporter::ShapeToSolid(TopoDS_Shape pShape) {
 	lSewedShell = TopoDS::Shell(lFaceSewer.SewedShape());
 	if (lSewedShell.Closed() == Standard_False)
 		return TopoDS_Solid();
-	
+
 	lBuilder.Add(lSolid, lSewedShell);
 	return lSolid;
 	/*TGLOG("Warning: 5");

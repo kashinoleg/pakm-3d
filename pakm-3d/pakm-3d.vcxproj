@@ -139,12 +139,14 @@
     <ClCompile Include="CircleRangeCtrl.cpp" />
     <ClCompile Include="CompleteDialog.cpp" />
     <ClCompile Include="ControlsWindow.cpp" />
+    <ClCompile Include="Convert.cpp" />
     <ClCompile Include="CustomInteractorStyle.cpp" />
     <ClCompile Include="CustomWidget.cpp" />
     <ClCompile Include="DomainPlanesDialog.cpp" />
     <ClCompile Include="DropTarget.cpp" />
     <ClCompile Include="EmbeddedPythonFunctions.cpp" />
     <ClCompile Include="Embedded_wrap.cxx" />
+    <ClCompile Include="Exporter.cpp" />
     <ClCompile Include="latin_random.cpp" />
     <ClCompile Include="LayersOffsetDialog.cpp" />
     <ClCompile Include="Modeller.cpp" />
@@ -171,11 +173,13 @@
     <ClInclude Include="CompleteDialog.h" />
     <ClInclude Include="ControlsWindow.h" />
     <ClInclude Include="Convert.h" />
+    <ClInclude Include="ConvertString.h" />
     <ClInclude Include="CustomInteractorStyle.h" />
     <ClInclude Include="CustomWidget.h" />
     <ClInclude Include="DomainPlanesDialog.h" />
     <ClInclude Include="DropTarget.h" />
     <ClInclude Include="EmbeddedPythonFunctions.h" />
+    <ClInclude Include="Exporter.h" />
     <ClInclude Include="latin_random.hpp" />
     <ClInclude Include="LayersOffsetDialog.h" />
     <ClInclude Include="LoggerGUI.h" />
@@ -250,6 +254,7 @@
     <Import Project="..\packages\CSparse.SilverHorn.3.1.3\build\CSparse.SilverHorn.targets" Condition="Exists('..\packages\CSparse.SilverHorn.3.1.3\build\CSparse.SilverHorn.targets')" />
     <Import Project="..\packages\wxWidgets.SilverHorn.2.8.12-opengl\build\wxWidgets.SilverHorn.targets" Condition="Exists('..\packages\wxWidgets.SilverHorn.2.8.12-opengl\build\wxWidgets.SilverHorn.targets')" />
     <Import Project="..\packages\VTK.SilverHorn.6.3.0.2\build\VTK.SilverHorn.targets" Condition="Exists('..\packages\VTK.SilverHorn.6.3.0.2\build\VTK.SilverHorn.targets')" />
+    <Import Project="..\packages\OpenCASCADE.SilverHorn.7.2.0-alpha\build\OpenCASCADE.SilverHorn.targets" Condition="Exists('..\packages\OpenCASCADE.SilverHorn.7.2.0-alpha\build\OpenCASCADE.SilverHorn.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -261,5 +266,6 @@
     <Error Condition="!Exists('..\packages\CSparse.SilverHorn.3.1.3\build\CSparse.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CSparse.SilverHorn.3.1.3\build\CSparse.SilverHorn.targets'))" />
     <Error Condition="!Exists('..\packages\wxWidgets.SilverHorn.2.8.12-opengl\build\wxWidgets.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\wxWidgets.SilverHorn.2.8.12-opengl\build\wxWidgets.SilverHorn.targets'))" />
     <Error Condition="!Exists('..\packages\VTK.SilverHorn.6.3.0.2\build\VTK.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\VTK.SilverHorn.6.3.0.2\build\VTK.SilverHorn.targets'))" />
+    <Error Condition="!Exists('..\packages\OpenCASCADE.SilverHorn.7.2.0-alpha\build\OpenCASCADE.SilverHorn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OpenCASCADE.SilverHorn.7.2.0-alpha\build\OpenCASCADE.SilverHorn.targets'))" />
   </Target>
 </Project>

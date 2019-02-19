@@ -126,7 +126,7 @@ vector<TopoDS_Solid> CExporter::TextileToVector(CTextile &Textile, bool ExportDo
 	bool isDomain = ExportDomain && Textile.GetDomain() != NULL;
 	int i = 0;
 	vector<CYarn> yarns = Textile.GetYarns();
-	vector<TopoDS_Solid> shapes(yarns.size());
+	vector<TopoDS_Solid> shapes;
 	for (CYarn yarn : yarns)
 	{
 		i++;
@@ -163,11 +163,11 @@ vector<TopoDS_Solid> CExporter::TextileToVector(CTextile &Textile, bool ExportDo
 		TGLOG("Converting domain");
 		CMesh mesh = Textile.GetDomain()->GetMesh();
 		TopoDS_Solid domain = meshToSolid(mesh);
-		shapes = confineYarnsToDomain(shapes, domain);
 		if (SubtractYarns)
 		{
-			domain = subtractYarnsFromDomain(domain, shapes);
+			domain = subtractYarnsFromDomain(TopoDS_Solid(domain), shapes);
 		}
+		shapes = confineYarnsToDomain(shapes, meshToSolid(mesh));
 		shapes.push_back(domain);
 	}
 	return shapes;

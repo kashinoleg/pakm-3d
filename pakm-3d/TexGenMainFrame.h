@@ -90,7 +90,12 @@ protected:
 
 	void OnGeometrySolve(wxCommandEvent& event);
 	void OnModeller(wxCommandEvent& event);
+
 	void OnDomains(wxCommandEvent& event);
+	void OnDeleteDomain();
+	void OnEditDomain();
+
+
 	void OnPython(wxCommandEvent& event);
     void OnLogNotebook(wxAuiNotebookEvent& event);
     void OnViewerNotebookPageChanged(wxAuiNotebookEvent& event);
@@ -133,8 +138,6 @@ protected:
 	ofstream m_ScriptRecordFile;
 
 	DECLARE_EVENT_TABLE()
-private:
-	void EditDomain();
 };
 
 class CNoteBookHandler : public wxEvtHandler

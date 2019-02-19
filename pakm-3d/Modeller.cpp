@@ -535,50 +535,38 @@ const CNode *CModeller::GetNode(PROP_NODE_INFO NodeInfo) const
 	return &Yarn.GetMasterNodes()[NodeInfo.iNode];
 }
 
+void CModeller::OnDeleteSelectedNodes()
+{
+	vector<PROP_NODE_INFO> SelectedNodes = GetSelectedNodes();
+	// Make sure nodes are sorted in descending order...
+	// This ensures that selected node information is valid at the time of deletion
+	sort(SelectedNodes.rbegin(), SelectedNodes.rend());
+	for (auto itNode = SelectedNodes.begin(); itNode != SelectedNodes.end(); ++itNode)
+	{
+		CTexGen::Instance().GetTextile(m_TextileName)->GetYarn(itNode->iYarn)->DeleteNode(itNode->iNode);
+	}
+}
+
+void CModeller::OnDeleteSelectedYarns()
+{
+	vector<PROP_YARN_INFO> SelectedYarns = GetSelectedYarns();
+	// Make sure yarns are sorted in descending order...
+	// This ensures that selected yarn information is valid at the time of deletion
+	sort(SelectedYarns.rbegin(), SelectedYarns.rend());
+	for (auto itYarn = SelectedYarns.begin(); itYarn != SelectedYarns.end(); itYarn++)
+	{
+		CTexGen::Instance().GetTextile(m_TextileName)->DeleteYarn(itYarn->iYarn);
+	}
+}
+
 void CModeller::DeleteSelectedObjects()
 {
-	stringstream StringStream;
-	{
-		vector<PROP_NODE_INFO> SelectedNodes = GetSelectedNodes();
-		vector<PROP_NODE_INFO>::iterator itNode;
-
-		// Make sure nodes are sorted in descending order...
-		// This ensures that selected node information is valid at the time of deletion
-		sort(SelectedNodes.rbegin(), SelectedNodes.rend());
-
-		for (itNode=SelectedNodes.begin(); itNode!=SelectedNodes.end(); ++itNode)
-		{
-			StringStream << "yarn = GetTextile('" << m_TextileName << "').GetYarn(" << itNode->iYarn << ")" << endl;
-			StringStream << "yarn.DeleteNode(" << itNode->iNode << ")" << endl;
-		}
-	}
-
-	{
-		vector<PROP_YARN_INFO> SelectedYarns = GetSelectedYarns();
-		vector<PROP_YARN_INFO>::iterator itYarn;
-
-		// Make sure yarns are sorted in descending order...
-		// This ensures that selected yarn information is valid at the time of deletion
-		sort(SelectedYarns.rbegin(), SelectedYarns.rend());
-
-		for (itYarn=SelectedYarns.begin(); itYarn!=SelectedYarns.end(); ++itYarn)
-		{
-			StringStream << "GetTextile('" << m_TextileName << "').DeleteYarn(" << itYarn->iYarn << ")" << endl;
-		}
-	}
-
-	string Command = StringStream.str();
-	CTexGenMainFrame *pMainFrame = ((CTexGenApp*)wxTheApp)->GetMainFrame();
-	pMainFrame->SendPythonCode(Command);
-
+	OnDeleteSelectedNodes();
+	OnDeleteSelectedYarns();
 	DeselectAll();
-
 	DeleteInvalidYarns();
-
 	m_pRenderer->RefreshTextile(m_TextileName);
-
 	UpdateOutlinerItems();
-
 }
 
 void CModeller::DeleteInvalidYarns()
@@ -601,14 +589,13 @@ void CModeller::DeleteInvalidYarns()
 void CModeller::InsertNodes()
 {
 	vector<PROP_NODE_INFO> SelectedNodes = GetSelectedNodes();
-	vector<PROP_NODE_INFO>::iterator itNodeInfo;
 
 	// Make sure nodes are sorted in descending order...
 	// This ensures that selected node information is valid at the time of insertion
 	sort(SelectedNodes.rbegin(), SelectedNodes.rend());
 
 	stringstream StringStream;
-	for (itNodeInfo=SelectedNodes.begin(); itNodeInfo!=SelectedNodes.end(); ++itNodeInfo)
+	for (auto itNodeInfo = SelectedNodes.begin(); itNodeInfo != SelectedNodes.end(); ++itNodeInfo)
 	{
 		CTextile* pTextile = TEXGEN.GetTextile(itNodeInfo->TextileName);
 		if (pTextile)

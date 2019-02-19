@@ -82,7 +82,12 @@ public:
 	void DisplayVolumeFractionForSelectedObjects();
 	void AssignPropertiesToTextile();
 	void AssignMatrixProperties();
+	
 	void DeleteSelectedObjects();
+	void OnDeleteSelectedYarns();
+	void OnDeleteSelectedNodes();
+
+
 	void InsertNodes();
 	void DuplicateYarns();
 //	void ShowOutliner(bool bShow);

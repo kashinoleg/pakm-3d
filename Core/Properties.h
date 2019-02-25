@@ -151,7 +151,10 @@ namespace TexGen {
 		double GetYarnLinearDensity(string Units = "kg/m") const;
 		double GetFibreDensity(string Units = "kg/m^3") const;
 		double GetFibreDiameter(string Units = "m") const;
+
 		int GetFibresPerYarn() const;
+		CProperty FibresPerYarnProperty() const;
+
 		/// Get the area occupied by fibres given fibre diameter and number of fibres
 		/**
 		Either returns the value stored in m_dFibreArea or calculates it from 
@@ -170,8 +173,13 @@ namespace TexGen {
 		double GetAlphaZ( string Units = "/K") const;
 
 		double GetPoissonsRatioX() const;
+		CProperty PoissonsRatioXProperty() const;
+
 		double GetPoissonsRatioY() const;
+		CProperty PoissonsRatioYProperty() const;
+
 		double GetPoissonsRatioZ() const;
+		CProperty PoissonsRatioZProperty() const;
 
 		CProperty m_YarnLinearDensity;
 		CProperty m_FibreDensity;

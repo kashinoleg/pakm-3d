@@ -140,6 +140,7 @@
     <ClCompile Include="CompleteDialog.cpp" />
     <ClCompile Include="ControlsWindow.cpp" />
     <ClCompile Include="Convert.cpp" />
+    <ClCompile Include="ConvertString.cpp" />
     <ClCompile Include="CustomInteractorStyle.cpp" />
     <ClCompile Include="CustomWidget.cpp" />
     <ClCompile Include="DomainPlanesDialog.cpp" />

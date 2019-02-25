@@ -84,6 +84,13 @@ protected:
 	void OnRendering(wxCommandEvent& event);
 	void OnTextiles(wxCommandEvent& event);
 
+	void OnSetLayerOffsets();
+	void OnNestLayers();
+	void OnMaxNestLayers();
+	void OnCreate3DTextile();
+	void OnCreate2DWeave();
+	void OnEditTextile();
+	void OnCreateLayeredTextile();
 	void OnCreateEmptyTextile();
 	void OnDeleteTextile();
 
@@ -92,6 +99,8 @@ protected:
 	void OnModeller(wxCommandEvent& event);
 
 	void OnDomains(wxCommandEvent& event);
+	void OnCreateDomainPlanes();
+	void OnCreateDomainBox();
 	void OnDeleteDomain();
 	void OnEditDomain();
 

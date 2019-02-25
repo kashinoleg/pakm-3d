@@ -120,6 +120,7 @@ namespace TexGen {
 			x=Coords[0];
 			y=Coords[1];
 		}
+
 		/// Overload to see if two XY coordinates are the same
 		bool operator ==(const XY &right) const {
 			return x == right.x && y == right.y;

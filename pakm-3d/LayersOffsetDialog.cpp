@@ -106,20 +106,37 @@ int CLayersOffsetDialog::GetOption()
 	return m_OptionsRadio->GetSelection();
 }
 
-void CLayersOffsetDialog::GetEditOffsets( vector<XY>& Offsets )
+void CLayersOffsetDialog::GetEditOffsets(vector<XY>& Offsets)
 {
 	XY Offset;
 	Offsets.clear();
 	int iNumLayers = m_pGrid->GetNumberRows();
-	for ( int i = iNumLayers-1; i >= 0; --i )
+	for (int i = iNumLayers - 1; i >= 0; --i)
 	{
 		wxString X = m_pGrid->GetCellValue(i, 0);
 		wxString Y = m_pGrid->GetCellValue(i, 1);
 		X.ToDouble(&Offset.x);
 		Y.ToDouble(&Offset.y);
-		
+
 		Offsets.push_back(Offset);
 	}
+}
+
+vector<XY> CLayersOffsetDialog::GetEditOffsets()
+{
+	vector<XY> Offsets;
+	XY Offset;
+	int iNumLayers = m_pGrid->GetNumberRows();
+	for (int i = iNumLayers - 1; i >= 0; --i)
+	{
+		wxString X = m_pGrid->GetCellValue(i, 0);
+		wxString Y = m_pGrid->GetCellValue(i, 1);
+		X.ToDouble(&Offset.x);
+		Y.ToDouble(&Offset.y);
+
+		Offsets.push_back(Offset);
+	}
+	return Offsets;
 }
 
 void CLayersOffsetDialog::GetConstantOffset( XY& Offset )
@@ -128,6 +145,16 @@ void CLayersOffsetDialog::GetConstantOffset( XY& Offset )
 	wxString y = m_YOffset->GetValue();
 	x.ToDouble(&Offset.x); 
 	y.ToDouble(&Offset.y);
+}
+
+XY CLayersOffsetDialog::GetConstantOffset()
+{
+	auto Offset = XY();
+	wxString x = m_XOffset->GetValue();
+	wxString y = m_YOffset->GetValue();
+	x.ToDouble(&Offset.x);
+	y.ToDouble(&Offset.y);
+	return Offset;
 }
 
 void CLayersOffsetDialog::GetRandomOffsets()

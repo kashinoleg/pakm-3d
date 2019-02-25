@@ -418,6 +418,8 @@ void CTexGenMainFrame::OnSaveScreenshot(wxCommandEvent& event)
 			dialog.CentreOnParent();
 			if (dialog.ShowModal() == wxID_OK)
 			{
+				
+
 				string Command;
 				Command = "GetRenderWindow().TakeScreenShot(r\"";
 				Command += ConvertString(dialog.GetPath());
@@ -428,6 +430,7 @@ void CTexGenMainFrame::OnSaveScreenshot(wxCommandEvent& event)
 				Command += stringify(MagCtrl->GetValue());
 				Command += ")";
 				SendPythonCode(Command);
+
 			}
 		}
 	}
@@ -435,7 +438,7 @@ void CTexGenMainFrame::OnSaveScreenshot(wxCommandEvent& event)
 
 void CTexGenMainFrame::OnOpenWiseTex(wxCommandEvent& event)
 {
-	wxFileDialog dialog
+	/*wxFileDialog dialog
 	(
 		this,
 		wxT("Open WiseTex file"),
@@ -453,12 +456,12 @@ void CTexGenMainFrame::OnOpenWiseTex(wxCommandEvent& event)
 		Command += ConvertString(dialog.GetPath());
 		Command += "\")";
 		SendPythonCode(Command);
-	}
+	}//*/
 }
 
 void CTexGenMainFrame::OnOpenTexGenv2(wxCommandEvent& event)
 {
-	wxFileDialog dialog
+	/*wxFileDialog dialog
 	(
 		this,
 		wxT("Open TexGen v2 file"),
@@ -476,12 +479,12 @@ void CTexGenMainFrame::OnOpenTexGenv2(wxCommandEvent& event)
 		Command += ConvertString(dialog.GetPath());
 		Command += "\")";
 		SendPythonCode(Command);
-	}
+	}//*/
 }
 
 void CTexGenMainFrame::OnOpenWeavePattern(wxCommandEvent& event)
 {
-	wxFileDialog dialog
+	/*wxFileDialog dialog
 	(
 		this,
 		wxT("Open Weave Pattern file"),
@@ -499,12 +502,12 @@ void CTexGenMainFrame::OnOpenWeavePattern(wxCommandEvent& event)
 		Command += ConvertString(dialog.GetPath());
 		Command += "\")";
 		SendPythonCode(Command);
-	}
+	}//*/
 }
 
 void CTexGenMainFrame::OnSaveGrid(wxCommandEvent& event)
 {
-	wxFileDialog dialog
+	/*wxFileDialog dialog
 	(
 		this,
 		wxT("Save Grid file"),
@@ -546,12 +549,12 @@ void CTexGenMainFrame::OnSaveGrid(wxCommandEvent& event)
 				SendPythonCode(Command);
 			}
 		}
-	}
+	}//*/
 }
 
 void CTexGenMainFrame::OnSaveVoxel(wxCommandEvent& event)
 {
-	wxFileDialog dialog
+	/*wxFileDialog dialog
 	(
 		this,
 		wxT("Save Voxel file"),
@@ -594,7 +597,7 @@ void CTexGenMainFrame::OnSaveVoxel(wxCommandEvent& event)
 				SendPythonCode(Command);
 			}
 		}
-	}
+	}//*/
 }
 
 void CTexGenMainFrame::OnSaveVolumeMesh(wxCommandEvent& event)
@@ -966,24 +969,30 @@ void CTexGenMainFrame::OnSaveABAQUSVoxels(wxCommandEvent& event)
 					TGERROR("No output selected");
 					return;
 				}
+				auto textile = CTexGen::Instance().GetTextile(TextileName);
+				auto outputFilename = ConvertString(dialog.GetPath());
+				auto XVoxNum = Convert::ToInt(XVoxels);
+				auto YVoxNum = Convert::ToInt(YVoxels);
+				auto ZVoxNum = Convert::ToInt(ZVoxels);
 
 				if ( iBoundaryConditions == SHEARED_BC )
 				{
-					Command << "Vox = CShearedVoxelMesh('CShearedPeriodicBoundaries')" << endl;
+					auto vox = new CShearedVoxelMesh("CShearedPeriodicBoundaries");
+					vox->SaveVoxelMesh(*textile, outputFilename, XVoxNum, YVoxNum, ZVoxNum, bOutputMatrix, bOutputYarns, iBoundaryConditions, iElementType);
 				}
 				else if ( iBoundaryConditions == STAGGERED_BC )
 				{
-					Command << "Vox = CStaggeredVoxelMesh('CStaggeredPeriodicBoundaries')" << endl;
-					Command << "Vox.SetOffset(" << ConvertString(XOffset) << ")" << endl;
+					auto vox = new CStaggeredVoxelMesh("CStaggeredPeriodicBoundaries");
+					auto offset = Convert::ToDouble(XOffset);
+					vox->SetOffset(offset);
+					vox->SaveVoxelMesh(*textile, outputFilename, XVoxNum, YVoxNum, ZVoxNum, bOutputMatrix, bOutputYarns, iBoundaryConditions, iElementType);
 				}
 				else
-					Command << "Vox = CRectangularVoxelMesh('CPeriodicBoundaries')" << endl;
-				Command << "Vox.SaveVoxelMesh(GetTextile('" + TextileName + "'), r\'" << ConvertString(dialog.GetPath()) << "', " << ConvertString(XVoxels) << "," << ConvertString(YVoxels) << "," << ConvertString(ZVoxels) 
-					<< "," << bOutputMatrix << "," << bOutputYarns << ","<< iBoundaryConditions << "," << iElementType << ")" << endl;
-
-				SendPythonCode(Command.str());
+				{
+					auto vox = new CRectangularVoxelMesh("CPeriodicBoundaries");
+					vox->SaveVoxelMesh(*textile, outputFilename, XVoxNum, YVoxNum, ZVoxNum, bOutputMatrix, bOutputYarns, iBoundaryConditions, iElementType);
+				}
 			}
-			
 		}
 	}
 	
@@ -1218,181 +1227,189 @@ void CTexGenMainFrame::OnTextiles(wxCommandEvent& event)
 	case ID_DeleteTextile:
 		OnDeleteTextile(); break;
 	case ID_EditTextile:
-		{
-			string TextileName = GetTextileSelection();
-			if (!TextileName.empty())
-			{
-				CTextile* pTextile = CTexGen::Instance().GetTextile(TextileName);
-				string Type = pTextile->GetType();
-				if (pTextile && (Type == "CTextileWeave2D" || Type == "CShearedTextileWeave2D" ||
-					Type == "CTextileOrthogonal" || Type == "CTextileAngleInterlock" || Type == "CTextileOffsetAngleInterlock" || Type == "CTextileLayerToLayer"))
-				{
-					string Command;
-					if (Type == "CTextileWeave2D" || Type == "CShearedTextileWeave2D")
-					{
-						CWeaveWizard Wizard(this, wxID_ANY);
-						if (Type == "CTextileWeave2D")
-							Wizard.LoadSettings(*((CTextileWeave2D*)pTextile));
-						else
-							Wizard.LoadSettings(*((CShearedTextileWeave2D*)pTextile));
-
-						if ( Wizard.RunIt() )
-						{
-							Command = Wizard.GetCreateTextileCommand(TextileName);
-						}
-					}
-					else // if (pTextile->GetType() == "CTextileWeave3D")
-					{
-						CWeaveWizard3D Wizard(this, wxID_ANY);
-						Wizard.LoadSettings(*((CTextile3DWeave*)pTextile));
-						if ( Wizard.RunIt() )
-						{
-							Command = Wizard.GetCreateTextileCommand(TextileName);
-						}
-					}
-					
-					if (!Command.empty())
-					{
-						SendPythonCode(Command);
-						RefreshTextile(TextileName);
-					}
-				}
-			}
-		}
-		break;
+		OnEditTextile(); break;
 	case ID_CreateEmptyTextile:
 		OnCreateEmptyTextile(); break;
 	case ID_Create2DWeave:
-		{
-			CWeaveWizard Wizard(this, wxID_ANY); 
-			if (Wizard.RunIt())
-			{
-				string Command = Wizard.GetCreateTextileCommand();
-				if (!Command.empty())
-				{
-					SendPythonCode(Command);
-				}
-			}
-		}
-		break;
+		OnCreate2DWeave(); break;
 	case ID_GeometrySolve:
-		{
-			OnGeometrySolve(event);
-		}
-		break;
-
+		OnGeometrySolve(event); break;
 	case ID_Create3DTextile:
-		{
-			CWeaveWizard3D Wizard(this, wxID_ANY);
-			if ( Wizard.RunIt() )
-			{
-				string Command = Wizard.GetCreateTextileCommand();
-				if ( !Command.empty() )
-				{
-					SendPythonCode(Command);
-				}
-			}
-		}
-		break;
+		OnCreate3DTextile(); break;
 	case ID_CreateLayeredTextile:
-		{
-			CTextileLayersDialog Dialog;
-			if ( Dialog.ShowModal() == wxID_OK )
-			{
-				vector<string> LayerNames;
-				Dialog.GetLayerNames( LayerNames );
-				if ( !LayerNames.empty() ) 
-				{
-					// Create python code with list of names
-					string Command = ConvertMultiWeaveLayered( LayerNames );
-					SendPythonCode( Command );
-				}
-			}
-		}
-		break;
+		OnCreateLayeredTextile(); break;
 	case ID_SetLayerOffsets:
-		{
-			string TextileName = GetTextileSelection();
-			if (!TextileName.empty())
-			{
-				CTextile* pTextile = CTexGen::Instance().GetTextile(TextileName);
-				string Type = pTextile->GetType();
-				if ( Type != "CTextileLayered" )
-				{
-					TGERROR("Cannot set layers: not a layered textile");
-					break;
-				}
-				
-				CLayersOffsetDialog Dialog;
-				XYZ Min,Max;
-				CDomain* Domain = pTextile->GetDomain();
-				((CDomainPlanes*)Domain)->GetBoxLimits(Min, Max);
-				XY DomainSize( Max.x-Min.x, Max.y-Min.y );
-				Dialog.LoadSettings( dynamic_cast<CTextileLayered*>(pTextile)->GetOffsets(), DomainSize );
-				
-				if (Dialog.ShowModal() == wxID_OK)
-				{
-					vector<XY> LayerOffsets;
-					int iOption = Dialog.GetOption();
-					stringstream StringStream;
-
-					switch ( iOption )
-					{
-						case CONSTANT:
-							{
-							XY Offset;
-							Dialog.GetConstantOffset( Offset );
-							StringStream << "textile = GetTextile('" << TextileName << "')" << endl;
-							StringStream << "LayeredTextile = textile.GetLayeredTextile()" << endl;
-							StringStream << "Offset = XY(" << Offset << ")" << endl;
-							StringStream << "LayeredTextile.SetOffsets( Offset )" << endl;
-							break;
-							}
-						case RANDOM:
-						case EDIT:
-							Dialog.GetEditOffsets( LayerOffsets );
-							StringStream << "textile = GetTextile('" << TextileName << "')" << endl;
-							StringStream << "LayeredTextile = textile.GetLayeredTextile()" << endl;
-							StringStream << "Offsets = XYVector()" << endl;
-							for (int i=0; i<(int)LayerOffsets.size(); ++i)
-							{
-								StringStream << "Offsets.append(XY(" << LayerOffsets[i] << "))" << endl;
-							}
-							StringStream << "LayeredTextile.SetOffsets( Offsets )" << endl;
-							break;
-					}
-					SendPythonCode( StringStream.str() );
-					RefreshTextile( TextileName );
-				}
-			}
-		}
-		break;
+		OnSetLayerOffsets(); break;
 	case ID_NestLayers:
+		OnNestLayers(); break;
 	case ID_MaxNestLayers:
-		{
-			string TextileName = GetTextileSelection();
-			if (!TextileName.empty())
-			{
-				CTextile* pTextile = CTexGen::Instance().GetTextile(TextileName);
-				string Type = pTextile->GetType();
-				if ( Type != "CTextileLayered" )
-				{
-					TGERROR("Cannot nest layers: not a layered textile");
-					break;
-				}
+		OnMaxNestLayers(); break;
+	}
+}
 
-				stringstream StringStream;
-				StringStream << "textile = GetTextile('" << TextileName << "')" << endl;
-				StringStream << "LayeredTextile = textile.GetLayeredTextile()" << endl;
-				if ( event.GetId() == ID_NestLayers )
-					StringStream << "LayeredTextile.NestLayers()" << endl;
+void CTexGenMainFrame::OnEditTextile()
+{
+	string TextileName = GetTextileSelection();
+	if (!TextileName.empty())
+	{
+		CTextile* pTextile = CTexGen::Instance().GetTextile(TextileName);
+		string Type = pTextile->GetType();
+		if (pTextile && (Type == "CTextileWeave2D" || Type == "CShearedTextileWeave2D" ||
+			Type == "CTextileOrthogonal" || Type == "CTextileAngleInterlock" || Type == "CTextileOffsetAngleInterlock" || Type == "CTextileLayerToLayer"))
+		{
+			string Command;
+			if (Type == "CTextileWeave2D" || Type == "CShearedTextileWeave2D")
+			{
+				CWeaveWizard Wizard(this, wxID_ANY);
+				if (Type == "CTextileWeave2D")
+					Wizard.LoadSettings(*((CTextileWeave2D*)pTextile));
 				else
-					StringStream << "LayeredTextile.MaxNestLayers()" << endl;
-				SendPythonCode( StringStream.str() );
-				RefreshTextile( TextileName );
+					Wizard.LoadSettings(*((CShearedTextileWeave2D*)pTextile));
+
+				if (Wizard.RunIt())
+				{
+					Command = Wizard.GetCreateTextileCommand(TextileName);
+				}
+			}
+			else // if (pTextile->GetType() == "CTextileWeave3D")
+			{
+				CWeaveWizard3D Wizard(this, wxID_ANY);
+				Wizard.LoadSettings(*((CTextile3DWeave*)pTextile));
+				if (Wizard.RunIt())
+				{
+					Command = Wizard.GetCreateTextileCommand(TextileName);
+				}
+			}
+
+			if (!Command.empty())
+			{
+				SendPythonCode(Command);
+				RefreshTextile(TextileName);
 			}
 		}
-		break;
+	}
+}
+
+void CTexGenMainFrame::OnCreate2DWeave()
+{
+	CWeaveWizard Wizard(this, wxID_ANY);
+	if (Wizard.RunIt())
+	{
+		string Command = Wizard.GetCreateTextileCommand();
+		if (!Command.empty())
+		{
+			SendPythonCode(Command);
+		}
+	}
+}
+
+void CTexGenMainFrame::OnCreate3DTextile()
+{
+	CWeaveWizard3D Wizard(this, wxID_ANY);
+	if (Wizard.RunIt())
+	{
+		string Command = Wizard.GetCreateTextileCommand();
+		if (!Command.empty())
+		{
+			SendPythonCode(Command);
+		}
+	}
+}
+
+void CTexGenMainFrame::OnCreateLayeredTextile()
+{
+	CTextileLayersDialog Dialog;
+	if (Dialog.ShowModal() == wxID_OK)
+	{
+		vector<string> LayerNames;
+		Dialog.GetLayerNames(LayerNames);
+		if (!LayerNames.empty())
+		{
+			// Create python code with list of names
+			string Command = ConvertMultiWeaveLayered(LayerNames);
+			SendPythonCode(Command);
+		}
+	}
+}
+
+void CTexGenMainFrame::OnMaxNestLayers()
+{
+	string TextileName = GetTextileSelection();
+	if (!TextileName.empty())
+	{
+		CTextile* pTextile = CTexGen::Instance().GetTextile(TextileName);
+		string Type = pTextile->GetType();
+		if (Type != "CTextileLayered")
+		{
+			TGERROR("Cannot nest layers: not a layered textile");
+			return;
+		}
+		auto textile = CTexGen::Instance().GetTextile(TextileName);
+		textile->GetLayeredTextile()->MaxNestLayers();
+		RefreshTextile(TextileName);
+	}
+}
+
+void CTexGenMainFrame::OnNestLayers()
+{
+	string TextileName = GetTextileSelection();
+	if (!TextileName.empty())
+	{
+		CTextile* pTextile = CTexGen::Instance().GetTextile(TextileName);
+		string Type = pTextile->GetType();
+		if (Type != "CTextileLayered")
+		{
+			TGERROR("Cannot nest layers: not a layered textile");
+			return;
+		}
+		auto textile = CTexGen::Instance().GetTextile(TextileName);
+		textile->GetLayeredTextile()->NestLayers();
+		RefreshTextile(TextileName);
+	}
+}
+
+void CTexGenMainFrame::OnSetLayerOffsets()
+{
+	string TextileName = GetTextileSelection();
+	if (!TextileName.empty())
+	{
+		CTextile* pTextile = CTexGen::Instance().GetTextile(TextileName);
+		string Type = pTextile->GetType();
+		if (Type != "CTextileLayered")
+		{
+			TGERROR("Cannot set layers: not a layered textile");
+			return;
+		}
+
+		CLayersOffsetDialog Dialog;
+		XYZ Min, Max;
+		CDomain* Domain = pTextile->GetDomain();
+		((CDomainPlanes*)Domain)->GetBoxLimits(Min, Max);
+		XY DomainSize(Max.x - Min.x, Max.y - Min.y);
+		Dialog.LoadSettings(dynamic_cast<CTextileLayered*>(pTextile)->GetOffsets(), DomainSize);
+
+		if (Dialog.ShowModal() == wxID_OK)
+		{
+			switch (Dialog.GetOption())
+			{
+			case CONSTANT:
+			{
+				auto textile = CTexGen::Instance().GetTextile(TextileName);
+				auto layeredTextile = textile->GetLayeredTextile();
+				auto Offset = Dialog.GetConstantOffset();
+				layeredTextile->SetOffsets(Offset);
+				break;
+			}
+			case RANDOM:
+			case EDIT:
+				auto LayerOffsets = Dialog.GetEditOffsets();
+				auto textile = CTexGen::Instance().GetTextile(TextileName);
+				auto layeredTextile = textile->GetLayeredTextile();
+				layeredTextile->SetOffsets(LayerOffsets);
+				break;
+			}
+			RefreshTextile(TextileName);
+		}
 	}
 }
 
@@ -1422,27 +1439,41 @@ void CTexGenMainFrame::OnGeometrySolve(wxCommandEvent& event)
 		XRCCTRL(GeometrySolveOptions, "CreateCopyCheckBox", wxCheckBox)->SetValidator(wxGenericValidator(&bCreateCopy));
 		if (GeometrySolveOptions.ShowModal() == wxID_OK)
 		{
-			stringstream Command;
-			Command << "solver = CGeometrySolver()" << endl;
+			auto solver = CGeometrySolver();
 			if (!SeedSize.IsEmpty())
-				Command << "solver.SetSeed(" << ConvertString(SeedSize) << ")" << endl;
+			{
+				solver.SetSeed(Convert::ToDouble(SeedSize));
+			}
 			if (!TensileStress.IsEmpty())
-				Command << "solver.SetTensileStress(" << ConvertString(TensileStress) << ")" << endl;
+			{
+				solver.SetTensileStress(Convert::ToDouble(TensileStress));
+			}
 			if (!LongitudinalBendingModulus.IsEmpty())
-				Command << "solver.SetLongitudinalBendingModulus(" << ConvertString(LongitudinalBendingModulus) << ")" << endl;
+			{
+				solver.SetLongitudinalBendingModulus(Convert::ToDouble(LongitudinalBendingModulus));
+			}
 			if (!TransverseBendingModulus.IsEmpty())
-				Command << "solver.SetTransverseBendingModulus(" << ConvertString(TransverseBendingModulus) << ")" << endl;
+			{
+				solver.SetTransverseBendingModulus(Convert::ToDouble(TransverseBendingModulus));
+			}
 			if (!ContactStiffness.IsEmpty())
-				Command << "solver.SetContactStiffness(" << ConvertString(ContactStiffness) << ")" << endl;
+			{
+				solver.SetContactStiffness(Convert::ToDouble(ContactStiffness));
+			}
 			if (!DisabledStiffness.IsEmpty())
-				Command << "solver.SetDisabledStiffness(" << ConvertString(DisabledStiffness) << ")" << endl;
-			Command << "solver.CreateSystem('" << TextileName << "')" << endl;
-			Command << "solver.SolveSystem()" << endl;
+			{
+				solver.SetDisabledStiffness(Convert::ToDouble(DisabledStiffness));
+			}
+			solver.CreateSystem(TextileName);
+			solver.SolveSystem();
 			if (bCreateCopy)
-				Command << "solver.GetDeformedCopyOfTextile()" << endl;
+			{
+				solver.GetDeformedCopyOfTextile();
+			}
 			else
-				Command << "solver.DeformTextile()" << endl;
-			SendPythonCode(Command.str());
+			{
+				solver.DeformTextile();
+			}
 			RefreshTextile(TextileName);
 		}
 /*
@@ -1709,43 +1740,47 @@ void CTexGenMainFrame::OnDomains(wxCommandEvent& event)
 	case ID_EditDomain:
 		OnEditDomain(); break;
 	case ID_CreateDomainPlanes:
-		{
-			CDomainPlanesDialog Dialog(this, wxID_ANY);
-			if (Dialog.ShowModal() == wxID_OK)
-			{
-				string TextileName = GetTextileSelection();
-				if (!TextileName.empty())
-				{
-					string Command = Dialog.GetCreateDomainCommand();
-					if (!Command.empty())
-					{
-						Command += "GetTextile('" + TextileName + "').AssignDomain(domain)";
-						SendPythonCode(Command);
-						RefreshTextile(TextileName);
-					}
-				}
-			}
-		}
-		break;
+		OnCreateDomainPlanes(); break;
 	case ID_CreateDomainBox:
+		OnCreateDomainBox();break;
+	}
+}
+
+void CTexGenMainFrame::OnCreateDomainPlanes()
+{
+	CDomainPlanesDialog Dialog(this, wxID_ANY);
+	if (Dialog.ShowModal() == wxID_OK)
+	{
+		string TextileName = GetTextileSelection();
+		if (!TextileName.empty())
 		{
-			CDomainPlanesDialog Dialog(this, wxID_ANY);
-			if (Dialog.CreateBox())
+			string Command = Dialog.GetCreateDomainCommand();
+			if (!Command.empty())
 			{
-				string TextileName = GetTextileSelection();
-				if (!TextileName.empty())
-				{
-					string Command = Dialog.GetCreateDomainCommand();
-					if (!Command.empty())
-					{
-						Command += "GetTextile('" + TextileName + "').AssignDomain(domain)";
-						SendPythonCode(Command);
-						RefreshTextile(TextileName);
-					}
-				}
+				Command += "GetTextile('" + TextileName + "').AssignDomain(domain)";
+				SendPythonCode(Command);
+				RefreshTextile(TextileName);
 			}
 		}
-		break;
+	}
+}
+
+void CTexGenMainFrame::OnCreateDomainBox()
+{
+	CDomainPlanesDialog Dialog(this, wxID_ANY);
+	if (Dialog.CreateBox())
+	{
+		string TextileName = GetTextileSelection();
+		if (!TextileName.empty())
+		{
+			string Command = Dialog.GetCreateDomainCommand();
+			if (!Command.empty())
+			{
+				Command += "GetTextile('" + TextileName + "').AssignDomain(domain)";
+				SendPythonCode(Command);
+				RefreshTextile(TextileName);
+			}
+		}
 	}
 }
 
@@ -1928,7 +1963,7 @@ void CTexGenMainFrame::OnRendering(wxCommandEvent& event)
 
 void CTexGenMainFrame::OnPython(wxCommandEvent& event)
 {
-	switch (event.GetId())
+	/*switch (event.GetId())
 	{
 	case ID_RunScript:
 		{
@@ -1991,7 +2026,7 @@ void CTexGenMainFrame::OnPython(wxCommandEvent& event)
 				m_pControls->UpdatePythonPage(m_ScriptRecordFile.is_open());
 		}
 		break;
-	}
+	}//*/
 }
 
 void CTexGenMainFrame::OnLogNotebook(wxAuiNotebookEvent& event)
@@ -2358,58 +2393,43 @@ void CTexGenMainFrame::OnPatternDraft(wxCommandEvent& event)
 		return;
 	}
 	string Type = pTextile->GetType();
-	stringstream Command;
-
-	// Get appropriate weave type
+	CPatternDraftDialog Dialog;
 	if (Type == "CTextileWeave2D")
 	{
-		Command << "Weave = GetTextile( '" << TextileName << "' ).GetWeave()" << endl;
+		auto Weave = CTexGen::Instance().GetTextile(TextileName)->GetWeave();
+		Weave->ConvertToPatternDraft();
+		auto PatternDraft = Weave->GetPatternDraft();
+		PatternDraft.CreatePatternDraft();
+		Dialog.SetPatternDraft(PatternDraft);
 	}
 	else if (Type == "CTextile3DWeave")
 	{
-		Command << "Weave = GetTextile( '" << TextileName << "' ).Get3DWeave()" << endl;
+		auto Weave = CTexGen::Instance().GetTextile(TextileName)->Get3DWeave();
+		Weave->ConvertToPatternDraft();
+		auto PatternDraft = Weave->GetPatternDraft();
+		PatternDraft.CreatePatternDraft();
+		Dialog.SetPatternDraft(PatternDraft);
 	}
 	else if (Type == "CTextileOrthogonal")
 	{
-		Command << "Weave = GetTextile( '" << TextileName << "' ).GetOrthogonalWeave()" << endl;
+		auto Weave = CTexGen::Instance().GetTextile(TextileName)->GetOrthogonalWeave();
+		Weave->ConvertToPatternDraft();
+		auto PatternDraft = Weave->GetPatternDraft();
+		PatternDraft.CreatePatternDraft();
+		Dialog.SetPatternDraft(PatternDraft);
 	}
 	else if (Type == "CTextileLayerToLayer")
 	{
-		Command << "Weave = GetTextile( '" << TextileName << "' ).GetLayerToLayerWeave()" << endl;
+		auto Weave = CTexGen::Instance().GetTextile(TextileName)->GetOrthogonalWeave();
+		Weave->ConvertToPatternDraft();
+		auto PatternDraft = Weave->GetPatternDraft();
+		PatternDraft.CreatePatternDraft();
+		Dialog.SetPatternDraft(PatternDraft);
 	}
 	else
 	{
 		wxMessageBox(wxT("Cannot create pattern draft - incorrect weave type"), wxT("Pattern Draft Error"), wxOK | wxICON_ERROR, this);
 		return;
-	}
-
-	Command << "Weave.ConvertToPatternDraft()" << endl;
-	Command << "PatternDraft = Weave.GetPatternDraft()" << endl;
-	Command << "PatternDraft.CreatePatternDraft()" << endl;
-
-	SendPythonCode(Command.str());
-
-	CPatternDraftDialog Dialog;
-	if (Type == "CTextileWeave2D")
-	{
-		Dialog.SetPatternDraft(((CTextileWeave2D*)pTextile)->GetPatternDraft());
-	}
-	else if (Type == "CTextile3DWeave")
-	{
-		Dialog.SetPatternDraft(((CTextile3DWeave*)pTextile)->GetPatternDraft());
-	}
-	else if (Type == "CTextileOrthogonal")
-	{
-		Dialog.SetPatternDraft(((CTextileOrthogonal*)pTextile)->GetPatternDraft());
-	}
-	else
-	{
-		Dialog.SetPatternDraft(((CTextileLayerToLayer*)pTextile)->GetPatternDraft());
-	}
-
-	if (Dialog.ShowModal() == wxID_OK)
-	{
-
 	}
 }
 

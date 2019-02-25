@@ -594,7 +594,6 @@ void CModeller::InsertNodes()
 	// This ensures that selected node information is valid at the time of insertion
 	sort(SelectedNodes.rbegin(), SelectedNodes.rend());
 
-	stringstream StringStream;
 	for (auto itNodeInfo = SelectedNodes.begin(); itNodeInfo != SelectedNodes.end(); ++itNodeInfo)
 	{
 		CTextile* pTextile = TEXGEN.GetTextile(itNodeInfo->TextileName);
@@ -620,58 +619,44 @@ void CModeller::InsertNodes()
 
 				XYZ NewNodePos = 0.5*(NextNode.GetPosition() + PrevNode.GetPosition());
 
-				StringStream << "yarn = GetTextile('" << m_TextileName << "').GetYarn(" << itNodeInfo->iYarn << ")" << endl;
-				StringStream << "node = CNode(XYZ(" << NewNodePos.x << ", " << NewNodePos.y << ", " << NewNodePos.z  << "))" << endl;
-				StringStream << "yarn.InsertNode(node, " << itNodeInfo->iNode << ")" << endl;
+				auto yarn = CTexGen::Instance().GetTextile(m_TextileName)->GetYarn(itNodeInfo->iYarn);
+				auto node = CNode(NewNodePos);
+				yarn->InsertNode(node, itNodeInfo->iNode);
 			}
 		}
 	}
-
-	string Command = StringStream.str();
-	CTexGenMainFrame *pMainFrame = ((CTexGenApp*)wxTheApp)->GetMainFrame();
-	pMainFrame->SendPythonCode(Command);
-
 	RefreshSelectedYarns();
 	UpdateWidget();
-
 	UpdateOutlinerItems();
 }
 
 void CModeller::DuplicateYarns()
 {
 	vector<PROP_YARN_INFO> SelectedYarns = GetSelectedYarns();
-	vector<PROP_YARN_INFO>::iterator itYarn;
 
 	CTextile* pTextile = TEXGEN.GetTextile(m_TextileName);
 	if (pTextile)
 	{
 		int iFirstNewYarn = (int)pTextile->GetYarns().size();
 		int iLastNewYarn = iFirstNewYarn;
-		stringstream StringStream;
-		StringStream << "textile = GetTextile('" << m_TextileName << "')" << endl;
-		for (itYarn=SelectedYarns.begin(); itYarn!=SelectedYarns.end(); ++itYarn)
+		auto textile = CTexGen::Instance().GetTextile(m_TextileName);
+		for (auto itYarn = SelectedYarns.begin(); itYarn != SelectedYarns.end(); itYarn++)
 		{
-			StringStream << "newyarn = CYarn(textile.GetYarn(" << itYarn->iYarn << "))" << endl;
-			StringStream << "textile.AddYarn(newyarn)" << endl;
+			auto newyarn = CYarn(*textile->GetYarn(itYarn->iYarn));
+			textile->AddYarn(newyarn);
 			++iLastNewYarn;
 		}
-		CTexGenMainFrame *pMainFrame = ((CTexGenApp*)wxTheApp)->GetMainFrame();
-		pMainFrame->SendPythonCode(StringStream.str());
-
 		DeselectAll();
 
 		m_pRenderer->RefreshTextile(m_TextileName);
 
 		PROP_YARN_INFO YarnInfo;
 		YarnInfo.TextileName = m_TextileName;
-		int i;
-		for (i=iFirstNewYarn; i<iLastNewYarn; ++i)
+		for (int i = iFirstNewYarn; i < iLastNewYarn; i++)
 		{
 			YarnInfo.iYarn = i;
 			SelectObject(new PROP_YARN_INFO(YarnInfo));
 		}
-
-//		m_pRenderer->RefreshView();
 		UpdateOutlinerItems();
 	}
 }
@@ -704,8 +689,9 @@ void CModeller::AssignSectionToSelectedObjects()
 	CYarn *pYarn = GetYarn(SelectedYarns.back());
 	const CYarnSection* pSection = nullptr;
 	if (pYarn)
+	{
 		pSection = pYarn->GetYarnSection();
-
+	}
 	CYarnSectionSelect Dialog;
 	if (bSameNumNodes)
 		Dialog.SetNumberOfNodes(iNumNodes);
@@ -722,7 +708,6 @@ void CModeller::AssignSectionToSelectedObjects()
 			{
 				StringStream << "textile.GetYarn(" << itYarn->iYarn << ").AssignSection(yarnsection)" << endl;
 			}
-
 			Command += StringStream.str();
 
 			CTexGenMainFrame *pMainFrame = ((CTexGenApp*)wxTheApp)->GetMainFrame();
@@ -747,7 +732,9 @@ void CModeller::AssignInterpolationToSelectedObjects()
 	CYarn *pYarn = GetYarn(SelectedYarns.back());
 	const CInterpolation* pInterpolation = nullptr;
 	if (pYarn)
+	{
 		pInterpolation = pYarn->GetInterpolation();
+	}
 
 	int iInterpSelection = 0;
 	bool bPeriodic = true;
@@ -772,29 +759,21 @@ void CModeller::AssignInterpolationToSelectedObjects()
 
 		if (Dialog.ShowModal() == wxID_OK)
 		{
-			stringstream StringStream;
-
+			CInterpolation* interpolation = nullptr;
 			switch (iInterpSelection)
 			{
-			case 0:
-				StringStream << "interpolation = CInterpolationBezier(";
-				break;
-			case 1:
-				StringStream << "interpolation = CInterpolationCubic(";
-				break;
-			case 2:
-				StringStream << "interpolation = CInterpolationLinear(";
-				break;
+			case 0: interpolation = new CInterpolationBezier(bPeriodic); break;
+			case 1: interpolation = new CInterpolationCubic(bPeriodic); break;
+			case 2: interpolation = new CInterpolationLinear(bPeriodic); break;
 			}
-			StringStream << bPeriodic << ")" << endl;
-
-			StringStream << "textile = GetTextile('" << m_TextileName << "')" << endl;
-			for (itYarn=SelectedYarns.begin(); itYarn!=SelectedYarns.end(); ++itYarn)
+			if (interpolation)
 			{
-				StringStream << "textile.GetYarn(" << itYarn->iYarn << ").AssignInterpolation(interpolation)" << endl;
+				auto textile = CTexGen::Instance().GetTextile(m_TextileName);
+				for (auto itYarn = SelectedYarns.begin(); itYarn != SelectedYarns.end(); itYarn++)
+				{
+					textile->GetYarn(itYarn->iYarn)->AssignInterpolation(*interpolation);
+				}
 			}
-			CTexGenMainFrame *pMainFrame = ((CTexGenApp*)wxTheApp)->GetMainFrame();
-			pMainFrame->SendPythonCode(StringStream.str());
 			RefreshSelectedYarns();
 		}
 	}
@@ -803,8 +782,6 @@ void CModeller::AssignInterpolationToSelectedObjects()
 void CModeller::AssignRepeatsToSelectedObjects()
 {
 	vector<PROP_YARN_INFO> SelectedYarns = GetSelectedYarns();
-	vector<PROP_YARN_INFO>::iterator itYarn;
-
 	if (SelectedYarns.empty())
 	{
 		wxMessageBox(wxT("Please select at least one yarn before trying to assign repeats."), wxT("Unable to assign repeats"), wxOK | wxICON_INFORMATION);
@@ -813,8 +790,7 @@ void CModeller::AssignRepeatsToSelectedObjects()
 
 	CYarn *pYarn = GetYarn(SelectedYarns.back());
 	const vector<XYZ> &Repeats = pYarn->GetRepeats();
-	int i, j;
-
+	
 	wxDialog Dialog;
 	if (wxXmlResource::Get()->LoadDialog(&Dialog, ((CTexGenApp*)wxTheApp)->GetMainFrame(), wxT("Repeats")))
 	{
@@ -822,9 +798,9 @@ void CModeller::AssignRepeatsToSelectedObjects()
 		int iNumRepeats = max((int)Repeats.size(), 3);
 		pGrid->CreateGrid(iNumRepeats, 3);
 //		wxGridTableBase* pTable = pGrid->GetTable();
-		for (i=0; i<(int)Repeats.size(); ++i)
+		for (size_t i = 0; i < Repeats.size(); i++)
 		{
-			for (j=0; j<3; ++j)
+			for (int j = 0; j < 3; j++)
 			{
 				wxString Val;
 				Val << Repeats[i][j];
@@ -851,7 +827,7 @@ void CModeller::AssignRepeatsToSelectedObjects()
 		{
 			vector<XYZ> RepeatVectors;
 			pGrid->SaveEditControlValue();
-			for (i=0; i<pGrid->GetNumberRows(); ++i)
+			for (int i = 0; i < pGrid->GetNumberRows(); i++)
 			{
 				XYZ RepeatVector;
 				wxString X = pGrid->GetCellValue(i, 0);
@@ -861,24 +837,24 @@ void CModeller::AssignRepeatsToSelectedObjects()
 				Y.ToDouble(&RepeatVector.y);
 				Z.ToDouble(&RepeatVector.z);
 				if (RepeatVector)
+				{
 					RepeatVectors.push_back(RepeatVector);
+				}
 				else
+				{
 					break;
+				}
 			}
-
-			stringstream StringStream;
-			StringStream << "textile = GetTextile('" << m_TextileName << "')" << endl;
-			StringStream << "repeats = []" << endl;
-			for (i=0; i<(int)RepeatVectors.size(); ++i)
+			auto textile = CTexGen::Instance().GetTextile(m_TextileName);
+			vector<XYZ> repeats;
+			for (size_t i = 0; i < RepeatVectors.size(); i++)
 			{
-				StringStream << "repeats.append(XYZ(" << RepeatVectors[i] << "))" << endl;
+				repeats.push_back(XYZ(RepeatVectors[i]));
 			}
-			for (itYarn=SelectedYarns.begin(); itYarn!=SelectedYarns.end(); ++itYarn)
+			for (auto itYarn = SelectedYarns.begin(); itYarn != SelectedYarns.end(); itYarn++)
 			{
-				StringStream << "textile.GetYarn(" << itYarn->iYarn << ").SetRepeats(repeats)" << endl;
+				textile->GetYarn(itYarn->iYarn)->SetRepeats(repeats);
 			}			
-			CTexGenMainFrame *pMainFrame = ((CTexGenApp*)wxTheApp)->GetMainFrame();
-			pMainFrame->SendPythonCode(StringStream.str());
 			RefreshSelectedYarns();
 /*			double x = pTable->GetValueAsDouble(0, 0);
 			double y = pTable->GetValueAsDouble(0, 1);
@@ -890,7 +866,6 @@ void CModeller::AssignRepeatsToSelectedObjects()
 void CModeller::AssignPropertiesToSelectedObjects()
 {
 	vector<PROP_YARN_INFO> SelectedYarns = GetSelectedYarns();
-	vector<PROP_YARN_INFO>::iterator itYarn;
 
 	if (SelectedYarns.empty())
 	{
@@ -900,49 +875,64 @@ void CModeller::AssignPropertiesToSelectedObjects()
 	}
 
 	CYarn *pYarn = GetYarn(SelectedYarns.back());
-//	int i, j;
 
 	wxDialog Dialog;
 	if (wxXmlResource::Get()->LoadDialog(&Dialog, ((CTexGenApp*)wxTheApp)->GetMainFrame(), wxT("Properties")))
 	{
-		wxGrid* pGrid = XRCCTRL(Dialog, "PropertiesGrid", wxGrid);
-
 		vector<pair<wxString, CProperty> > Properties;
-		vector<pair<wxString, CProperty> >::iterator itProperty;
 
-		CProperty FibresPerYarn("");
-		FibresPerYarn.SetValue(pYarn->GetFibresPerYarn(), "");
-		CProperty PoissonsRatioX("");
-		PoissonsRatioX.SetValue(pYarn->GetPoissonsRatioX(),"");
-		CProperty PoissonsRatioY("");
-		PoissonsRatioY.SetValue(pYarn->GetPoissonsRatioY(),"");
-		CProperty PoissonsRatioZ("");
-		PoissonsRatioZ.SetValue(pYarn->GetPoissonsRatioZ(),"");
+		auto nameYarnLinearDensity = wxT("Yarn Linear Density");
+		Properties.push_back(make_pair(nameYarnLinearDensity, pYarn->m_YarnLinearDensity));
 
+		auto nameFibreDensity = wxT("Fibre Density");
+		Properties.push_back(make_pair(nameFibreDensity, pYarn->m_FibreDensity));
 
+		auto nameTotalFibreArea = wxT("Total Fibre Area");
+		Properties.push_back(make_pair(nameTotalFibreArea, pYarn->m_FibreArea));
 
-		// Note that for each property name there should be an equivalent Set<PropertyName>
-		Properties.push_back(make_pair(wxT("Yarn Linear Density"), pYarn->m_YarnLinearDensity));
-		Properties.push_back(make_pair(wxT("Fibre Density"), pYarn->m_FibreDensity));
-		Properties.push_back(make_pair(wxT("Total Fibre Area"), pYarn->m_FibreArea));
-		Properties.push_back(make_pair(wxT("Fibre Diameter"), pYarn->m_FibreDiameter));
-		Properties.push_back(make_pair(wxT("Fibres Per Yarn"), FibresPerYarn));
-		Properties.push_back(make_pair(wxT("Young's Modulus X"), pYarn->m_YoungsModulusX));
-		Properties.push_back(make_pair(wxT("Young's Modulus Y"), pYarn->m_YoungsModulusY));
-		Properties.push_back(make_pair(wxT("Young's Modulus Z"), pYarn->m_YoungsModulusZ));
+		auto nameFibreDiameter = wxT("Fibre Diameter");
+		Properties.push_back(make_pair(nameFibreDiameter, pYarn->m_FibreDiameter));
+
+		auto nameFibresPerYarn = wxT("Fibres Per Yarn");
+		Properties.push_back(make_pair(nameFibresPerYarn, pYarn->FibresPerYarnProperty()));
+
+		auto nameYoungsModulusX = wxT("Young's Modulus X");
+		Properties.push_back(make_pair(nameYoungsModulusX, pYarn->m_YoungsModulusX));
+
+		auto nameYoungsModulusY = wxT("Young's Modulus Y");
+		Properties.push_back(make_pair(nameYoungsModulusY, pYarn->m_YoungsModulusY));
+
+		auto nameYoungsModulusZ = wxT("Young's Modulus Z");
+		Properties.push_back(make_pair(nameYoungsModulusZ, pYarn->m_YoungsModulusZ));
 		
-		Properties.push_back(make_pair(wxT("Shear Modulus XY"), pYarn->m_ShearModulusXY));
-		Properties.push_back(make_pair(wxT("Shear Modulus XZ"), pYarn->m_ShearModulusXZ));
-		Properties.push_back(make_pair(wxT("Shear Modulus YZ"), pYarn->m_ShearModulusYZ));
+		auto nameShearModulusXY = wxT("Shear Modulus XY");
+		Properties.push_back(make_pair(nameShearModulusXY, pYarn->m_ShearModulusXY));
+
+		auto nameShearModulusXZ = wxT("Shear Modulus XZ");
+		Properties.push_back(make_pair(nameShearModulusXZ, pYarn->m_ShearModulusXZ));
+
+		auto nameShearModulusYZ = wxT("Shear Modulus YZ");
+		Properties.push_back(make_pair(nameShearModulusYZ, pYarn->m_ShearModulusYZ));
 		
-		Properties.push_back(make_pair(wxT("Poisson's Ratio X"), PoissonsRatioX));
-		Properties.push_back(make_pair(wxT("Poisson's Ratio Y"), PoissonsRatioY));
-		Properties.push_back(make_pair(wxT("Poisson's Ratio Z"), PoissonsRatioZ));
+		auto namePoissonsRatioX = wxT("Poisson's Ratio X");
+		Properties.push_back(make_pair(namePoissonsRatioX, pYarn->PoissonsRatioXProperty()));
 
-		Properties.push_back(make_pair(wxT("Alpha X"), pYarn->m_AlphaX));
-		Properties.push_back(make_pair(wxT("Alpha Y"), pYarn->m_AlphaY));
-		Properties.push_back(make_pair(wxT("Alpha Z"), pYarn->m_AlphaZ));
+		auto namePoissonsRatioY = wxT("Poisson's Ratio Y");
+		Properties.push_back(make_pair(namePoissonsRatioY, pYarn->PoissonsRatioYProperty()));
 
+		auto namePoissonsRatioZ = wxT("Poisson's Ratio Z");
+		Properties.push_back(make_pair(namePoissonsRatioZ, pYarn->PoissonsRatioZProperty()));
+
+		auto nameAlphaX = wxT("Alpha X");
+		Properties.push_back(make_pair(nameAlphaX, pYarn->m_AlphaX));
+
+		auto nameAlphaY = wxT("Alpha Y");
+		Properties.push_back(make_pair(nameAlphaY, pYarn->m_AlphaY));
+
+		auto nameAlphaZ = wxT("Alpha Z");
+		Properties.push_back(make_pair(nameAlphaZ, pYarn->m_AlphaZ));
+
+		wxGrid* pGrid = XRCCTRL(Dialog, "PropertiesGrid", wxGrid);
 		CreatePropertiesGrid(pGrid, Properties);
 
 		Dialog.SetInitialSize(wxSize(400, 250));
@@ -950,28 +940,84 @@ void CModeller::AssignPropertiesToSelectedObjects()
 		{
 			SavePropertiesFromGrid(pGrid, Properties);
 
-			stringstream StringStream;
-			StringStream << "textile = GetTextile('" << m_TextileName << "')" << endl;
-			for (itYarn=SelectedYarns.begin(); itYarn!=SelectedYarns.end(); ++itYarn)
+			auto textile = CTexGen::Instance().GetTextile(m_TextileName);
+			for (auto itYarn = SelectedYarns.begin(); itYarn != SelectedYarns.end(); itYarn++)
 			{
-				for (itProperty=Properties.begin(); itProperty!=Properties.end(); ++itProperty)
+				for (auto itProperty = Properties.begin(); itProperty != Properties.end(); itProperty++)
 				{
 					if (itProperty->second.IsSet())
 					{
-						wxString TruncatedName = itProperty->first;
-						TruncatedName.Replace(wxT("Total"), wxT(""));  // Strip out from Total Fibre Area to maintain compatability
-						TruncatedName.Replace(wxT(" "), wxT(""));
-						TruncatedName.Replace(wxT("'"), wxT(""));
-						if (TruncatedName == wxT("FibresPerYarn")|| TruncatedName == wxT("PoissonsRatioX")
-							|| TruncatedName == wxT("PoissonsRatioY") || TruncatedName == wxT("PoissonsRatioZ"))
-							StringStream << "textile.GetYarn(" << itYarn->iYarn << ").Set" << ConvertString(TruncatedName) << "(" << itProperty->second.GetValue() << ")" << endl;
-						else
-							StringStream << "textile.GetYarn(" << itYarn->iYarn << ").Set" << ConvertString(TruncatedName) << "(" << itProperty->second.GetValue() << ", '" << itProperty->second.GetUnits() << "')" << endl;
+						if (itProperty->first == nameYarnLinearDensity)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetYarnLinearDensity(itProperty->second.GetValue());
+						}
+						if (itProperty->first == nameFibreDensity)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetFibreDensity(itProperty->second.GetValue());
+						}
+						if (itProperty->first == nameTotalFibreArea)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetFibreArea(itProperty->second.GetValue());
+						}
+						if (itProperty->first == nameFibreDiameter)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetFibreDiameter(itProperty->second.GetValue());
+						}
+						if (itProperty->first == nameFibresPerYarn)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetFibresPerYarn(itProperty->second.GetValue());
+						}
+						if (itProperty->first == nameYoungsModulusX)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetYoungsModulusX(itProperty->second.GetValue());
+						}
+						if (itProperty->first == nameYoungsModulusY)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetYoungsModulusY(itProperty->second.GetValue());
+						}
+						if (itProperty->first == nameYoungsModulusZ)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetYoungsModulusZ(itProperty->second.GetValue());
+						}
+						if (itProperty->first == nameShearModulusXY)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetShearModulusXY(itProperty->second.GetValue());
+						}
+						if (itProperty->first == nameShearModulusXZ)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetShearModulusXZ(itProperty->second.GetValue());
+						}
+						if (itProperty->first == nameShearModulusYZ)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetShearModulusYZ(itProperty->second.GetValue());
+						}
+						if (itProperty->first == namePoissonsRatioX)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetPoissonsRatioX(itProperty->second.GetValue());
+						}
+						if (itProperty->first == namePoissonsRatioY)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetPoissonsRatioY(itProperty->second.GetValue());
+						}
+						if (itProperty->first == namePoissonsRatioZ)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetPoissonsRatioZ(itProperty->second.GetValue());
+						}
+						if (itProperty->first == nameAlphaX)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetAlphaX(itProperty->second.GetValue());
+						}
+						if (itProperty->first == nameAlphaY)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetAlphaY(itProperty->second.GetValue());
+						}
+						if (itProperty->first == nameAlphaZ)
+						{
+							textile->GetYarn(itYarn->iYarn)->SetAlphaZ(itProperty->second.GetValue());
+						}
 					}
 				}
 			}
-			CTexGenMainFrame *pMainFrame = ((CTexGenApp*)wxTheApp)->GetMainFrame();
-			pMainFrame->SendPythonCode(StringStream.str());
 		}
 	}
 }
@@ -1010,7 +1056,6 @@ void CModeller::AssignPropertiesToTextile()
 		wxGrid* pGrid = XRCCTRL(Dialog, "PropertiesGrid", wxGrid);
 
 		vector<pair<wxString, CProperty> > Properties;
-		vector<pair<wxString, CProperty> >::iterator itProperty;
 
 		CProperty FibresPerYarn("");
 		FibresPerYarn.SetValue(pTextile->GetFibresPerYarn(), "");
@@ -1032,7 +1077,7 @@ void CModeller::AssignPropertiesToTextile()
 
 			stringstream StringStream;
 			StringStream << "textile = GetTextile('" << m_TextileName << "')" << endl;
-			for (itProperty=Properties.begin(); itProperty!=Properties.end(); ++itProperty)
+			for (auto itProperty = Properties.begin(); itProperty != Properties.end(); itProperty++)
 			{
 				if (itProperty->second.IsSet())
 				{
@@ -1202,7 +1247,7 @@ void CModeller::CreateYarn()
 		if (Dialog.ShowModal() == wxID_OK)
 		{
 			XYZ Origin, End;
-			long i, iNumNodes = 2;
+			long iNumNodes = 2;
 			OriginX.ToDouble(&Origin.x);
 			OriginY.ToDouble(&Origin.y);
 			OriginZ.ToDouble(&Origin.z);
@@ -1210,26 +1255,19 @@ void CModeller::CreateYarn()
 			EndY.ToDouble(&End.y);
 			EndZ.ToDouble(&End.z);
 			NumNodes.ToLong(&iNumNodes);
-			stringstream StringStream;
-			StringStream << "yarn = CYarn()" << endl;
-			StringStream << "yarn.AddNode(CNode(XYZ(" << Origin << ")))" << endl;
-			for (i=1; i<iNumNodes-1; ++i)
+			
+			auto yarn = CYarn();
+			yarn.AddNode(CNode(XYZ(Origin)));
+			for (long i = 1; i < iNumNodes - 1; i++)
 			{
 				double u = i/double(iNumNodes-1);
-				StringStream << "yarn.AddNode(CNode(XYZ(" << Origin+u*(End-Origin) << ")))" << endl;
+				yarn.AddNode(CNode(XYZ(Origin + u * (End - Origin))));
 			}
-			StringStream << "yarn.AddNode(CNode(XYZ(" << End << ")))" << endl;
-			StringStream << "GetTextile('" << m_TextileName << "').AddYarn(yarn)" << endl;
-/*			for (itYarn=SelectedYarns.begin(); itYarn!=SelectedYarns.end(); ++itYarn)
-			{
-				StringStream << "yarns[" << itYarn->iYarn << "].AssignInterpolation(interpolation)" << endl;
-			}*/
-			CTexGenMainFrame *pMainFrame = ((CTexGenApp*)wxTheApp)->GetMainFrame();
-			pMainFrame->SendPythonCode(StringStream.str());
+			yarn.AddNode(CNode(XYZ(End)));
+			CTexGen::Instance().GetTextile(m_TextileName)->AddYarn(yarn);
 			if (bFirstYarn)
 			{
 				SetDefaultRenderState();
-//				pMainFrame->RefreshTextile(m_TextileName);
 			}
 			else
 			{

@@ -263,6 +263,13 @@ double CProperties::GetFibreDiameter(string Units) const
 	return m_FibreDiameter.GetValue(Units);
 }
 
+CProperty CProperties::FibresPerYarnProperty() const
+{
+	CProperty property("");
+	property.SetValue(m_iFibresPerYarn, "");
+	return property;
+}
+
 int CProperties::GetFibresPerYarn() const
 {
 	return m_iFibresPerYarn;
@@ -318,14 +325,35 @@ double CProperties::GetPoissonsRatioX() const
 	return m_PoissonsRatioX;
 }
 
+CProperty CProperties::PoissonsRatioXProperty() const
+{
+	CProperty property("");
+	property.SetValue(m_PoissonsRatioX, "");
+	return property;
+}
+
 double CProperties::GetPoissonsRatioY() const
 {
 	return m_PoissonsRatioY;
 }
 
+CProperty CProperties::PoissonsRatioYProperty() const
+{
+	CProperty property("");
+	property.SetValue(m_PoissonsRatioY, "");
+	return property;
+}
+
 double CProperties::GetPoissonsRatioZ() const
 {
 	return m_PoissonsRatioZ;
+}
+
+CProperty CProperties::PoissonsRatioZProperty() const
+{
+	CProperty property("");
+	property.SetValue(m_PoissonsRatioZ, "");
+	return property;
 }
 
 void CProperties::SetDefaultProperties()

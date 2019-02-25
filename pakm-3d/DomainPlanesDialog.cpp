@@ -49,7 +49,8 @@ string CDomainPlanesDialog::GetCreateDomainCommand()
 	stringstream StringStream;
 	StringStream << "domain = CDomainPlanes()" << endl;
 	wxListItem Item;
-	for (int iItemID = 0; iItemID < m_pListView->GetItemCount(); iItemID++) {
+	for (int iItemID = 0; iItemID < m_pListView->GetItemCount(); iItemID++)
+	{
 		StringStream << "domain.AddPlane(PLANE(XYZ(";
         Item.SetId(iItemID);
         Item.SetMask(wxLIST_MASK_TEXT);

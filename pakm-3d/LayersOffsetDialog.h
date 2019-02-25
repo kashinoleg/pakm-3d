@@ -33,7 +33,10 @@ public:
 	void LoadSettings( const vector<XY>& Offsets, XY& DomainSize );
 	int GetOption();
 	void GetEditOffsets( vector<XY>& Offsets );
+	vector<XY> GetEditOffsets();
+
 	void GetConstantOffset( XY& Offset );
+	XY GetConstantOffset();
 
 protected:
 	void BuildDialog();

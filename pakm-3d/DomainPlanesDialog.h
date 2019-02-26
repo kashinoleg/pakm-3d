@@ -21,7 +21,6 @@ public:
 	CDomainPlanesDialog(wxWindow* parent, wxWindowID id = wxID_ANY);
 	~CDomainPlanesDialog(void) {};
 
-	string GetCreateDomainCommand();
 	CDomainPlanes CreateDomain();
 	void LoadSettings(const CDomainPlanes &DomainPlanes);
 	bool CreateBox();

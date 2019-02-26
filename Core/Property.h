@@ -1,10 +1,12 @@
 #pragma once
 #include "Logger.h"
 
-namespace TexGen {
+namespace TexGen
+{
 	using namespace std;
 
-	class CLASS_DECLSPEC CProperty {
+	class CLASS_DECLSPEC CProperty
+	{
 	public:
 		CProperty(string SIUnits);
 

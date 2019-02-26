@@ -866,80 +866,40 @@ void CModeller::AssignRepeatsToSelectedObjects()
 void CModeller::AssignPropertiesToSelectedObjects()
 {
 	vector<PROP_YARN_INFO> SelectedYarns = GetSelectedYarns();
-
 	if (SelectedYarns.empty())
 	{
 //		wxMessageBox(wxT("Please select at least one yarn before trying to assign properties."), wxT("Unable to assign properties"), wxOK | wxICON_INFORMATION);
 		AssignPropertiesToTextile();
 		return;
 	}
-
-	CYarn *pYarn = GetYarn(SelectedYarns.back());
-
+	auto yarn = GetYarn(SelectedYarns.back());
 	wxDialog Dialog;
 	if (wxXmlResource::Get()->LoadDialog(&Dialog, ((CTexGenApp*)wxTheApp)->GetMainFrame(), wxT("Properties")))
 	{
 		vector<pair<wxString, CProperty> > Properties;
-
-		auto nameYarnLinearDensity = wxT("Yarn Linear Density");
-		Properties.push_back(make_pair(nameYarnLinearDensity, pYarn->m_YarnLinearDensity));
-
-		auto nameFibreDensity = wxT("Fibre Density");
-		Properties.push_back(make_pair(nameFibreDensity, pYarn->m_FibreDensity));
-
-		auto nameTotalFibreArea = wxT("Total Fibre Area");
-		Properties.push_back(make_pair(nameTotalFibreArea, pYarn->m_FibreArea));
-
-		auto nameFibreDiameter = wxT("Fibre Diameter");
-		Properties.push_back(make_pair(nameFibreDiameter, pYarn->m_FibreDiameter));
-
-		auto nameFibresPerYarn = wxT("Fibres Per Yarn");
-		Properties.push_back(make_pair(nameFibresPerYarn, pYarn->FibresPerYarnProperty()));
-
-		auto nameYoungsModulusX = wxT("Young's Modulus X");
-		Properties.push_back(make_pair(nameYoungsModulusX, pYarn->m_YoungsModulusX));
-
-		auto nameYoungsModulusY = wxT("Young's Modulus Y");
-		Properties.push_back(make_pair(nameYoungsModulusY, pYarn->m_YoungsModulusY));
-
-		auto nameYoungsModulusZ = wxT("Young's Modulus Z");
-		Properties.push_back(make_pair(nameYoungsModulusZ, pYarn->m_YoungsModulusZ));
-		
-		auto nameShearModulusXY = wxT("Shear Modulus XY");
-		Properties.push_back(make_pair(nameShearModulusXY, pYarn->m_ShearModulusXY));
-
-		auto nameShearModulusXZ = wxT("Shear Modulus XZ");
-		Properties.push_back(make_pair(nameShearModulusXZ, pYarn->m_ShearModulusXZ));
-
-		auto nameShearModulusYZ = wxT("Shear Modulus YZ");
-		Properties.push_back(make_pair(nameShearModulusYZ, pYarn->m_ShearModulusYZ));
-		
-		auto namePoissonsRatioX = wxT("Poisson's Ratio X");
-		Properties.push_back(make_pair(namePoissonsRatioX, pYarn->PoissonsRatioXProperty()));
-
-		auto namePoissonsRatioY = wxT("Poisson's Ratio Y");
-		Properties.push_back(make_pair(namePoissonsRatioY, pYarn->PoissonsRatioYProperty()));
-
-		auto namePoissonsRatioZ = wxT("Poisson's Ratio Z");
-		Properties.push_back(make_pair(namePoissonsRatioZ, pYarn->PoissonsRatioZProperty()));
-
-		auto nameAlphaX = wxT("Alpha X");
-		Properties.push_back(make_pair(nameAlphaX, pYarn->m_AlphaX));
-
-		auto nameAlphaY = wxT("Alpha Y");
-		Properties.push_back(make_pair(nameAlphaY, pYarn->m_AlphaY));
-
-		auto nameAlphaZ = wxT("Alpha Z");
-		Properties.push_back(make_pair(nameAlphaZ, pYarn->m_AlphaZ));
-
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_YARN_LINEAR_DENSITY), yarn->m_YarnLinearDensity));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_FIBRE_DENSITY), yarn->m_FibreDensity));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_FIBRE_AREA), yarn->m_FibreArea));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_FIBRE_DIAMETER), yarn->m_FibreDiameter));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_FIBRES_PER_YARN), yarn->FibresPerYarnProperty()));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_YOUNGS_MODULUS_X), yarn->m_YoungsModulusX));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_YOUNGS_MODULUS_Y), yarn->m_YoungsModulusY));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_YOUNGS_MODULUS_Z), yarn->m_YoungsModulusZ));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_SHEAR_MODULUS_XY), yarn->m_ShearModulusXY));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_SHEAR_MODULUS_XZ), yarn->m_ShearModulusXZ));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_SHEAR_MODULUS_YZ), yarn->m_ShearModulusYZ));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_POISSONS_RATIO_X), yarn->PoissonsRatioXProperty()));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_POISSONS_RATIO_Y), yarn->PoissonsRatioYProperty()));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_POISSONS_RATIO_Z), yarn->PoissonsRatioZProperty()));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_ALPHA_X), yarn->m_AlphaX));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_ALPHA_Y), yarn->m_AlphaY));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_ALPHA_Z), yarn->m_AlphaZ));
 		wxGrid* pGrid = XRCCTRL(Dialog, "PropertiesGrid", wxGrid);
 		CreatePropertiesGrid(pGrid, Properties);
-
 		Dialog.SetInitialSize(wxSize(400, 250));
 		if (Dialog.ShowModal() == wxID_OK)
 		{
 			SavePropertiesFromGrid(pGrid, Properties);
-
 			auto textile = CTexGen::Instance().GetTextile(m_TextileName);
 			for (auto itYarn = SelectedYarns.begin(); itYarn != SelectedYarns.end(); itYarn++)
 			{
@@ -947,73 +907,59 @@ void CModeller::AssignPropertiesToSelectedObjects()
 				{
 					if (itProperty->second.IsSet())
 					{
-						if (itProperty->first == nameYarnLinearDensity)
+						switch (Convert::ToProperty(itProperty->first))
 						{
+						case CProperties_ID::ID_YARN_LINEAR_DENSITY:
 							textile->GetYarn(itYarn->iYarn)->SetYarnLinearDensity(itProperty->second.GetValue());
-						}
-						if (itProperty->first == nameFibreDensity)
-						{
+							break;
+						case CProperties_ID::ID_FIBRE_DENSITY:
 							textile->GetYarn(itYarn->iYarn)->SetFibreDensity(itProperty->second.GetValue());
-						}
-						if (itProperty->first == nameTotalFibreArea)
-						{
+							break;
+						case CProperties_ID::ID_FIBRE_AREA:
 							textile->GetYarn(itYarn->iYarn)->SetFibreArea(itProperty->second.GetValue());
-						}
-						if (itProperty->first == nameFibreDiameter)
-						{
+							break;
+						case CProperties_ID::ID_FIBRE_DIAMETER:
 							textile->GetYarn(itYarn->iYarn)->SetFibreDiameter(itProperty->second.GetValue());
-						}
-						if (itProperty->first == nameFibresPerYarn)
-						{
+							break;
+						case CProperties_ID::ID_FIBRES_PER_YARN:
 							textile->GetYarn(itYarn->iYarn)->SetFibresPerYarn(itProperty->second.GetValue());
-						}
-						if (itProperty->first == nameYoungsModulusX)
-						{
+							break;
+						case CProperties_ID::ID_YOUNGS_MODULUS_X:
 							textile->GetYarn(itYarn->iYarn)->SetYoungsModulusX(itProperty->second.GetValue());
-						}
-						if (itProperty->first == nameYoungsModulusY)
-						{
+							break;
+						case CProperties_ID::ID_YOUNGS_MODULUS_Y:
 							textile->GetYarn(itYarn->iYarn)->SetYoungsModulusY(itProperty->second.GetValue());
-						}
-						if (itProperty->first == nameYoungsModulusZ)
-						{
+							break;
+						case CProperties_ID::ID_YOUNGS_MODULUS_Z:
 							textile->GetYarn(itYarn->iYarn)->SetYoungsModulusZ(itProperty->second.GetValue());
-						}
-						if (itProperty->first == nameShearModulusXY)
-						{
+							break;
+						case CProperties_ID::ID_SHEAR_MODULUS_XY:
 							textile->GetYarn(itYarn->iYarn)->SetShearModulusXY(itProperty->second.GetValue());
-						}
-						if (itProperty->first == nameShearModulusXZ)
-						{
+							break;
+						case CProperties_ID::ID_SHEAR_MODULUS_XZ:
 							textile->GetYarn(itYarn->iYarn)->SetShearModulusXZ(itProperty->second.GetValue());
-						}
-						if (itProperty->first == nameShearModulusYZ)
-						{
+							break;
+						case CProperties_ID::ID_SHEAR_MODULUS_YZ:
 							textile->GetYarn(itYarn->iYarn)->SetShearModulusYZ(itProperty->second.GetValue());
-						}
-						if (itProperty->first == namePoissonsRatioX)
-						{
+							break;
+						case CProperties_ID::ID_POISSONS_RATIO_X:
 							textile->GetYarn(itYarn->iYarn)->SetPoissonsRatioX(itProperty->second.GetValue());
-						}
-						if (itProperty->first == namePoissonsRatioY)
-						{
+							break;
+						case CProperties_ID::ID_POISSONS_RATIO_Y:
 							textile->GetYarn(itYarn->iYarn)->SetPoissonsRatioY(itProperty->second.GetValue());
-						}
-						if (itProperty->first == namePoissonsRatioZ)
-						{
+							break;
+						case CProperties_ID::ID_POISSONS_RATIO_Z:
 							textile->GetYarn(itYarn->iYarn)->SetPoissonsRatioZ(itProperty->second.GetValue());
-						}
-						if (itProperty->first == nameAlphaX)
-						{
+							break;
+						case CProperties_ID::ID_ALPHA_X:
 							textile->GetYarn(itYarn->iYarn)->SetAlphaX(itProperty->second.GetValue());
-						}
-						if (itProperty->first == nameAlphaY)
-						{
+							break;
+						case CProperties_ID::ID_ALPHA_Y:
 							textile->GetYarn(itYarn->iYarn)->SetAlphaY(itProperty->second.GetValue());
-						}
-						if (itProperty->first == nameAlphaZ)
-						{
+							break;
+						case CProperties_ID::ID_ALPHA_Z:
 							textile->GetYarn(itYarn->iYarn)->SetAlphaZ(itProperty->second.GetValue());
+							break;
 						}
 					}
 				}
@@ -1025,73 +971,72 @@ void CModeller::AssignPropertiesToSelectedObjects()
 void CModeller::DisplayVolumeFractionForSelectedObjects()
 {
 	vector<PROP_YARN_INFO> SelectedYarns = GetSelectedYarns();
-	vector<PROP_YARN_INFO>::iterator itYarn;
-
 	if (SelectedYarns.empty())
 	{
 		wxMessageBox(wxT("Please select at least one yarn for display of volume fraction."), wxT("Unable to display volume fraction"), wxOK | wxICON_INFORMATION);
 		return;
 	}
-
 	wxString VfMessage;
-	for (itYarn = SelectedYarns.begin(); itYarn != SelectedYarns.end(); ++itYarn )
+	for (auto itYarn = SelectedYarns.begin(); itYarn != SelectedYarns.end(); ++itYarn )
 	{
 		CYarn *pYarn = GetYarn( *itYarn );
 		double VolumeFraction = pYarn->GetFibreYarnVolumeFraction();
 		VfMessage << wxT("Yarn ") << itYarn->iYarn << wxT(" Fibre volume fraction =  ") << VolumeFraction << wxT("\n");
 	}
-
 	wxMessageBox( VfMessage, wxT("Volume Fraction")/*, wxOK|wxCENTRE*/ );
 }
 
 void CModeller::AssignPropertiesToTextile()
 {
-	CTextile* pTextile = TEXGEN.GetTextile(m_TextileName);
-	if (!pTextile)
+	auto textile = CTexGen::Instance().GetTextile(m_TextileName);
+	if (!textile)
+	{
 		return;
-
+	}
 	wxDialog Dialog;
 	if (wxXmlResource::Get()->LoadDialog(&Dialog, ((CTexGenApp*)wxTheApp)->GetMainFrame(), wxT("Properties")))
 	{
+		vector<pair<wxString, CProperty>> Properties;
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_YARN_LINEAR_DENSITY), textile->m_YarnLinearDensity));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_FIBRE_DENSITY), textile->m_FibreDensity));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_FIBRE_AREA), textile->m_FibreArea));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_FIBRE_DIAMETER), textile->m_FibreDiameter));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_FIBRES_PER_YARN), textile->FibresPerYarnProperty()));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_ID::ID_AREAL_DENSITY), textile->m_ArealDensity));
 		wxGrid* pGrid = XRCCTRL(Dialog, "PropertiesGrid", wxGrid);
-
-		vector<pair<wxString, CProperty> > Properties;
-
-		CProperty FibresPerYarn("");
-		FibresPerYarn.SetValue(pTextile->GetFibresPerYarn(), "");
-
-		// Note that for each property name there should be an equivalent Set<PropertyName>
-		Properties.push_back(make_pair(wxT("Yarn Linear Density"), pTextile->m_YarnLinearDensity));
-		Properties.push_back(make_pair(wxT("Fibre Density"), pTextile->m_FibreDensity));
-		Properties.push_back(make_pair(wxT("Total Fibre Area"), pTextile->m_FibreArea));
-		Properties.push_back(make_pair(wxT("Fibre Diameter"), pTextile->m_FibreDiameter));
-		Properties.push_back(make_pair(wxT("Fibres Per Yarn"), FibresPerYarn));
-		Properties.push_back(make_pair(wxT("Areal Density"), pTextile->m_ArealDensity));
-
 		CreatePropertiesGrid(pGrid, Properties);
-
 		Dialog.SetInitialSize(wxSize(400, 180));
 		if (Dialog.ShowModal() == wxID_OK)
 		{
 			SavePropertiesFromGrid(pGrid, Properties);
-
-			stringstream StringStream;
-			StringStream << "textile = GetTextile('" << m_TextileName << "')" << endl;
+			auto textile = CTexGen::Instance().GetTextile(m_TextileName);
 			for (auto itProperty = Properties.begin(); itProperty != Properties.end(); itProperty++)
 			{
 				if (itProperty->second.IsSet())
 				{
-					wxString TruncatedName = itProperty->first;
-					TruncatedName.Replace(wxT("Total"), wxT(""));  // Strip out from Total Fibre Area to maintain compatability
-					TruncatedName.Replace(wxT(" "), wxT(""));
-					if (TruncatedName == wxT("FibresPerYarn"))
-						StringStream << "textile.Set" << TruncatedName << "(" << itProperty->second.GetValue() << ")" << endl;
-					else
-						StringStream << "textile.Set" << TruncatedName << "(" << itProperty->second.GetValue() << ", '" << itProperty->second.GetUnits() << "')" << endl;
+					switch (Convert::ToProperty(itProperty->first))
+					{
+					case CProperties_ID::ID_YARN_LINEAR_DENSITY:
+						textile->SetYarnLinearDensity(itProperty->second.GetValue(), itProperty->second.GetUnits());
+						break;
+					case CProperties_ID::ID_FIBRE_DENSITY:
+						textile->SetFibreDensity(itProperty->second.GetValue(), itProperty->second.GetUnits());
+						break;
+					case CProperties_ID::ID_FIBRE_AREA:
+						textile->SetFibreArea(itProperty->second.GetValue(), itProperty->second.GetUnits());
+						break;
+					case CProperties_ID::ID_FIBRE_DIAMETER:
+						textile->SetFibreDiameter(itProperty->second.GetValue(), itProperty->second.GetUnits());
+						break;
+					case CProperties_ID::ID_FIBRES_PER_YARN:
+						textile->SetFibresPerYarn(itProperty->second.GetValue());
+						break;
+					case CProperties_ID::ID_AREAL_DENSITY:
+						textile->SetArealDensity(itProperty->second.GetValue(), itProperty->second.GetUnits());
+						break;
+					}
 				}
 			}
-			CTexGenMainFrame *pMainFrame = ((CTexGenApp*)wxTheApp)->GetMainFrame();
-			pMainFrame->SendPythonCode(StringStream.str());
 		}
 	}
 }
@@ -1168,17 +1113,16 @@ void CModeller::SavePropertiesFromGrid(wxGrid* pGrid, vector<pair<wxString, CPro
 
 void CModeller::AssignMatrixProperties()
 {
-	CTextile* pTextile = TEXGEN.GetTextile(m_TextileName);
+	auto pTextile = CTexGen::Instance().GetTextile(m_TextileName);
 	if (!pTextile)
+	{
 		return;
-
+	}
 	wxDialog Dialog;
 	if (wxXmlResource::Get()->LoadDialog(&Dialog, ((CTexGenApp*)wxTheApp)->GetMainFrame(), wxT("Properties")))
 	{
-		wxGrid* pGrid = XRCCTRL(Dialog, "PropertiesGrid", wxGrid);
-
-		vector<pair<wxString, CProperty> > Properties;
-		vector<pair<wxString, CProperty> >::iterator itProperty;
+		vector<pair<wxString, CProperty>> Properties;
+		Properties.push_back(make_pair(wxT("Matrix Young's Modulus"), pTextile->m_MatrixYoungsModulus));
 
 		CProperty PoissonsRatio("");
 		PoissonsRatio.SetValue(pTextile->GetMatrixPoissonsRatio(),"");
@@ -1187,10 +1131,11 @@ void CModeller::AssignMatrixProperties()
 		Alpha.SetValue(pTextile->GetMatrixAlpha(),"/K");
 
 		// Note that for each property name there should be an equivalent Set<PropertyName>
-		Properties.push_back(make_pair(wxT("Matrix Young's Modulus"), pTextile->m_MatrixYoungsModulus));
+		
 		Properties.push_back(make_pair(wxT("Matrix Poisson's Ratio"), PoissonsRatio));
 		Properties.push_back(make_pair(wxT("Matrix Alpha"), Alpha));
 		
+		wxGrid* pGrid = XRCCTRL(Dialog, "PropertiesGrid", wxGrid);
 		CreatePropertiesGrid(pGrid, Properties);
 
 		Dialog.SetInitialSize(wxSize(400, 150));
@@ -1200,7 +1145,7 @@ void CModeller::AssignMatrixProperties()
 
 			stringstream StringStream;
 			StringStream << "textile = GetTextile('" << m_TextileName << "')" << endl;
-			for (itProperty=Properties.begin(); itProperty!=Properties.end(); ++itProperty)
+			for (auto itProperty = Properties.begin(); itProperty != Properties.end(); itProperty++)
 			{
 				if (itProperty->second.IsSet())
 				{

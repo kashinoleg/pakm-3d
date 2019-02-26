@@ -1,7 +1,8 @@
 #pragma once
 #include "Property.h"
 
-namespace TexGen {
+namespace TexGen
+{
 	using namespace std;
 
 	/// Class to store properties related to a textile and/or yarn
@@ -155,19 +156,13 @@ namespace TexGen {
 		int GetFibresPerYarn() const;
 		CProperty FibresPerYarnProperty() const;
 
-		/// Get the area occupied by fibres given fibre diameter and number of fibres
-		/**
-		Either returns the value stored in m_dFibreArea or calculates it from 
-		m_iFibresPerYarn and m_FibreDiameter if they are set OR from
-		m_dYarnLinearDensity and m_dFibreDensity if they are set.
-		*/
 		double GetFibreArea(string Units = "m^2") const;
-		double GetYoungsModulusX( string Units = "MPa") const;
-		double GetYoungsModulusY( string Units = "MPa") const;
-		double GetYoungsModulusZ( string Units = "MPa") const;
-		double GetShearModulusXY( string Units = "MPa") const;
-		double GetShearModulusXZ( string Units = "MPa") const;
-		double GetShearModulusYZ( string Units = "MPa") const;
+		double GetYoungsModulusX(string Units = "MPa") const;
+		double GetYoungsModulusY(string Units = "MPa") const;
+		double GetYoungsModulusZ(string Units = "MPa") const;
+		double GetShearModulusXY(string Units = "MPa") const;
+		double GetShearModulusXZ(string Units = "MPa") const;
+		double GetShearModulusYZ(string Units = "MPa") const;
 		double GetAlphaX( string Units = "/K") const;
 		double GetAlphaY( string Units = "/K") const;
 		double GetAlphaZ( string Units = "/K") const;
@@ -195,7 +190,6 @@ namespace TexGen {
 		CProperty m_AlphaY;
 		CProperty m_AlphaZ;
 		CProperty m_CalculatedArea;
-
 	protected:
 		int m_iFibresPerYarn;
 		double m_PoissonsRatioX;
@@ -204,5 +198,27 @@ namespace TexGen {
 
 		/// Set default properties as specified by DefaultProperties.h
 		void SetDefaultProperties();
+	};
+
+	enum CProperties_ID
+	{
+		ID_POISSONS_RATIO_X,
+		ID_POISSONS_RATIO_Y,
+		ID_POISSONS_RATIO_Z,
+		ID_YARN_LINEAR_DENSITY,
+		ID_FIBRE_DENSITY,
+		ID_FIBRE_AREA,
+		ID_FIBRE_DIAMETER,
+		ID_YOUNGS_MODULUS_X,
+		ID_YOUNGS_MODULUS_Y,
+		ID_YOUNGS_MODULUS_Z,
+		ID_SHEAR_MODULUS_XY,
+		ID_SHEAR_MODULUS_XZ,
+		ID_SHEAR_MODULUS_YZ,
+		ID_ALPHA_X,
+		ID_ALPHA_Y,
+		ID_ALPHA_Z,
+		ID_AREAL_DENSITY,
+		ID_FIBRES_PER_YARN
 	};
 }

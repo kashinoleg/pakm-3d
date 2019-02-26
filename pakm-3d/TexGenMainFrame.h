@@ -98,11 +98,15 @@ protected:
 	void OnGeometrySolve(wxCommandEvent& event);
 	void OnModeller(wxCommandEvent& event);
 
+
+
 	void OnDomains(wxCommandEvent& event);
-	void OnCreateDomainPlanes();
-	void OnCreateDomainBox();
 	void OnDeleteDomain();
 	void OnEditDomain();
+	void OnCreateDomainPlanes();
+	void OnCreateDomainBox();
+	
+	
 
 
 	void OnPython(wxCommandEvent& event);

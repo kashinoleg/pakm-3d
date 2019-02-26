@@ -2,7 +2,8 @@
 #include "Properties.h"
 #include "Logger.h"
 
-namespace TexGen {
+namespace TexGen
+{
 	using namespace std;
 
 	/// Class to store properties related to a textile
@@ -13,7 +14,16 @@ namespace TexGen {
 	from the volume of yarns in the geometrical model along with information about fibre
 	density and areal density.
 	*/
-	class CLASS_DECLSPEC CPropertiesTextile : public CProperties {
+	class CLASS_DECLSPEC CPropertiesTextile : public CProperties
+	{
+	protected:
+		string m_GeometryScale;
+		double m_MatrixPoissonsRatio;
+		double m_MatrixAlpha;
+
+		/// Set default matrix properties as specified by DefaultProperties.h
+		void SetDefaultMatrixProperties();
+
 	public:
 		CPropertiesTextile();
 		CPropertiesTextile(TiXmlElement &Element);
@@ -51,14 +61,5 @@ namespace TexGen {
 
 		CProperty m_ArealDensity;
 		CProperty m_MatrixYoungsModulus;
-		//CProperty m_MatrixAlpha;
-
-	protected:
-		string m_GeometryScale;
-		double m_MatrixPoissonsRatio;
-		double m_MatrixAlpha;
-
-		/// Set default matrix properties as specified by DefaultProperties.h
-		void SetDefaultMatrixProperties();
 	};
 }

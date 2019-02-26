@@ -44,49 +44,6 @@ CDomainPlanes CDomainPlanesDialog::CreateDomain()
 	return Domain;
 }
 
-string CDomainPlanesDialog::GetCreateDomainCommand()
-{
-	stringstream StringStream;
-	StringStream << "domain = CDomainPlanes()" << endl;
-	wxListItem Item;
-	for (int iItemID = 0; iItemID < m_pListView->GetItemCount(); iItemID++)
-	{
-		StringStream << "domain.AddPlane(PLANE(XYZ(";
-        Item.SetId(iItemID);
-        Item.SetMask(wxLIST_MASK_TEXT);
-        Item.SetColumn(0);
-		if (m_pListView->GetItem(Item))
-		{
-			double dItem;
-			Item.GetText().ToDouble( &dItem );
-			StringStream << dItem << ", ";
-		}
-        Item.SetColumn(1);
-		if (m_pListView->GetItem(Item))
-		{
-			double dItem;
-			Item.GetText().ToDouble( &dItem );
-			StringStream << dItem << ", ";
-		}
-        Item.SetColumn(2);
-		if (m_pListView->GetItem(Item))
-		{
-			double dItem;
-			Item.GetText().ToDouble( &dItem );
-			StringStream << dItem << "), ";
-		}
-        Item.SetColumn(3);
-		if (m_pListView->GetItem(Item))
-		{
-			double dItem;
-			Item.GetText().ToDouble( &dItem );
-			StringStream << dItem << "))" << endl;
-		}
-		//break;
-	}
-	return StringStream.str();
-}
-
 void CDomainPlanesDialog::BuildDialog()
 {
 	wxSizerFlags SizerFlags;

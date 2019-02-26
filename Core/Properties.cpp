@@ -232,6 +232,12 @@ double CProperties::GetFibreDensity(string Units) const
 
 double CProperties::GetFibreArea(string Units) const
 {
+	/// Get the area occupied by fibres given fibre diameter and number of fibres
+		/**
+		Either returns the value stored in m_dFibreArea or calculates it from
+		m_iFibresPerYarn and m_FibreDiameter if they are set OR from
+		m_dYarnLinearDensity and m_dFibreDensity if they are set.
+		*/
 	if (m_FibreArea.IsSet())
 		return m_FibreArea.GetValue(Units);
 	else if (m_iFibresPerYarn && m_FibreDiameter.IsSet())

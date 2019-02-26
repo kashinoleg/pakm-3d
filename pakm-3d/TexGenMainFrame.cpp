@@ -1689,31 +1689,18 @@ void CTexGenMainFrame::OnSnapSize(wxCommandEvent &event)
 	}
 }
 
-void CTexGenMainFrame::OnEditDomain()
+void CTexGenMainFrame::OnDomains(wxCommandEvent& event)
 {
-	string TextileName = GetTextileSelection();
-	if (!TextileName.empty())
+	switch (event.GetId())
 	{
-		CTextile* pTextile = TEXGEN.GetTextile(TextileName);
-		if (pTextile)
-		{
-			const CDomain* pDomain = pTextile->GetDomain();
-			if (pDomain && pDomain->GetType() == "CDomainPlanes")
-			{
-				CDomainPlanesDialog Dialog(this, wxID_ANY);
-				Dialog.LoadSettings(*((CDomainPlanes*)pDomain));
-				if (Dialog.ShowModal() == wxID_OK)
-				{
-					string Command = Dialog.GetCreateDomainCommand();
-					if (!Command.empty())
-					{
-						Command += "GetTextile('" + TextileName + "').AssignDomain(domain)";
-						SendPythonCode(Command);
-						RefreshTextile(TextileName);
-					}
-				}
-			}
-		}
+	case ID_DeleteDomain:
+		OnDeleteDomain(); break;
+	case ID_EditDomain:
+		OnEditDomain(); break;
+	case ID_CreateDomainPlanes:
+		OnCreateDomainPlanes(); break;
+	case ID_CreateDomainBox:
+		OnCreateDomainBox();break;
 	}
 }
 
@@ -1731,18 +1718,26 @@ void CTexGenMainFrame::OnDeleteDomain()
 	}
 }
 
-void CTexGenMainFrame::OnDomains(wxCommandEvent& event)
+void CTexGenMainFrame::OnEditDomain()
 {
-	switch (event.GetId())
+	string TextileName = GetTextileSelection();
+	if (!TextileName.empty())
 	{
-	case ID_DeleteDomain:
-		OnDeleteDomain(); break;
-	case ID_EditDomain:
-		OnEditDomain(); break;
-	case ID_CreateDomainPlanes:
-		OnCreateDomainPlanes(); break;
-	case ID_CreateDomainBox:
-		OnCreateDomainBox();break;
+		auto textile = CTexGen::Instance().GetTextile(TextileName);
+		if (textile)
+		{
+			const CDomain* pDomain = textile->GetDomain();
+			if (pDomain && pDomain->GetType() == "CDomainPlanes")
+			{
+				CDomainPlanesDialog Dialog(this, wxID_ANY);
+				Dialog.LoadSettings(*((CDomainPlanes*)pDomain));
+				if (Dialog.ShowModal() == wxID_OK)
+				{
+					Dialog.CreateDomain();
+					RefreshTextile(TextileName);
+				}
+			}
+		}
 	}
 }
 
@@ -1754,13 +1749,8 @@ void CTexGenMainFrame::OnCreateDomainPlanes()
 		string TextileName = GetTextileSelection();
 		if (!TextileName.empty())
 		{
-			string Command = Dialog.GetCreateDomainCommand();
-			if (!Command.empty())
-			{
-				Command += "GetTextile('" + TextileName + "').AssignDomain(domain)";
-				SendPythonCode(Command);
-				RefreshTextile(TextileName);
-			}
+			Dialog.CreateDomain();
+			RefreshTextile(TextileName);
 		}
 	}
 }
@@ -1773,13 +1763,8 @@ void CTexGenMainFrame::OnCreateDomainBox()
 		string TextileName = GetTextileSelection();
 		if (!TextileName.empty())
 		{
-			string Command = Dialog.GetCreateDomainCommand();
-			if (!Command.empty())
-			{
-				Command += "GetTextile('" + TextileName + "').AssignDomain(domain)";
-				SendPythonCode(Command);
-				RefreshTextile(TextileName);
-			}
+			Dialog.CreateDomain();
+			RefreshTextile(TextileName);
 		}
 	}
 }

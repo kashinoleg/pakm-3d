@@ -664,28 +664,26 @@ void CModeller::DuplicateYarns()
 void CModeller::AssignSectionToSelectedObjects()
 {
 	vector<PROP_YARN_INFO> SelectedYarns = GetSelectedYarns();
-	vector<PROP_YARN_INFO>::iterator itYarn;
-
 	if (SelectedYarns.empty())
 	{
 		wxMessageBox(wxT("Please select at least one yarn before trying to assign a section."), wxT("Unable to assign section"), wxOK | wxICON_INFORMATION);
 		return;
 	}
-
 	bool bSameNumNodes = true;
 	int iNumNodes = 0;
-	for (itYarn=SelectedYarns.begin(); itYarn!=SelectedYarns.end(); ++itYarn)
+	for (auto itYarn = SelectedYarns.begin(); itYarn != SelectedYarns.end(); itYarn++)
 	{
 		CYarn *pYarn = GetYarn(*itYarn);
-		if (itYarn==SelectedYarns.begin())
+		if (itYarn == SelectedYarns.begin())
+		{
 			iNumNodes = (int)pYarn->GetMasterNodes().size();
+		}
 		else if (iNumNodes != pYarn->GetMasterNodes().size())
 		{
 			bSameNumNodes = false;
 			break;
 		}
 	}
-
 	CYarn *pYarn = GetYarn(SelectedYarns.back());
 	const CYarnSection* pSection = nullptr;
 	if (pYarn)
@@ -704,7 +702,7 @@ void CModeller::AssignSectionToSelectedObjects()
 		{
 			stringstream StringStream;
 			StringStream << "textile = GetTextile('" << m_TextileName << "')" << endl;
-			for (itYarn=SelectedYarns.begin(); itYarn!=SelectedYarns.end(); ++itYarn)
+			for (auto itYarn = SelectedYarns.begin(); itYarn != SelectedYarns.end(); itYarn++)
 			{
 				StringStream << "textile.GetYarn(" << itYarn->iYarn << ").AssignSection(yarnsection)" << endl;
 			}

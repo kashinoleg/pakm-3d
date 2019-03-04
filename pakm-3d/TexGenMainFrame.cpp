@@ -416,21 +416,11 @@ void CTexGenMainFrame::OnSaveScreenshot(wxCommandEvent& event)
 				wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxFD_CHANGE_DIR
 			);
 			dialog.CentreOnParent();
-			if (dialog.ShowModal() == wxID_OK)
+			auto renderer = GetRendererWindow();
+			if (dialog.ShowModal() == wxID_OK && renderer)
 			{
-				
-
-				string Command;
-				Command = "GetRenderWindow().TakeScreenShot(r\"";
-				Command += ConvertString(dialog.GetPath());
-				Command += "\", ";
-				
-				wxSpinCtrl* MagCtrl = (wxSpinCtrl*)FindWindow(XRCID("Magnification"));
-				
-				Command += stringify(MagCtrl->GetValue());
-				Command += ")";
-				SendPythonCode(Command);
-
+				auto MagCtrl = (wxSpinCtrl*)FindWindow(XRCID("Magnification"));
+				renderer->TakeScreenShot(ConvertString(dialog.GetPath()), MagCtrl->GetValue());
 			}
 		}
 	}
@@ -603,7 +593,7 @@ void CTexGenMainFrame::OnSaveVoxel(wxCommandEvent& event)
 void CTexGenMainFrame::OnSaveVolumeMesh(wxCommandEvent& event)
 {
 	string TextileName = GetTextileSelection();
-	CTextile* pTextile = TEXGEN.GetTextile(TextileName);
+	auto pTextile = CTexGen::Instance().GetTextile(TextileName);
 
 	double dSeedSize = 1;
 
@@ -652,32 +642,45 @@ void CTexGenMainFrame::OnSaveVolumeMesh(wxCommandEvent& event)
 			dialog.CentreOnParent();
 			if (dialog.ShowModal() == wxID_OK)
 			{
-				stringstream Command;
-				if ( bPeriodic )
-					Command << "mesher = CMesher(" << iBoundaryConditions << ")" << endl;
-				else
-					Command << "mesher = CMesher()" << endl;
-				if (iElementOrder == 1)
-					Command << "mesher.SetQuadratic(True)" << endl;
-				if (!bProjectMidSideNodes)
-					Command << "mesher.SetProjectMidSideNodes(False)" << endl;
+				CMesher* mesher = nullptr;
 				if (bPeriodic)
-					Command << "mesher.SetPeriodic(True)" << endl;
+				{
+					mesher = new CMesher(iBoundaryConditions);
+				}
+				else
+				{
+					mesher = new CMesher();
+				}
+				if (iElementOrder == 1)
+				{
+					mesher->SetQuadratic(true);
+				}
+				if (!bProjectMidSideNodes)
+				{
+					mesher->SetProjectMidSideNodes(false);
+				}
+				if (bPeriodic)
+				{
+					mesher->SetPeriodic(true);
+				}
 				if (!SeedSize.IsEmpty())
-					Command << "mesher.SetSeed(" << ConvertString(SeedSize) << ")" << endl;
+				{
+					mesher->SetSeed(Convert::ToDouble(SeedSize));
+				}
 				if (!MergeTolerance.IsEmpty())
-					Command << "mesher.SetMergeTolerance(" << ConvertString(MergeTolerance) << ")" << endl;
-				Command << "mesher.CreateMesh(r'" << TextileName << "')" << endl;
+				{
+					mesher->SetMergeTolerance(Convert::ToDouble(MergeTolerance));
+				}
+				mesher->CreateMesh(TextileName);
 				switch (dialog.GetFilterIndex())
 				{
 				case 0:
-					Command << "mesher.SaveVolumeMeshToABAQUS(r'" << ConvertString(dialog.GetPath()) << "', '" << TextileName << "')" << endl;
+					mesher->SaveVolumeMeshToABAQUS(Convert::ToString(dialog.GetPath()), TextileName);
 					break;
 				case 1:
-					Command << "mesher.SaveVolumeMeshToVTK(r'" << ConvertString(dialog.GetPath()) << "')" << endl;
+					mesher->SaveVolumeMeshToVTK(Convert::ToString(dialog.GetPath()));
 					break;
 				}
-				SendPythonCode(Command.str());
 			}
 		}
 	}
@@ -840,9 +843,7 @@ void CTexGenMainFrame::OnSaveSTEP(wxCommandEvent& event)
 
 void CTexGenMainFrame::OnSaveABAQUS(wxCommandEvent& event)
 {
-
-	string TextileName = GetTextileSelection();
-	stringstream Command;
+	/*string TextileName = GetTextileSelection();
 
 	wxString XScale = wxT("1.0");
 	wxString YScale = wxT("1.0");
@@ -872,8 +873,8 @@ void CTexGenMainFrame::OnSaveABAQUS(wxCommandEvent& event)
 		XRCCTRL(AbaqusInput, "XScale", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &XScale));
 		XRCCTRL(AbaqusInput, "YScale", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &YScale));
 		XRCCTRL(AbaqusInput, "ZScale", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &ZScale));
-		/*XRCCTRL(AbaqusInput, "YoungsModulus", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &YoungsModulus));
-		XRCCTRL(AbaqusInput, "PoissonsRatio", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &PoissonsRatio));*/
+		//XRCCTRL(AbaqusInput, "YoungsModulus", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &YoungsModulus));
+		//XRCCTRL(AbaqusInput, "PoissonsRatio", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &PoissonsRatio));
 		XRCCTRL(AbaqusInput, "AdjustIntersections", wxCheckBox)->SetValidator(wxGenericValidator(&bAdjustIntersections));
 		XRCCTRL(AbaqusInput, "IntersectionTolerance", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &IntersectionTolerance));
 		XRCCTRL(AbaqusInput, "IncludePlates", wxCheckBox)->SetValidator(wxGenericValidator(&bIncludePlates));
@@ -884,6 +885,7 @@ void CTexGenMainFrame::OnSaveABAQUS(wxCommandEvent& event)
 		{
 			if (dialog.ShowModal() == wxID_OK)
 			{
+				stringstream Command;
 				Command << "tension = CLinearTransformation()" << endl;
 				Command << "tension.AddScale(" << ConvertString(XScale) << "," << ConvertString(YScale) << "," << ConvertString(ZScale) << ")" << endl;
 
@@ -909,24 +911,15 @@ void CTexGenMainFrame::OnSaveABAQUS(wxCommandEvent& event)
 				SendPythonCode(Command.str());
 			}
 		}
-	}
-
-	
-
+	}//*/
 /*if not deformer.CreateAbaqusInputFile(textile, baseName + '.inp'):
 	raise RuntimeError('Unable to create ABAQUS input file')
 else:
     print 'Abaqus input files are complete now.'*/
-
-
 }
 
 void CTexGenMainFrame::OnSaveABAQUSVoxels(wxCommandEvent& event)
 {
-
-	string TextileName = GetTextileSelection();
-	stringstream Command;
-
 	wxString XVoxels = wxT("50");
 	wxString YVoxels = wxT("50");
 	wxString ZVoxels = wxT("50");
@@ -949,7 +942,6 @@ void CTexGenMainFrame::OnSaveABAQUSVoxels(wxCommandEvent& event)
 	dialog.CentreOnParent();
 	
 	CAbaqusVoxelInput AbaqusVoxelInput(this);
-
 	{
 		XRCCTRL(AbaqusVoxelInput, "XVoxelCount", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &XVoxels));
 		XRCCTRL(AbaqusVoxelInput, "YVoxelCount", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &YVoxels));
@@ -969,6 +961,7 @@ void CTexGenMainFrame::OnSaveABAQUSVoxels(wxCommandEvent& event)
 					TGERROR("No output selected");
 					return;
 				}
+				string TextileName = GetTextileSelection();
 				auto textile = CTexGen::Instance().GetTextile(TextileName);
 				auto outputFilename = ConvertString(dialog.GetPath());
 				auto XVoxNum = Convert::ToInt(XVoxels);
@@ -995,14 +988,6 @@ void CTexGenMainFrame::OnSaveABAQUSVoxels(wxCommandEvent& event)
 			}
 		}
 	}
-	
-
-/*if not deformer.CreateAbaqusInputFile(textile, baseName + '.inp'):
-	raise RuntimeError('Unable to create ABAQUS input file')
-else:
-    print 'Abaqus input files are complete now.'*/
-
-
 }
 
 void CTexGenMainFrame::OnPeriodicBoundaries(wxCommandEvent& event)
@@ -1100,6 +1085,24 @@ CTexGenRenderWindow *CTexGenMainFrame::GetRenderWindow(string WindowName)
 	}
 	return NULL;
 }
+
+CTexGenRenderer* CTexGenMainFrame::GetRendererWindow(string WindowName)
+{
+	if (wxTheApp)
+	{
+		CTexGenMainFrame *pMainFrame = ((CTexGenApp*)wxTheApp)->GetMainFrame();
+		if (pMainFrame)
+		{
+			CTexGenRenderWindow* pRenderWindow = pMainFrame->GetRenderWindow(WindowName);
+			if (pRenderWindow)
+			{
+				return pRenderWindow->GetRenderer();
+			}
+		}
+	}
+	return NULL;
+}
+
 
 CTexGenRenderWindow *CTexGenMainFrame::CreateRenderWindow(string WindowName)
 {
@@ -1773,177 +1776,200 @@ void CTexGenMainFrame::OnRendering(wxCommandEvent& event)
 {
 	string TextileName = GetTextileSelection();
 	if (TextileName.empty())
+	{
 		return;
-	CTextile* pTextile = CTexGen::Instance().GetTextile(TextileName);
+	}
+	auto pTextile = CTexGen::Instance().GetTextile(TextileName);
 	if (!pTextile)
+	{
 		return;
-	string Command;
+	}
 	switch (event.GetId())
 	{
 	case ID_RenderNodes:
 		if (event.IsChecked())
-			Command = "GetRenderWindow('" + TextileName + "').RenderNodes('" + TextileName + "')";
+		{
+			GetRendererWindow(TextileName)->RenderNodes(TextileName);
+		}
 		else
 		{
-			Command = "GetRenderWindow('" + TextileName + "').RemoveNodes()";
+			GetRendererWindow(TextileName)->RemoveNodes();
 		}
 		break;
 	case ID_RenderPaths:
 		if (event.IsChecked())
-			Command = "GetRenderWindow('" + TextileName + "').RenderPaths('" + TextileName + "')";
+		{
+			GetRendererWindow(TextileName)->RenderPaths(TextileName);
+		}
 		else
-			Command = "GetRenderWindow('" + TextileName + "').RemovePaths()";
+		{
+			GetRendererWindow(TextileName)->RemovePaths();
+		}
 		break;
 	case ID_RenderSurface:
 		if (event.IsChecked())
-			Command = "GetRenderWindow('" + TextileName + "').RenderTextile('" + TextileName + "')";
+		{
+			GetRendererWindow(TextileName)->RenderTextile(TextileName);
+		}
 		else
-			Command = "GetRenderWindow('" + TextileName + "').RemoveTextiles()";
+		{
+			GetRendererWindow(TextileName)->RemoveTextiles();
+		}
 		break;
 	case ID_RenderVolume:
 		if (event.IsChecked())
-			Command = "GetRenderWindow('" + TextileName + "').RenderMesh('" + TextileName + "')";
+		{
+			GetRendererWindow(TextileName)->RenderMesh(TextileName);
+		}
 		else
-			Command = "GetRenderWindow('" + TextileName + "').RemoveMeshes()";
+		{
+			GetRendererWindow(TextileName)->RemoveMeshes();
+		}
 		break;
 	case ID_RenderInterference:
 		if (event.IsChecked())
-			Command = "GetRenderWindow('" + TextileName + "').RenderInterference('" + TextileName + "')";
+		{
+			GetRendererWindow(TextileName)->RenderInterference(TextileName);
+		}
 		else
-			Command = "GetRenderWindow('" + TextileName + "').RemoveInterference()";
+		{
+			GetRendererWindow(TextileName)->RemoveInterference();
+		}
 		break;
 	case ID_RenderInterferenceDepth:
 		if (event.IsChecked())
-			Command = "GetRenderWindow('" + TextileName + "').RenderInterference('" + TextileName + "', True)";
+		{
+			GetRendererWindow(TextileName)->RenderInterference(TextileName, true);
+		}
 		else
-			Command = "GetRenderWindow('" + TextileName + "').RemoveInterferenceDepth()";
+		{
+			GetRendererWindow(TextileName)->RemoveInterferenceDepth();
+		}
 		break;
 	case ID_RenderOrientation:
 		if (event.IsChecked())
-			Command = "GetRenderWindow('" + TextileName + "').RenderGrid('" + TextileName + "')";
+		{
+			GetRendererWindow(TextileName)->RenderGrid(TextileName);
+		}
 		else
-			Command = "GetRenderWindow('" + TextileName + "').RemoveOrientations()";
+		{
+			GetRendererWindow(TextileName)->RemoveOrientations();
+		}
 		break;
 	case ID_RenderDomain:
 		if (event.IsChecked())
-			Command = "GetRenderWindow('" + TextileName + "').RenderDomain('" + TextileName + "')";
+		{
+			GetRendererWindow(TextileName)->RenderDomain(TextileName);
+		}
 		else
-			Command = "GetRenderWindow('" + TextileName + "').RemoveDomains()";
+		{
+			GetRendererWindow(TextileName)->RemoveDomains();
+		}
 		break;
 	case ID_RenderDomainAxes:
 		if (event.IsChecked())
-			Command = "GetRenderWindow('" + TextileName + "').RenderDomainAxes('" + TextileName + "')";
+		{
+			GetRendererWindow(TextileName)->RenderDomainAxes(TextileName);
+		}
 		else
-			Command = "GetRenderWindow('" + TextileName + "').RemoveDomainAxes()";
+		{
+			GetRendererWindow(TextileName)->RemoveDomainAxes();
+		}
 		break;
 	case ID_RenderAxes:
 		if (event.IsChecked())
-			Command = "GetRenderWindow('" + TextileName + "').RenderAxes()";
+		{
+			GetRendererWindow(TextileName)->RenderAxes();
+		}
 		else
-			Command = "GetRenderWindow('" + TextileName + "').RemoveAxes()";
+		{
+			GetRendererWindow(TextileName)->RemoveAxes();
+		}
 		break;
 	case ID_XRay:
-		if (event.IsChecked())
-			Command = "GetRenderWindow('" + TextileName + "').SetXRay(True)\n";
-		else
-			Command = "GetRenderWindow('" + TextileName + "').SetXRay(False)\n";
 		{
-			CTexGenRenderWindow* pRenderWindow = GetRenderWindow(TextileName);
-			if (pRenderWindow)
+			GetRendererWindow(TextileName)->SetXRay(event.IsChecked());
+			auto rendWindow = GetRenderWindow(TextileName);
+			if (rendWindow && rendWindow->GetRenderer() && rendWindow->GetRenderer()->GetNumProps(CTexGenRenderer::PROP_SURFACE))
 			{
-				CTexGenRenderer* pRenderer = pRenderWindow->GetRenderer();
-				if (pRenderer)
-				{
-					if (pRenderer->GetNumProps(CTexGenRenderer::PROP_SURFACE))
-					{
-						Command += "GetRenderWindow('" + TextileName + "').RemoveTextiles()\n";
-						Command += "GetRenderWindow('" + TextileName + "').RenderTextile('" + TextileName + "')";
-					}
-				}
+				GetRendererWindow(TextileName)->RemoveTextiles();
+				GetRendererWindow(TextileName)->RenderTextile(TextileName);
 			}
 		}
 		break;
 	case ID_ParallelProjection:
-		if (event.IsChecked())
-		{
-			Command = "GetRenderWindow('" + TextileName + "').SetParallelProjection(True)\n";
-		}
-		else
-		{
-			Command = "GetRenderWindow('" + TextileName + "').SetParallelProjection(False)\n";
-		}
-/*		{
-			CTexGenRenderWindow* pRenderWindow = GetRenderWindow(TextileName);
-			if (pRenderWindow)
-			{
-				CTexGenRenderer* pRenderer = pRenderWindow->GetRenderer();
-				if (pRenderer)
-				{
-					if (pRenderer->GetNumProps(CTexGenRenderer::PROP_SURFACE))
-					{
-						Command += "GetRenderWindow('" + TextileName + "').RemoveTextiles()\n";
-						Command += "GetRenderWindow('" + TextileName + "').RenderTextile('" + TextileName + "')";
-					}
-				}
-			}
-		}*/
-		break;
+		GetRendererWindow(TextileName)->SetParallelProjection(event.IsChecked()); break;
 	case ID_TrimtoDomain:
-		if (event.IsChecked())
-			Command = "GetRenderWindow('" + TextileName + "').SetTrimToDomain(True)\n";
-		else
-			Command = "GetRenderWindow('" + TextileName + "').SetTrimToDomain(False)\n";
-		{
-			CTexGenRenderWindow* pRenderWindow = GetRenderWindow(TextileName);
-			if (pRenderWindow)
-			{
-				CTexGenRenderer* pRenderer = pRenderWindow->GetRenderer();
-				if (pRenderer)
-				{
-					if (pRenderer->GetNumProps(CTexGenRenderer::PROP_SURFACE))
-					{
-						Command += "GetRenderWindow('" + TextileName + "').RemoveTextiles()\n";
-						Command += "GetRenderWindow('" + TextileName + "').RenderTextile('" + TextileName + "')\n";
-					}
-					if ( pRenderer->GetNumProps(CTexGenRenderer::PROP_INTERFERENCE) )
-					{
-						Command += "GetRenderWindow('" + TextileName + "').RemoveInterference()\n";
-						Command += "GetRenderWindow('" + TextileName + "').RenderInterference('" + TextileName + "')\n";
-					}
-					if ( pRenderer->GetNumProps(CTexGenRenderer::PROP_INTERFERENCE_DEPTH) )
-					{
-						Command += "GetRenderWindow('" + TextileName + "').RemoveInterferenceDepth()\n";
-						Command += "GetRenderWindow('" + TextileName + "').RenderInterference('" + TextileName + "', True)\n";
-					}
-					if ( pRenderer->GetNumProps(CTexGenRenderer::PROP_ORIENTATION) )
-					{
-						Command += "GetRenderWindow('" + TextileName + "').RemoveOrientations()\n";
-						Command += "GetRenderWindow('" + TextileName + "').RenderGrid('" + TextileName + "')\n";
-					}
-				}
-			}
-		}
-		break;
+		OnTrimtoDomain(event.IsChecked()); break;
 	case ID_ChangeBackgroundColor:
-		{
-			string Color = GetUserSelectedColor();
-			if (!Color.empty())
-				Command = "GetRenderWindow('" + TextileName + "').SetBackgroundColor(" + Color + ")";
-		}
-		break;
+		OnChangeBackgroundColor(); break;
 	case ID_ChangeSurfaceColor:
-		{
-			string Color = GetUserSelectedColor();
-			if (!Color.empty())
-				Command = "GetRenderWindow('" + TextileName + "').SetPropsColor(CTexGenRenderer.PROP_SURFACE, " + Color + ")";
-		}
-		break;
-	}
-	if (!Command.empty())
-	{
-		SendPythonCode(Command);
+		OnChangeSurfaceColor(); break;
 	}
 	UpdateRenderingPage();
+}
+
+void CTexGenMainFrame::OnTrimtoDomain(bool check)
+{
+	string TextileName = GetTextileSelection();
+	if (!TextileName.empty())
+	{
+		GetRendererWindow(TextileName)->SetTrimToDomain(check);
+		CTexGenRenderWindow* pRenderWindow = GetRenderWindow(TextileName);
+		if (pRenderWindow)
+		{
+			CTexGenRenderer* pRenderer = pRenderWindow->GetRenderer();
+			if (pRenderer)
+			{
+				if (pRenderer->GetNumProps(CTexGenRenderer::PROP_SURFACE))
+				{
+					GetRendererWindow(TextileName)->RemoveTextiles();
+					GetRendererWindow(TextileName)->RenderTextile(TextileName);
+				}
+				if (pRenderer->GetNumProps(CTexGenRenderer::PROP_INTERFERENCE))
+				{
+					GetRendererWindow(TextileName)->RemoveInterference();
+					GetRendererWindow(TextileName)->RenderInterference(TextileName);
+				}
+				if (pRenderer->GetNumProps(CTexGenRenderer::PROP_INTERFERENCE_DEPTH))
+				{
+					GetRendererWindow(TextileName)->RemoveInterferenceDepth();
+					GetRendererWindow(TextileName)->RenderInterference(TextileName, true);
+				}
+				if (pRenderer->GetNumProps(CTexGenRenderer::PROP_ORIENTATION))
+				{
+					GetRendererWindow(TextileName)->RemoveOrientations();
+					GetRendererWindow(TextileName)->RenderGrid(TextileName);
+				}
+			}
+		}
+	}
+}
+
+void CTexGenMainFrame::OnChangeBackgroundColor()
+{
+	string TextileName = GetTextileSelection();
+	if (!TextileName.empty())
+	{
+		auto Color = GetUserSelectedColor();
+		if (!Color.empty())
+		{
+			GetRendererWindow(TextileName)->SetBackgroundColor(Color);
+		}
+	}
+}
+
+void CTexGenMainFrame::OnChangeSurfaceColor()
+{
+	string TextileName = GetTextileSelection();
+	if (!TextileName.empty())
+	{
+		auto Color = GetUserSelectedColor();
+		if (!Color.empty())
+		{
+			GetRendererWindow(TextileName)->SetPropsColor(CTexGenRenderer::PROP_SURFACE, Color);
+		}
+	}
 }
 
 void CTexGenMainFrame::OnPython(wxCommandEvent& event)
@@ -2107,27 +2133,13 @@ void CTexGenMainFrame::OnViewerNotebookClose(wxAuiNotebookEvent& event)
 	}
 }
 
-/*void CTexGenMainFrame::RefreshDomain(string DomainName)
-{
-//	map<string, CTexGenRenderWindow*>::iterator itRenderWindow;
-//	CTextile* pTextile;
-//	for (itRenderWindow = m_RenderWindows.begin(); itRenderWindow != m_RenderWindows.end(); ++itRenderWindow)
-//	{
-//		pTextile = CTexGen::GetInstance().GetTextile(itRenderWindow->first);
-//		if (pTextile && pTextile->GetAssignedDomain() == DomainName)
-//		{
-//			RefreshTextile(itRenderWindow->first);
-//		}
-//	}
-}*/
-
 bool CTexGenMainFrame::RefreshTextile(string TextileName)
 {
 	if (TextileName.empty())
 	{
 		TextileName = GetTextileSelection();
 	}
-	CTextile* pTextile = TEXGEN.GetTextile(TextileName);
+	auto pTextile = CTexGen::Instance().GetTextile(TextileName);
 	CTexGenRenderWindow* pRenderWindow = GetRenderWindow(TextileName);
 	if (pTextile && pRenderWindow)
 	{
@@ -2191,7 +2203,7 @@ bool CTexGenMainFrame::RefreshTextile(string TextileName)
 	return false;
 }
 
-string CTexGenMainFrame::GetUserSelectedColor()
+COLOR CTexGenMainFrame::GetUserSelectedColor()
 {
 	wxColourDialog ColorDialog(this);
 	for (int i = 0; i < 16; i++)
@@ -2204,19 +2216,13 @@ string CTexGenMainFrame::GetUserSelectedColor()
 	if (ColorDialog.ShowModal() == wxID_OK)
 	{
 		wxColour Color = ColorDialog.GetColourData().GetColour();
-		double r, g, b;
-		r = Color.Red()/255.0;
-		g = Color.Green()/255.0;
-		b = Color.Blue()/255.0;
-		string ReturnVal = "COLOR(";
-		ReturnVal += stringify(r) + ", ";
-		ReturnVal += stringify(g) + ", ";
-		ReturnVal += stringify(b) + ")";
-		return ReturnVal;
+		double r = Color.Red()/255.0;
+		double g = Color.Green()/255.0;
+		double b = Color.Blue()/255.0;
+		return COLOR(r, g, b);
 	}
-	return "";
+	return COLOR::Empty();
 }
-
 
 string CTexGenMainFrame::GetTextileSelection()
 {

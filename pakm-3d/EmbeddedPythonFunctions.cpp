@@ -15,21 +15,6 @@ CTexGenRenderer *CreateRenderWindow(string WindowName)
 	return NULL;
 }
 
-CTexGenRenderer *GetRenderWindow(string WindowName)
-{
-	if (wxTheApp)
-	{
-		CTexGenMainFrame *pMainFrame = ((CTexGenApp*)wxTheApp)->GetMainFrame();
-		if (pMainFrame)
-		{
-			CTexGenRenderWindow* pRenderWindow = pMainFrame->GetRenderWindow(WindowName);
-			if (pRenderWindow)
-				return pRenderWindow->GetRenderer();
-		}
-	}
-	return NULL;
-}
-
 bool DeleteRenderWindow(string WindowName)
 {
 	if (wxTheApp)

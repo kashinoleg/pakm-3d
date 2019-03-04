@@ -77,23 +77,46 @@ namespace TexGen
 		bool operator()(std::pair<double, XYZ> x, std::pair<double, XYZ> y) { return x.first < y.first; }
 	};
 
-	class COLOR {
+	class COLOR
+	{
+	private:
+		bool _empty;
 	public:
 		double r;
 		double g;
 		double b;
-		COLOR(double setR, double setG, double setB) {
+
+		COLOR(double setR, double setG, double setB)
+		{
 			r = setR;
 			g = setG;
 			b = setB;
+			_empty = false;
 		}
-		COLOR() {
+
+		COLOR()
+		{
 			r = 1;
 			g = 1;
 			b = 1;
+			_empty = false;
 		}
-		inline double* Array() {
-			return (double*)this;
+
+		static COLOR Empty()
+		{
+			auto color = COLOR();
+			color._empty = true;
+			return color;
+		}
+
+		inline bool empty()
+		{
+			return _empty;
+		}
+
+		inline double* Array()
+		{
+			return new double[3] { r, g, b };
 		}
 	};
 

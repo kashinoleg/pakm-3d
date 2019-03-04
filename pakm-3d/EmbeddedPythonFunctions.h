@@ -8,8 +8,6 @@ namespace TexGen
 	class CTexGenRenderer;
 }
 
-/// Shortcut function to get an instance of CTexGenRenderer associated with a particular window (if NULL the current)
-TexGen::CTexGenRenderer *GetRenderWindow(string WindowName = "");
 /// Shortcut function to create a new render window
 TexGen::CTexGenRenderer *CreateRenderWindow(string WindowName = "");
 /// Shortcut function to delete a new render window

@@ -39,7 +39,13 @@ public:
 
 	void ReceiveOutput(string Text, OUTPUT_TYPE OutputType, bool bError, bool bInteractive);
 
+	/// Shortcut function to get an instance of CTexGenRenderer associated with a particular window (if NULL the current)
+	CTexGenRenderer *GetRendererWindow(string WindowName = "");
+
 	CTexGenRenderWindow *GetRenderWindow(string WindowName = "");
+
+
+
 	CTexGenRenderWindow *CreateRenderWindow(string WindowName = "");
 	bool DeleteRenderWindow(string WindowName = "");
 	void TextileCallback(string TextileName, bool bAdded);
@@ -82,6 +88,13 @@ protected:
 	void OnWindow(wxCommandEvent& event);
 	void OnChar(wxKeyEvent& event);
 	void OnRendering(wxCommandEvent& event);
+
+	void OnTrimtoDomain(bool check);
+	void OnChangeBackgroundColor();
+	void OnChangeSurfaceColor();
+
+
+
 	void OnTextiles(wxCommandEvent& event);
 
 	void OnSetLayerOffsets();
@@ -134,7 +147,7 @@ protected:
 	void UpdateRenderingPage();
 	void UpdateModellingPage();
 	void UpdateOutliner();
-	string GetUserSelectedColor();
+	COLOR GetUserSelectedColor();
 
 	wxAuiManager m_Manager;
 	wxAuiNotebook *m_pViewerNotebook;

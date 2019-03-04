@@ -2,9 +2,6 @@
 #include "WindowIDs.h"
 #include "WeavePatternCtrl3D.h"
 #include "WeavePatternCtrl.h"
-#include "PythonConverter.h"
-
-//#include "WizardTexGen.xpm"
 #include "RangeValidator.h"
 
 #include "Orthogonal.xpm"
@@ -625,10 +622,12 @@ bool CWeaveWizard3D::HasNextPage(wxWizardPage *page)
 	return wxWizard::HasNextPage(page);
 }
 
-string CWeaveWizard3D::GetCreateTextileCommand(string ExistingTextile)
+void CWeaveWizard3D::CreateTextile(string ExistingTextile)
 {
 	if (!m_pWeavePatternCtrl->bHasWeave())
-		return "";
+	{
+		return;
+	}
 	stringstream StringStream;
 	int iWidth = m_pWeavePatternCtrl->GetWeaveWidth();
 	int iHeight = m_pWeavePatternCtrl->GetWeaveHeight();
@@ -656,136 +655,155 @@ string CWeaveWizard3D::GetCreateTextileCommand(string ExistingTextile)
 	m_Thickness.ToDouble(&dThickness);
 	m_MaxVolFraction.ToDouble(&dMaxVolFraction);
 
+	CTextile3DWeave* weave = nullptr;
+
 	switch( m_WeaveTypeRadio->GetSelection() )
 	{
 		case ORTHOGONAL:
-			{	
+			{
 				int iWarpRatio = m_pWarpRatioSpin->GetValue();
-				StringStream << "weave = CTextileOrthogonal(" << iHeight << ", " << iWidth << ", " << Warp.dSpacing << ", " 
-					<< Weft.dSpacing << ", " << Warp.dHeight << ", " << Weft.dHeight << ", " << m_pRefineBox->GetValue() << ")" << endl;	
-				StringStream << "weave.SetWarpRatio( " << iWarpRatio << ")" << endl;
-				StringStream << "weave.SetBinderRatio( " << m_pBinderRatioSpin->GetValue() << ")" << endl;
-				StringStream << "weave.SetWarpYarnWidths( " << Warp.dWidth << ")" << endl;
-				StringStream << "weave.SetYYarnWidths( " << Weft.dWidth << ")" << endl;
-				StringStream << "weave.SetBinderYarnWidths( " << Binder.dWidth << ")" << endl;
-				
-				if ( iWarpRatio == 0 )
+				auto weaveOrthogonal = new CTextileOrthogonal(iHeight, iWidth, Warp.dSpacing, Weft.dSpacing, Warp.dHeight, Weft.dHeight, m_pRefineBox->GetValue());
+				weaveOrthogonal->SetWarpRatio(iWarpRatio);
+				weaveOrthogonal->SetBinderRatio(m_pBinderRatioSpin->GetValue());
+				weaveOrthogonal->SetWarpYarnWidths(Warp.dWidth);
+				weaveOrthogonal->SetYYarnWidths(Weft.dWidth);
+				weaveOrthogonal->SetBinderYarnWidths(Binder.dWidth);
+				if (iWarpRatio == 0)
+				{
 					iNumWarpLayers = 0;
-				StringStream << "weave.SetupLayers( " << iNumWarpLayers << ", " << iNumWeftLayers << ")" << endl;
-				StringStream << "weave.SetGapSize( " << GapSize << " )" << endl;
-				
+				}
+				weaveOrthogonal->SetupLayers(iNumWarpLayers, iNumWeftLayers);
+				weaveOrthogonal->SetGapSize(GapSize);
 				if ( m_pRefineBox->GetValue() )
 				{
-					StringStream << "weave.SetThickness( " << dThickness << " )" << endl;
+					weaveOrthogonal->SetThickness(dThickness);
 					StringStream << ConvertProperties( m_WarpProperties, WARP, "weave" );
 					StringStream << ConvertProperties( m_WeftProperties, WEFT, "weave" );
 					StringStream << ConvertProperties( m_BinderProperties, BINDER, "weave" );
-					StringStream << "weave.SetMaxVolFraction( " << dMaxVolFraction << ")" << endl;
+					weaveOrthogonal->SetMaxVolFraction(dMaxVolFraction);
 				}
-
-				for (int i=0; i<iWidth; ++i)
+				for (int i = 0; i < iWidth; i++)
 				{
-					for (int j=0; j<iHeight; ++j)
+					for (int j = 0; j < iHeight; j++)
 					{
 						if (GetBinderCellBottom(i, j) == PATTERN3D_XYARN)
 						{
-							StringStream << "weave.SwapBinderPosition(" << i <<", " << j << ")" << endl;
+							weaveOrthogonal->SwapBinderPosition(i, j);
 						}
 					}
 				}
+				weave = weaveOrthogonal;
 			}
 			break;
 		case LAYER_TO_LAYER:
 			{
-				StringStream << "weave = CTextileLayerToLayer(" << iHeight << ", " << iWidth << ", " << Warp.dSpacing << ", " 
-					<< Weft.dSpacing << ", " << Warp.dHeight << ", " << Weft.dHeight << ", " << m_pBinderLayersSpin->GetValue() << ")" << endl;		
-				StringStream << "weave.SetWarpRatio( " << m_pWarpRatioSpin->GetValue() << ")" << endl;
-				StringStream << "weave.SetBinderRatio( " << m_pBinderRatioSpin->GetValue() << ")" << endl;
-				StringStream << "weave.SetWarpYarnWidths( " << Warp.dWidth << ")" << endl;
-				StringStream << "weave.SetYYarnWidths( " << Weft.dWidth << ")" << endl;
-				StringStream << "weave.SetBinderYarnWidths( " << Binder.dWidth << ")" << endl;
-				
-				StringStream << "weave.SetupLayers( " << iNumWarpLayers << ", " << iNumWeftLayers << ", " << m_pBinderLayersSpin->GetValue() << ")" << endl;
-				StringStream << "weave.SetGapSize( " << GapSize << " )" << endl;
-
-				CTextile3DWeave &Weave = m_pWeavePatternCtrl->GetWeave();
-				CTextileLayerToLayer* pWeaveLayerToLayer = dynamic_cast<CTextileLayerToLayer*>(&Weave);
-				for (int j=0; j<iHeight; ++j) 
+				auto weaveLayToLay = new CTextileLayerToLayer(iHeight, iWidth, Warp.dSpacing, Weft.dSpacing, Warp.dHeight, Weft.dHeight, m_pBinderLayersSpin->GetValue());
+				weaveLayToLay->SetWarpRatio(m_pWarpRatioSpin->GetValue());
+				weaveLayToLay->SetBinderRatio(m_pBinderRatioSpin->GetValue());
+				weaveLayToLay->SetWarpYarnWidths(Warp.dWidth);
+				weaveLayToLay->SetYYarnWidths(Weft.dWidth);
+				weaveLayToLay->SetBinderYarnWidths(Binder.dWidth);
+				weaveLayToLay->SetupLayers(iNumWarpLayers, iNumWeftLayers, m_pBinderLayersSpin->GetValue());
+				weaveLayToLay->SetGapSize(GapSize);
+				for (int j = 0; j < iHeight; j++) 
 				{
-					if ( m_pWeavePatternCtrl->IsBinderYarn( j ))
+					if (m_pWeavePatternCtrl->IsBinderYarn(j))
 					{
-						for (int i=0; i<iWidth; ++i)
+						for (int i = 0; i < iWidth; i++)
 						{
-							int iOffset = pWeaveLayerToLayer->GetBinderOffset( i, j );
-							StringStream << "weave.SetBinderPosition(" << i <<", " << j << ", " << iOffset << ")" << endl;
+							weaveLayToLay->SetBinderPosition(i, j, weaveLayToLay->GetBinderOffset(i, j));
 						}
 					}
 				}
+				weave = weaveLayToLay;
 			}
 			break;
 		case ANGLE_INTERLOCK:
 			{
 				if ( m_pOffsetWeftBox->GetValue() )
 				{
-					StringStream << "weave = CTextileOffsetAngleInterlock(" << iHeight << ", " << iWidth/2 << ", " << Warp.dSpacing << ", " 
-												<< Weft.dSpacing*2.0 << ", " << Warp.dHeight << ", " << Weft.dHeight << ")" << endl;
+					auto weaveOffsetAngle = new CTextileOffsetAngleInterlock(iHeight, iWidth / 2, Warp.dSpacing, Weft.dSpacing*2.0, Warp.dHeight, Weft.dHeight);
+					weaveOffsetAngle->SetWarpRatio(m_pWarpRatioSpin->GetValue());
+					weaveOffsetAngle->SetBinderRatio(m_pBinderRatioSpin->GetValue());
+					weaveOffsetAngle->SetWarpYarnWidths(Warp.dWidth);
+					weaveOffsetAngle->SetYYarnWidths(Weft.dWidth);
+					weaveOffsetAngle->SetBinderYarnWidths(Binder.dWidth);
+
+					weaveOffsetAngle->SetupLayers(iNumWarpLayers, iNumWeftLayers);
+					weaveOffsetAngle->SetGapSize(GapSize);
+
+					for (int i = 0; i < iWidth; i++)
+					{
+						for (int j = 0; j < iHeight; j++)
+						{
+							if (GetBinderCellBottom(i, j) == PATTERN3D_XYARN)
+							{
+								weaveOffsetAngle->SetBinderYarnPositions((i + iWidth / 2) % iWidth, j);
+							}
+						}
+					}
+					weave = weaveOffsetAngle;
 				}
 				else
 				{
-					StringStream << "weave = CTextileAngleInterlock(" << iHeight << ", " << iWidth << ", " << Warp.dSpacing << ", " 
-												<< Weft.dSpacing << ", " << Warp.dHeight << ", " << Weft.dHeight << ")" << endl;				
-				}
-				StringStream << "weave.SetWarpRatio( " << m_pWarpRatioSpin->GetValue() << ")" << endl;
-				StringStream << "weave.SetBinderRatio( " << m_pBinderRatioSpin->GetValue() << ")" << endl;
-				StringStream << "weave.SetWarpYarnWidths( " << Warp.dWidth << ")" << endl;
-				StringStream << "weave.SetYYarnWidths( " << Weft.dWidth << ")" << endl;
-				StringStream << "weave.SetBinderYarnWidths( " << Binder.dWidth << ")" << endl;
-				
-				StringStream << "weave.SetupLayers( " << iNumWarpLayers << ", " << iNumWeftLayers << ")" << endl;
-				StringStream << "weave.SetGapSize( " << GapSize << " )" << endl;
+					auto weaveAngle = new CTextileAngleInterlock(iHeight, iWidth, Warp.dSpacing, Weft.dSpacing, Warp.dHeight, Weft.dHeight);	
+					weaveAngle->SetWarpRatio(m_pWarpRatioSpin->GetValue());
+					weaveAngle->SetBinderRatio(m_pBinderRatioSpin->GetValue());
+					weaveAngle->SetWarpYarnWidths(Warp.dWidth);
+					weaveAngle->SetYYarnWidths(Weft.dWidth);
+					weaveAngle->SetBinderYarnWidths(Binder.dWidth);
 
-				for (int i=0; i<iWidth; ++i)
-				{
-					for (int j=0; j<iHeight; ++j)
+					weaveAngle->SetupLayers(iNumWarpLayers, iNumWeftLayers);
+					weaveAngle->SetGapSize(GapSize);
+
+					for (int i = 0; i < iWidth; i++)
 					{
-						if (GetBinderCellBottom(i, j) == PATTERN3D_XYARN)
+						for (int j = 0; j < iHeight; j++)
 						{
-							StringStream << "weave.SetBinderYarnPositions(" << (i+iWidth/2)%iWidth <<", " << j << ")" << endl;
+							if (GetBinderCellBottom(i, j) == PATTERN3D_XYARN)
+							{
+								weaveAngle->SetBinderYarnPositions((i + iWidth / 2) % iWidth, j);
+							}
 						}
 					}
+					weave = weaveAngle;
 				}
 			}
 			break;
 		default:
-			return "";
+			return;
 	}
-	
-	StringStream << "weave.SetWarpYarnPower( " << dWarpPower << ")" << endl;
-	StringStream << "weave.SetWeftYarnPower( " << dWeftPower << ")" << endl;
-	StringStream << "weave.SetBinderYarnPower( " << dBinderPower << ")" << endl;
-
-	StringStream << ConvertWeaveYarnDimensions(m_pWeavePatternCtrl->GetWeave(), "weave");
+	weave->SetWarpYarnPower(dWarpPower);
+	weave->SetWeftYarnPower(dWeftPower);
+	weave->SetBinderYarnPower(dBinderPower);
+	for (int i = 0; i < m_pWeavePatternCtrl->GetWeave().GetNumXYarns(); i++)
+	{
+		weave->SetXYarnWidths(i, m_pWeavePatternCtrl->GetWeave().GetXYarnWidths(i));
+		weave->SetXYarnHeights(i, m_pWeavePatternCtrl->GetWeave().GetXYarnHeights(i));
+		weave->SetXYarnSpacings(i, m_pWeavePatternCtrl->GetWeave().GetXYarnSpacings(i));
+	}
+	for (int i = 0; i < m_pWeavePatternCtrl->GetWeave().GetNumYYarns(); i++)
+	{
+		weave->SetYYarnWidths(i, m_pWeavePatternCtrl->GetWeave().GetYYarnWidths(i));
+		weave->SetYYarnHeights(i, m_pWeavePatternCtrl->GetWeave().GetYYarnHeights(i));
+		weave->SetYYarnSpacings(i, m_pWeavePatternCtrl->GetWeave().GetYYarnSpacings(i));
+	}
 	if (m_bCreateDomain)
 	{
-		StringStream << "weave.AssignDefaultDomain(";
-		if ( !m_bAddedDomainHeight )
-			StringStream << "False";
-		StringStream << ")" << endl;
-		
-		if ( m_WeaveTypeRadio->GetSelection() == ORTHOGONAL && m_pRefineBox->GetValue() )
+		weave->AssignDefaultDomain(m_bAddedDomainHeight);
+		if (m_WeaveTypeRadio->GetSelection() == ORTHOGONAL && m_pRefineBox->GetValue())
 		{
-			StringStream << "weave.SetDomainZValues()" << endl;
+			weave->SetDomainZValues();
 		}
 	}
 	if (ExistingTextile.empty())
 	{
-		StringStream << "textilename = AddTextile(weave)" << endl;
+		CTexGen::Instance().AddTextile(*weave);
 	}
 	else
 	{
-		StringStream << "AddTextile('" << ExistingTextile << "', weave, True)" << endl;
+		CTexGen::Instance().AddTextile(ExistingTextile, *weave, true);
 	}
-	return StringStream.str();
 }
 
 int CWeaveWizard3D::GetBinderCellBottom(int i, int j)

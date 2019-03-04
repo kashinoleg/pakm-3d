@@ -137,6 +137,8 @@ namespace TexGen {
 		int GetYarnIndex(int x, int y, int z) const;
 		CPatternDraft &GetPatternDraft() { return m_PatternDraft; }
 
+		vector<PATTERN2D> &GetCell(int x, int y);
+
 	protected:
 		/// Check that the weave pattern contained in m_Pattern is valid
 		bool Valid() const;
@@ -181,7 +183,7 @@ namespace TexGen {
 		CPatternDraft m_PatternDraft;
 
 		pair<int, int> GetCellCoordinates(int iIndex) const;
-		vector<PATTERN2D> &GetCell(int x, int y);
+		
 
 		int m_iNumXYarns;
 		int m_iNumYYarns;

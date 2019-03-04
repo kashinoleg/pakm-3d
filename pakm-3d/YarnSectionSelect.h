@@ -2,7 +2,6 @@
 #include "SectionSelect.h"
 #include "WindowIDs.h"
 #include "TexGenApp.h"
-#include "PythonConverter.h"
 
 class CInterpPositionItem : public wxClientData
 {
@@ -30,7 +29,7 @@ public:
 	CYarnSectionSelect();
 	~CYarnSectionSelect(void);
 
-	string GetCreateSectionCommand(string YarnSectionVariableName = "yarnsection");
+	CYarnSection* GetCreateSection();
 	void SetNumberOfNodes(int iNumNodes);
 	void LoadSettings(const CYarnSection &YarnSection);
 

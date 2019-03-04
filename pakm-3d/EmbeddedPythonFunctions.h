@@ -14,5 +14,3 @@ TexGen::CTexGenRenderer *CreateRenderWindow(string WindowName = "");
 bool DeleteRenderWindow(string WindowName = "");
 /// Function to refresh the current render (may be necessary after performing Python commands which modify the Textile)
 bool Refresh(string WindowName = "");
-/// Function to capture standard output and direct it to the log window
-void ReceivePythonOutput(string Output, string Type);

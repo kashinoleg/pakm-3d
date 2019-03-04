@@ -407,7 +407,7 @@ void CYarnSectionSelect::LoadSettings(const CYarnSection &YarnSection)
 	}
 }
 
-string CYarnSectionSelect::GetCreateSectionCommand(string YarnSectionVariableName)
+CYarnSection* CYarnSectionSelect::GetCreateSection()
 {
 	stringstream StringStream;
 	wxChoicebook* pChoicebook = XRCCTRL(*this, "YarnSectionType", wxChoicebook);
@@ -416,43 +416,41 @@ string CYarnSectionSelect::GetCreateSectionCommand(string YarnSectionVariableNam
 	{
 		if (pPage == XRCCTRL(*this, "Constant", wxPanel))
 		{
-			StringStream << ConvertSection(*m_ConstactSection);
-			StringStream << YarnSectionVariableName << " = CYarnSectionConstant(section)" << endl;
+			auto yarnsection = new CYarnSectionConstant(*m_ConstactSection);
+			return yarnsection;
 		}
 		else if (pPage == XRCCTRL(*this, "InterpNodes", wxPanel))
 		{
-			StringStream << YarnSectionVariableName << " = CYarnSectionInterpNode(" << m_bRamped << ", " << m_bPolar << "," << m_bConstMesh <<")" << endl;
+			auto yarnsection = new CYarnSectionInterpNode(m_bRamped, m_bPolar, m_bConstMesh);
 			wxListBox* pListBox = XRCCTRL(*this, "InterpNodesListBox", wxListBox);
 			bool bRectangle = CheckRectangleSections( pListBox, "InterpNodes" );
-			int i, iCount = pListBox->GetCount();
-			for (i=0; i<iCount; ++i)
+			for (int i = 0; i < pListBox->GetCount(); i++)
 			{
-				CInterpNodesItem* pItem = dynamic_cast<CInterpNodesItem*>(pListBox->GetClientObject(i));
+				auto pItem = dynamic_cast<CInterpNodesItem*>(pListBox->GetClientObject(i));
 				if (pItem)
 				{
-					StringStream << ConvertSection(*pItem->m_Section, "section", bRectangle);
-					StringStream << YarnSectionVariableName << ".AddSection(section)" << endl;
+					yarnsection->AddSection(*pItem->m_Section);
 				}
 			}
+			return yarnsection;
 		}
 		else if (pPage == XRCCTRL(*this, "InterpPosition", wxPanel))
 		{
-			StringStream << YarnSectionVariableName << " = CYarnSectionInterpPosition(" << m_bRamped << ", " << m_bPolar << "," << m_bConstMesh <<")" << endl;
+			auto yarnsection = new CYarnSectionInterpPosition(m_bRamped, m_bPolar, m_bConstMesh);
 			wxListBox* pListBox = XRCCTRL(*this, "InterpPositionListBox", wxListBox);
 			bool bRectangle = CheckRectangleSections( pListBox, "InterpPosition" );
-			int i, iCount = pListBox->GetCount();
-			for (i=0; i<iCount; ++i)
+			for (int i = 0; i < pListBox->GetCount(); i++)
 			{
-				CInterpPositionItem* pItem = dynamic_cast<CInterpPositionItem*>(pListBox->GetClientObject(i));
+				auto pItem = dynamic_cast<CInterpPositionItem*>(pListBox->GetClientObject(i));
 				if (pItem)
 				{
-					StringStream << ConvertSection(*pItem->m_Section, "section", bRectangle);
-					StringStream << YarnSectionVariableName << ".AddSection(" << pItem->m_dPosition << ", section)" << endl;
+					yarnsection->AddSection(pItem->m_dPosition, *pItem->m_Section);
 				}
 			}
+			return yarnsection;
 		}
 	}
-	return StringStream.str();
+	return nullptr;
 }
 
 bool CYarnSectionSelect::CheckRectangleSections( wxListBox* pListBox, string str )
@@ -504,10 +502,3 @@ bool CYarnSectionSelect::CheckHybridSection( const CSection& Section )
 	}
 	return false;
 }
-
-
-
-
-
-
-

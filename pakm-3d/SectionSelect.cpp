@@ -127,12 +127,6 @@ void CSectionSelect::OnOK(wxCommandEvent& event)
 	}
 }
 
-string CSectionSelect::GetCreateSectionCommand(string SectionVariableName)
-{
-	UpdateSectionFromDialog();
-	return ConvertSection(*m_Section, SectionVariableName);
-}
-
 void CSectionSelect::UpdateSectionFromDialog()
 {
 	if (!Validate())

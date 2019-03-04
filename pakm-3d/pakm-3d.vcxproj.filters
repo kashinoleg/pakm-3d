@@ -33,9 +33,6 @@
     <ClCompile Include="DropTarget.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Embedded_wrap.cxx">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="EmbeddedPythonFunctions.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -49,15 +46,6 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="PatternDraftDialog.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="PythonConsole.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="PythonConverter.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="PythonWrapper.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="RangeValidator.cpp">
@@ -152,15 +140,6 @@
     <ClInclude Include="PatternDraftDialog.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="PythonConsole.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="PythonConverter.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="PythonWrapper.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="RangeValidator.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
@@ -219,7 +198,6 @@
   <ItemGroup>
     <None Include="LayerToLayer.xpm" />
     <None Include="packages.config" />
-    <None Include="Embedded.i" />
     <None Include="TexGen.xrc" />
     <None Include="wx\msw\hand.cur">
       <Filter>Файлы ресурсов</Filter>

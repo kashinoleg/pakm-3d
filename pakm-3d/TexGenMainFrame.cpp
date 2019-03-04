@@ -93,8 +93,6 @@ CTexGenMainFrame::CTexGenMainFrame(const wxString& title, const wxPoint& pos, co
 : wxFrame(NULL, wxID_ANY, title, pos, size)
 , m_pViewerNotebook(NULL)
 , m_pLogNotebook(NULL)
-//, m_pPythonConsole(NULL)
-, m_pPythonOutput(NULL)
 , m_pTexGenOutput(NULL)
 , m_pControls(NULL)
 , m_pOutliner(NULL)
@@ -169,32 +167,9 @@ CTexGenMainFrame::CTexGenMainFrame(const wxString& title, const wxPoint& pos, co
 
 	m_pLogNotebook = new wxAuiNotebook(this, ID_LogNoteBook, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TOP | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS);
 	{
-/*		wxSize ImageSize(16, 16);
-
-		wxImageList *pImageList = new wxImageList(ImageSize.GetWidth(), ImageSize.GetHeight());
-
-		// should be able to add them as icons in which case they will automatically be transparent
-		// doesn't seem to work however!! Does work in the wxnotebook and arttest sample, don't know why...
-		pImageList->Add(wxArtProvider::GetIcon(wxART_INFORMATION, wxART_OTHER, ImageSize));
-		pImageList->Add(wxArtProvider::GetIcon(wxART_WARNING, wxART_OTHER, ImageSize));
-		pImageList->Add(wxArtProvider::GetIcon(wxART_ERROR, wxART_OTHER, ImageSize));
-
-		m_pLogNotebook->AssignImageList(pImageList);*/
-
-		/*m_pPythonConsole = new CPythonConsole(m_PythonWrapper, m_pLogNotebook, wxID_ANY, wxT(">>> "),
-			wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_DONTWRAP);
-		m_pPythonConsole->SetFont(ConsoleFont);//*/
-
-		m_pPythonOutput = new wxTextCtrl(m_pLogNotebook, wxID_ANY, wxEmptyString,
-			wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP | wxTE_RICH);
-		m_pPythonOutput->SetFont(ConsoleFont);
-
 		m_pTexGenOutput = new wxTextCtrl(m_pLogNotebook, wxID_ANY, wxEmptyString,
 			wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP | wxTE_RICH);
 		m_pTexGenOutput->SetFont(ConsoleFont);
-
-		//m_pLogNotebook->AddPage(m_pPythonConsole, wxT("Python Console"), true, wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_OTHER, wxSize(16, 16)));
-		m_pLogNotebook->AddPage(m_pPythonOutput, wxT("Python Output"), false, wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_OTHER, wxSize(16, 16)));
 		m_pLogNotebook->AddPage(m_pTexGenOutput, wxT("Log Output"), false, wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_OTHER, wxSize(16, 16)));
 	}
 
@@ -297,48 +272,16 @@ void CTexGenMainFrame::OnUserGuide(wxCommandEvent& WXUNUSED(event))
 	pDialog->Destroy();
 }
 
-void CTexGenMainFrame::ReceiveOutput(string Text, OUTPUT_TYPE OutputType, bool bError, bool bInteractive)
+void CTexGenMainFrame::ReceiveOutput(string Text, bool bError)
 {
-	wxTextAttr PrevStyle;
-	int iPage;
-	wxTextCtrl *pOutputWindow;
-	if (OutputType == OUTPUT_PYTHON)
-	{
-		/*if (bInteractive)
-		{
-			iPage = 0;
-			//pOutputWindow = m_pPythonConsole;
-		}
-		else//*/
-		{
-			iPage = 1;
-			pOutputWindow = m_pPythonOutput;
-		}
-	}
-	else if (OutputType == OUTPUT_TEXGEN)
-	{
-		iPage = 2;
-		pOutputWindow = m_pTexGenOutput;
-	}
-	else
-		return;
-
-	PrevStyle = pOutputWindow->GetDefaultStyle();
+	auto pOutputWindow = m_pTexGenOutput;
+	auto PrevStyle = pOutputWindow->GetDefaultStyle();
 	if (bError)
+	{
 		pOutputWindow->SetDefaultStyle(wxTextAttr(*wxRED));
+	}
 	pOutputWindow->AppendText(ConvertString(Text));
 	pOutputWindow->SetDefaultStyle(PrevStyle);
-	if (m_pLogNotebook->GetSelection() != iPage)
-	{
-		if (bError)
-			m_pLogNotebook->SetPageBitmap(iPage, wxArtProvider::GetBitmap(wxART_ERROR, wxART_OTHER, wxSize(16, 16)));
-		else/* if (m_pLogNotebook->GetPageBitmap(iPage) != 2)*/
-			m_pLogNotebook->SetPageBitmap(iPage, wxArtProvider::GetBitmap(wxART_WARNING, wxART_OTHER, wxSize(16, 16)));
-	}
-	// Will update the frame, this is usefull for operations which take a long time
-	// to complete in python. Each time a message is sent from python the window
-	// will be updated so that it avoids the user thinking the program has crashed.
-//	Update();		// Doesn't seem to work...
 	wxSafeYield();
 }
 
@@ -1164,33 +1107,6 @@ bool CTexGenMainFrame::DeleteRenderWindow(string WindowName)
 	return true;
 }
 
-void CTexGenMainFrame::SendPythonCode(string Code)
-{
-	if (m_ScriptRecordFile.is_open())
-	{
-		m_ScriptRecordFile << Code << endl;
-	}
-	stringstream StringStream;
-	StringStream << Code;
-	string Line;
-	string Prefix;
-	int iLine = 0;
-	while (StringStream.good())
-	{
-		Prefix = "<" + stringify(++iLine) + "> ";
-		getline(StringStream, Line);
-		if (!Line.empty())
-		{
-			ReceiveOutput(Prefix + Line + "\n", OUTPUT_PYTHON, false, false);
-		}
-	}
-
-	/*if (!m_PythonWrapper.SendCodeBlock(Code))
-	{
-		ReceiveOutput("<!> Error compiling code!", OUTPUT_PYTHON, true, false);
-	}//*/
-}
-
 void CTexGenMainFrame::OnCreateEmptyTextile()
 {
 	wxTextEntryDialog dlg(this, wxT("Please enter the name of the textile to create (or leave blank for default):"), wxT("Textile name"));
@@ -1255,39 +1171,35 @@ void CTexGenMainFrame::OnEditTextile()
 	string TextileName = GetTextileSelection();
 	if (!TextileName.empty())
 	{
-		CTextile* pTextile = CTexGen::Instance().GetTextile(TextileName);
-		string Type = pTextile->GetType();
-		if (pTextile && (Type == "CTextileWeave2D" || Type == "CShearedTextileWeave2D" ||
+		auto textile = CTexGen::Instance().GetTextile(TextileName);
+		string Type = textile->GetType();
+		if (textile && (Type == "CTextileWeave2D" || Type == "CShearedTextileWeave2D" ||
 			Type == "CTextileOrthogonal" || Type == "CTextileAngleInterlock" || Type == "CTextileOffsetAngleInterlock" || Type == "CTextileLayerToLayer"))
 		{
-			string Command;
 			if (Type == "CTextileWeave2D" || Type == "CShearedTextileWeave2D")
 			{
 				CWeaveWizard Wizard(this, wxID_ANY);
 				if (Type == "CTextileWeave2D")
-					Wizard.LoadSettings(*((CTextileWeave2D*)pTextile));
+				{
+					Wizard.LoadSettings(*((CTextileWeave2D*)textile));
+				}
 				else
-					Wizard.LoadSettings(*((CShearedTextileWeave2D*)pTextile));
-
+				{
+					Wizard.LoadSettings(*((CShearedTextileWeave2D*)textile));
+				}
 				if (Wizard.RunIt())
 				{
-					Command = Wizard.GetCreateTextileCommand(TextileName);
+					Wizard.GetCreateTextile(TextileName);
 				}
 			}
 			else // if (pTextile->GetType() == "CTextileWeave3D")
 			{
 				CWeaveWizard3D Wizard(this, wxID_ANY);
-				Wizard.LoadSettings(*((CTextile3DWeave*)pTextile));
+				Wizard.LoadSettings(*((CTextile3DWeave*)textile));
 				if (Wizard.RunIt())
 				{
-					Command = Wizard.GetCreateTextileCommand(TextileName);
+					Wizard.CreateTextile(TextileName);
 				}
-			}
-
-			if (!Command.empty())
-			{
-				SendPythonCode(Command);
-				RefreshTextile(TextileName);
 			}
 		}
 	}
@@ -1298,11 +1210,7 @@ void CTexGenMainFrame::OnCreate2DWeave()
 	CWeaveWizard Wizard(this, wxID_ANY);
 	if (Wizard.RunIt())
 	{
-		string Command = Wizard.GetCreateTextileCommand();
-		if (!Command.empty())
-		{
-			SendPythonCode(Command);
-		}
+		Wizard.GetCreateTextile();
 	}
 }
 
@@ -1311,11 +1219,7 @@ void CTexGenMainFrame::OnCreate3DTextile()
 	CWeaveWizard3D Wizard(this, wxID_ANY);
 	if (Wizard.RunIt())
 	{
-		string Command = Wizard.GetCreateTextileCommand();
-		if (!Command.empty())
-		{
-			SendPythonCode(Command);
-		}
+		Wizard.CreateTextile();
 	}
 }
 
@@ -1328,9 +1232,50 @@ void CTexGenMainFrame::OnCreateLayeredTextile()
 		Dialog.GetLayerNames(LayerNames);
 		if (!LayerNames.empty())
 		{
-			// Create python code with list of names
-			string Command = ConvertMultiWeaveLayered(LayerNames);
-			SendPythonCode(Command);
+			auto LayeredTextile = new CTextileLayered();
+			XYZ Offset;
+			XYZ Min;
+			XYZ Max;
+			for (vector<string>::reverse_iterator itLayerNames = LayerNames.rbegin(); itLayerNames != LayerNames.rend(); itLayerNames++)
+			{
+				auto textile = new CTextile(*CTexGen::Instance().GetTextile(*itLayerNames));
+				CDomain* pDomain = textile->GetDomain();
+				pair<XYZ, XYZ> AABB;
+				if (!pDomain)
+				{
+					string str = "Cannot output textile, " + (*itLayerNames) + ". No domain specified ";
+					TGERROR(str);
+					continue;
+				}
+				else
+				{
+					AABB = pDomain->GetMesh().GetAABB();
+				}
+
+				if (itLayerNames != LayerNames.rbegin())
+				{
+					Offset.z -= AABB.first.z;
+					Min.x = Min.x < AABB.first.x ? Min.x : AABB.first.x;
+					Min.y = Min.y < AABB.first.y ? Min.y : AABB.first.y;
+					Max.x = Max.x > AABB.second.x ? Max.x : AABB.second.x;
+					Max.y = Max.y > AABB.second.y ? Max.y : AABB.second.y;
+				}
+				else
+				{
+					Min = AABB.first;
+					Max = AABB.second;
+				}
+				auto offset = XYZ(Offset);
+				LayeredTextile->AddLayer(*textile, offset);
+				Offset.z += AABB.second.z;
+			}
+
+			Max.z = Offset.z;
+			auto domain = new CDomainPlanes(XYZ(Min), XYZ(Max));
+			LayeredTextile->AssignDomain(*domain);
+			auto offset = XY(0, 0);
+			LayeredTextile->SetOffsets(offset);
+			CTexGen::Instance().AddTextile(*LayeredTextile);
 		}
 	}
 }

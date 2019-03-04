@@ -17,7 +17,8 @@ public:
 	~CWeaveWizard(void);
 
 	bool RunIt();
-	string GetCreateTextileCommand(string ExistingTextile = "");
+	void GetCreateTextile(string ExistingTextile = "");
+
 	void LoadSettings(const CTextileWeave2D &Weave);
 	void LoadSettings(const CShearedTextileWeave2D &Weave);
 

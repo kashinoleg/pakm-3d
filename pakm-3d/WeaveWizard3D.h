@@ -41,7 +41,7 @@ public:
 
 	bool RunIt();
 	// Use the dialog input to create the string for the Python commands to build the textile
-	string GetCreateTextileCommand(string ExistingTextile = "");
+	void CreateTextile(string ExistingTextile = "");
 	void LoadSettings(const CTextile3DWeave &Weave);
 
 protected:

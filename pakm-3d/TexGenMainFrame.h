@@ -4,9 +4,7 @@
 #include <wx/aui/auibook.h>
 #include <wx/printdlg.h>
 #include <wx/hyperlink.h>
-#include "PythonWrapper.h"
 #include "TexGenRenderWindow.h"
-#include "PythonConsole.h"
 #include "ControlsWindow.h"
 #include "WindowIDs.h"
 #include "WeaveWizard.h"
@@ -18,7 +16,6 @@
 #include "WeaveWizard3D.h"
 #include "RangeValidator.h"
 #include "TextileLayersDialog.h"
-#include "PythonConverter.h"
 #include "LayersOffsetDialog.h"
 #include "PatternDraftDialog.h"
 #include "ConvertString.h"
@@ -31,13 +28,7 @@ public:
 
 	void OnInit() {}
 
-	enum OUTPUT_TYPE
-	{
-		OUTPUT_PYTHON,
-		OUTPUT_TEXGEN,
-	};
-
-	void ReceiveOutput(string Text, OUTPUT_TYPE OutputType, bool bError, bool bInteractive);
+	void ReceiveOutput(string Text, bool bError);
 
 	/// Shortcut function to get an instance of CTexGenRenderer associated with a particular window (if NULL the current)
 	CTexGenRenderer *GetRendererWindow(string WindowName = "");
@@ -53,8 +44,6 @@ public:
 	void ProcessFiles(const wxArrayString& filenames);
 	void UpdatePositionText();
 
-	void SendPythonCode(string Code);
-//	void RefreshDomain(string DomainName);
 	bool RefreshTextile(string TextileName);
 
 	wxPanel* GetOutliner() { return m_pOutliner; }
@@ -152,17 +141,11 @@ protected:
 	wxAuiManager m_Manager;
 	wxAuiNotebook *m_pViewerNotebook;
 	wxAuiNotebook *m_pLogNotebook;
-	//CPythonConsole *m_pPythonConsole;
-    wxTextCtrl *m_pPythonOutput;
     wxTextCtrl *m_pTexGenOutput;
-	//CPythonWrapper m_PythonWrapper;
 	CControlsWindow *m_pControls;
 	wxPanel* m_pOutliner;
 
 	map<string, CTexGenRenderWindow*> m_RenderWindows;
-
-	ofstream m_ScriptRecordFile;
-
 	DECLARE_EVENT_TABLE()
 };
 

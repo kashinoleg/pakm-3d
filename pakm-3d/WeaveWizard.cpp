@@ -288,11 +288,11 @@ bool CWeaveWizard::GetPatternCell(int i, int j)
 	m_pWeavePatternCtrl->SetCellStatus(i, j, bVal);
 }*/
 
-string CWeaveWizard::GetCreateTextileCommand(string ExistingTextile)
+void CWeaveWizard::GetCreateTextile(string ExistingTextile)
 {
 	if (!m_pWeavePatternCtrl->bHasWeave())
 	{
-		return "";
+		return;
 	}
 	stringstream StringStream;
 	int iWidth = m_pWeavePatternCtrl->GetWeaveWidth();
@@ -306,123 +306,154 @@ string CWeaveWizard::GetCreateTextileCommand(string ExistingTextile)
 	m_GapSize.ToDouble(&dGapSize);
 	m_ShearAngle.ToDouble(&dShearAngle);
 	int iLayers = m_pLayersSpin->GetValue();
+	CTextileWeave* weave = nullptr;
 	if (!m_b3DWeave)
 	{
+		CTextileWeave2D* weave2d = nullptr;
 		if ( m_bShear )
 		{
-			StringStream << "weave = CShearedTextileWeave2D(" << iWidth << ", " << iHeight << ", " << dYarnSpacing << ", " << dFabricThickness << ", " << dShearAngle*PI/180.0 << ", " << m_bRefine << "," << m_bInPlaneTangents << ")" << endl;
+			double shearAngle = dShearAngle * PI / 180.0;
+			weave2d = new CShearedTextileWeave2D(iWidth, iHeight, dYarnSpacing, dFabricThickness, shearAngle, m_bRefine, m_bInPlaneTangents);
 		}
 		else
 		{
-			auto weave = new CTextileWeave2D(iWidth, iHeight, dYarnSpacing, dFabricThickness, m_bRefine, m_bInPlaneTangents);
-
-
-			StringStream << "weave = CTextileWeave2D(" << iWidth << ", " << iHeight << ", " << dYarnSpacing << ", " << dFabricThickness;
-			if (m_bRefine) {
-				StringStream << ", True, ";
-			}
-			else {
-				StringStream << ", False, ";
-			}
-			if (m_bInPlaneTangents) {
-				StringStream << "True)" << endl;
-			}
-			else {
-				StringStream << "False)" << endl;
-			}
+			weave2d = new CTextileWeave2D(iWidth, iHeight, dYarnSpacing, dFabricThickness, m_bRefine, m_bInPlaneTangents);
 		}
 		if (m_bRefine)
 		{
-			StringStream << "weave.SetGapSize(" << dGapSize << ")" << endl;
+			weave2d->SetGapSize(dGapSize);
 		}
-	}
-	else
-	{
-		StringStream << "weave = CTextileWeave3D(" << iWidth << ", " << iHeight << ", " << dYarnSpacing << ", " << dFabricThickness << ")" << endl;
-	}
-	StringStream << "weave.SetYarnWidths(" << m_YarnWidth << ")" << endl;
-	if (!m_b3DWeave )
-	{
+		weave2d->SetYarnWidths(Convert::ToDouble(m_YarnWidth));
 		for (int i = 0; i < iWidth; i++)
 		{
 			for (int j = 0; j < iHeight; j++)
 			{
 				if (GetPatternCell(i, j))
 				{
-					StringStream << "weave.SwapPosition(" << i <<", " << j/*iHeight-(j+1)*/ << ")" << endl;
+					weave2d->SwapPosition(i, j);
 				}
 			}
 		}
+		weave = weave2d;
 	}
 	else
 	{
-		CTextileWeave3D* pWeave3D = dynamic_cast<CTextileWeave3D*>(&m_pWeavePatternCtrl->GetWeave());
-		if (pWeave3D)
+		auto weave3d = new CTextileWeave3D(iWidth, iHeight, dYarnSpacing, dFabricThickness);
+		weave3d->SetYarnWidths(Convert::ToDouble(m_YarnWidth));
+		for (int i = 0; i < weave3d->GetNumXYarns(); i++)
 		{
-			StringStream << ConvertWeave3DPattern(*pWeave3D, "weave");
-			double dFabricThickness = 1;
-			m_FabricThickness.ToDouble(&dFabricThickness);
-			StringStream << "weave.SetYarnHeights(" << dFabricThickness/pWeave3D->GetMaxNumLayers() << ")" << endl;
+			weave3d->AddXLayers(i, weave3d->GetNumXLayers(i));
 		}
+		for (int i = 0; i < weave3d->GetNumYYarns(); i++)
+		{
+			weave3d->AddYLayers(i, weave3d->GetNumYLayers(i));
+		}
+
+		int k;
+		int iNumXLayers;
+		int iNumYLayers;
+		vector<int> Swap1, Swap2;
+		for (int i = 0; i < weave3d->GetNumYYarns(); i++)
+		{
+			iNumYLayers = weave3d->GetNumYLayers(i);
+			for (int j = 0; j < weave3d->GetNumXYarns(); j++)
+			{
+				iNumXLayers = weave3d->GetNumXLayers(j);
+				auto Cell = weave3d->GetCell(i, j);
+				Swap1.clear();
+				Swap2.clear();
+
+				int iXCount = 0;
+				for (auto itCellStart = Cell.begin(); itCellStart != Cell.end() && iXCount < iNumXLayers; ++itCellStart, ++iXCount)
+				{
+					if (*itCellStart == PATTERN_YYARN)
+					{
+						Swap1.push_back(iXCount);
+					}
+				}
+				int iYCount = 0;
+				for (auto itCellEnd = Cell.rbegin(); itCellEnd != Cell.rend() && iYCount < iNumYLayers; ++itCellEnd, ++iYCount)
+				{
+					if (*itCellEnd == PATTERN_XYARN)
+					{
+						Swap2.push_back((int)Cell.size() - (iYCount + 1));
+					}
+				}
+				assert(Swap1.size() == Swap2.size());
+				for (k = 0; k < (int)Swap1.size() && k < (int)Swap2.size(); ++k)
+				{
+					weave3d->SwapPosition(i, j, Swap1[k], Swap2[k]);
+				}
+			}
+		}
+		double dFabricThickness = 1;
+		m_FabricThickness.ToDouble(&dFabricThickness);
+		weave3d->SetYarnHeights(dFabricThickness / weave3d->GetMaxNumLayers());
+		weave = weave3d;
 	}
-	StringStream << ConvertWeaveYarnDimensions(m_pWeavePatternCtrl->GetWeave(), "weave");
+	for (int i = 0; i < m_pWeavePatternCtrl->GetWeave().GetNumXYarns(); i++)
+	{
+		weave->SetXYarnWidths(i, m_pWeavePatternCtrl->GetWeave().GetXYarnWidths(i));
+		weave->SetXYarnHeights(i, m_pWeavePatternCtrl->GetWeave().GetXYarnHeights(i));
+		weave->SetXYarnSpacings(i, m_pWeavePatternCtrl->GetWeave().GetXYarnSpacings(i));
+	}
+	for (int i = 0; i < m_pWeavePatternCtrl->GetWeave().GetNumYYarns(); i++)
+	{
+		weave->SetYYarnWidths(i, m_pWeavePatternCtrl->GetWeave().GetYYarnWidths(i));
+		weave->SetYYarnHeights(i, m_pWeavePatternCtrl->GetWeave().GetYYarnHeights(i));
+		weave->SetYYarnSpacings(i, m_pWeavePatternCtrl->GetWeave().GetYYarnSpacings(i));
+	}
+	CTextileLayered* layered = nullptr;
 	if ( m_bLayers )
 	{
-		StringStream << ConvertLayeredWeave( "weave", "LayeredTextile", iLayers, dFabricThickness );
+		layered = new CTextileLayered();
+		auto offset = XYZ();
+		for (int i = 0; i < iLayers; i++)
+		{
+			layered->AddLayer(*weave, offset);
+			offset.z += dFabricThickness;
+		}
 	}
 	if (m_bCreateDomain)
 	{
-		StringStream << "weave.AssignDefaultDomain(";
-		if ( !m_bAddedDomainHeight )
-			StringStream << "False, False";
-		StringStream << ")" << endl;
+		weave->AssignDefaultDomain(false, m_bAddedDomainHeight);
 	}
 	if (m_bShearedDomain)
 	{
-		StringStream << "weave.AssignDefaultDomain( True";
-		if ( !m_bAddedDomainHeight )
-			StringStream << ",False";
-		StringStream << ")" << endl;
+		weave->AssignDefaultDomain(true, m_bAddedDomainHeight);
 	}
-
-	if ( (m_bCreateDomain || m_bShearedDomain) && m_bLayers )
+	if (layered && (m_bCreateDomain || m_bShearedDomain))
 	{
-		if ( m_bShearedDomain )
-		{
-			StringStream << "Domain = weave.GetDefaultDomain( True";
-			if ( !m_bAddedDomainHeight )
-				StringStream << ",False";
-			StringStream << ")" << endl;
-
-		}
-		else
-		{
-			StringStream << "Domain = weave.GetDefaultDomain(";
-			if ( !m_bAddedDomainHeight )
-				StringStream << "False, False";
-			StringStream << ")" << endl;
-		}
-		StringStream << "Plane = PLANE()" << endl;
-		StringStream << "index = Domain.GetPlane( XYZ(0,0,-1), Plane )" << endl;
-		StringStream << "Plane.d -= " << dFabricThickness * (iLayers-1) << endl;
-		StringStream << "Domain.SetPlane( index, Plane )" << endl;
-		StringStream << "LayeredTextile.AssignDomain( Domain )" << endl;
+		auto domain = weave->GetDefaultDomain(m_bShearedDomain, m_bAddedDomainHeight);
+		auto plane = PLANE();
+		auto normal = XYZ(0, 0, -1);
+		auto index = domain.GetPlane(normal, plane);
+		plane.d -= dFabricThickness * (iLayers - 1);
+		domain.SetPlane(index, plane);
+		layered->AssignDomain(domain);
 	}
 	if (ExistingTextile.empty())
 	{
-		if ( !m_bLayers )
-			StringStream << "textilename = AddTextile(weave)" << endl;
+		if (layered)
+		{
+			CTexGen::Instance().AddTextile(*layered);
+		}
 		else
-			StringStream << "textilename = AddTextile( LayeredTextile )" << endl;
+		{
+			CTexGen::Instance().AddTextile(*weave);
+		}
 	}
 	else
 	{
-		if ( !m_bLayers )
-			StringStream << "AddTextile('" << ExistingTextile << "', weave, True)" << endl;
+		if (layered)
+		{
+			CTexGen::Instance().AddTextile(ExistingTextile, *layered, true);
+		}
 		else
-			StringStream << "AddTextile('" << ExistingTextile << "', LayeredTextile, True)" << endl;
+		{
+			CTexGen::Instance().AddTextile(ExistingTextile, *weave, true);
+		}
 	}
-	return StringStream.str();
 }
 
 void CWeaveWizard::LoadSettings(const CTextileWeave2D &Weave)

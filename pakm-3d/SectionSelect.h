@@ -3,7 +3,6 @@
 #include <wx/choicebk.h>
 #include "WindowIDs.h"
 #include "TexGenApp.h"
-#include "PythonConverter.h"
 #include "CircleRangeCtrl.h"
 #include "TexGen.h"
 using namespace TexGen;
@@ -27,7 +26,6 @@ public:
 	CSectionSelect();
 	~CSectionSelect(void);
 
-	string GetCreateSectionCommand(string SectionVariableName = "section");
 	void LoadSettings(const CSection &Section);
 	const CSection &GetSection();
 	static void UpdateSection(CObjectContainer<CSection> &Section);

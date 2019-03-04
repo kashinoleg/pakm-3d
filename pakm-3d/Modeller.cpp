@@ -692,25 +692,23 @@ void CModeller::AssignSectionToSelectedObjects()
 	}
 	CYarnSectionSelect Dialog;
 	if (bSameNumNodes)
+	{
 		Dialog.SetNumberOfNodes(iNumNodes);
+	}
 	if (pSection)
+	{
 		Dialog.LoadSettings(*pSection);
+	}
 	if (Dialog.ShowModal() == wxID_OK)
 	{
-		string Command = Dialog.GetCreateSectionCommand();
-		if (!Command.empty())
+		auto section = Dialog.GetCreateSection();
+		if (section)
 		{
-			stringstream StringStream;
-			StringStream << "textile = GetTextile('" << m_TextileName << "')" << endl;
+			auto textile = CTexGen::Instance().GetTextile(m_TextileName);
 			for (auto itYarn = SelectedYarns.begin(); itYarn != SelectedYarns.end(); itYarn++)
 			{
-				StringStream << "textile.GetYarn(" << itYarn->iYarn << ").AssignSection(yarnsection)" << endl;
+				textile->GetYarn(itYarn->iYarn)->AssignSection(*section);
 			}
-			Command += StringStream.str();
-
-			CTexGenMainFrame *pMainFrame = ((CTexGenApp*)wxTheApp)->GetMainFrame();
-			pMainFrame->SendPythonCode(Command);
-
 			RefreshSelectedYarns();
 		}
 	}

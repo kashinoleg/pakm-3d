@@ -27,7 +27,7 @@ namespace TexGen
 	public:
 		CPropertiesTextile();
 		CPropertiesTextile(TiXmlElement &Element);
-		~CPropertiesTextile(void);
+		~CPropertiesTextile(void) {}
 
 		/// Used for saving data to XML
 		virtual void PopulateTiXmlElement(TiXmlElement &Element, OUTPUT_TYPE OutputType);
@@ -57,7 +57,10 @@ namespace TexGen
 
 		double GetMatrixYoungsModulus(string Units = "MPa") const;
 		double GetMatrixPoissonsRatio() const;
+		CProperty MatrixPoissonsRatioProperty() const;
+
 		double GetMatrixAlpha() const;
+		CProperty MatrixAlphaProperty() const;
 
 		CProperty m_ArealDensity;
 		CProperty m_MatrixYoungsModulus;

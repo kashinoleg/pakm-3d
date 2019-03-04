@@ -51,6 +51,10 @@ const string Convert::NAME_ALPHA_Z = "Alpha Z";
 const string Convert::NAME_AREAL_DENSITY = "Areal Density";
 const string Convert::NAME_FIBRES_PER_YARN = "Fibres Per Yarn";
 
+const string Convert::NAME_MATRIX_YOUNGS_MODULUS = "Matrix Young's Modulus";
+const string Convert::NAME_MATRIX_POISSONS_RATIO = "Matrix Poisson's Ratio";
+const string Convert::NAME_MATRIX_ALPHA = "Matrix Alpha";
+
 CProperties_ID Convert::ToProperty(wxString name)
 {
 	return ToProperty(ToString(name));
@@ -132,14 +136,14 @@ CProperties_ID Convert::ToProperty(string name)
 	}
 }
 
-wxString Convert::ToWxString(CProperties_ID Id)
+wxString Convert::ToWxString(CProperties_ID property)
 {
-	return ToWxString(ToString(Id));
+	return ToWxString(ToString(property));
 }
 
-string Convert::ToString(CProperties_ID Id)
+string Convert::ToString(CProperties_ID property)
 {
-	switch (Id)
+	switch (property)
 	{
 	case TexGen::ID_POISSONS_RATIO_X:
 		return NAME_POISSONS_RATIO_X;
@@ -179,5 +183,46 @@ string Convert::ToString(CProperties_ID Id)
 		return NAME_FIBRES_PER_YARN;
 	default:
 		break;
+	}
+}
+
+wxString Convert::ToWxString(CProperties_Matrix property)
+{
+	return ToWxString(ToString(property));
+}
+
+string Convert::ToString(CProperties_Matrix property)
+{
+	switch (property)
+	{
+	case TexGen::MATRIX_YOUNGS_MODULUS:
+		return NAME_MATRIX_YOUNGS_MODULUS;
+	case TexGen::MATRIX_POISSONS_RATIO:
+		return NAME_MATRIX_POISSONS_RATIO;
+	case TexGen::MATRIX_ALPHA:
+		return NAME_MATRIX_ALPHA;
+	default:
+		break;
+	}
+}
+
+CProperties_Matrix Convert::ToMatrixProperty(wxString name)
+{
+	return ToMatrixProperty(ToString(name));
+}
+
+CProperties_Matrix Convert::ToMatrixProperty(string name)
+{
+	if (name == NAME_MATRIX_YOUNGS_MODULUS)
+	{
+		return MATRIX_YOUNGS_MODULUS;
+	}
+	if (name == NAME_MATRIX_POISSONS_RATIO)
+	{
+		return MATRIX_POISSONS_RATIO;
+	}
+	if (name == NAME_MATRIX_ALPHA)
+	{
+		return MATRIX_ALPHA;
 	}
 }

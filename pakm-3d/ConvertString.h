@@ -47,9 +47,14 @@ namespace TexGen
 		static const string NAME_ALPHA_Z;
 		static const string NAME_AREAL_DENSITY;
 		static const string NAME_FIBRES_PER_YARN;
+
+		static const string NAME_MATRIX_YOUNGS_MODULUS;
+		static const string NAME_MATRIX_POISSONS_RATIO;
+		static const string NAME_MATRIX_ALPHA;
 	public:
 		static string ToString(wxString String);
-		static string ToString(CProperties_ID Id);
+		static string ToString(CProperties_ID property);
+		static string ToString(CProperties_Matrix property);
 
 		static int ToInt(wxString String);
 		static int ToInt(string String);
@@ -60,7 +65,11 @@ namespace TexGen
 		static CProperties_ID ToProperty(string name);
 		static CProperties_ID ToProperty(wxString name);
 
-		static wxString ToWxString(CProperties_ID Id);
 		static wxString ToWxString(string String);
+		static wxString ToWxString(CProperties_ID property);
+		static wxString ToWxString(CProperties_Matrix property);
+
+		static CProperties_Matrix ToMatrixProperty(string name);
+		static CProperties_Matrix ToMatrixProperty(wxString name);
 	};
 }

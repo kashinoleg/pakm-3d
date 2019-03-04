@@ -221,4 +221,11 @@ namespace TexGen
 		ID_AREAL_DENSITY,
 		ID_FIBRES_PER_YARN
 	};
+
+	enum CProperties_Matrix
+	{
+		MATRIX_YOUNGS_MODULUS,
+		MATRIX_POISSONS_RATIO,
+		MATRIX_ALPHA,
+	};
 }

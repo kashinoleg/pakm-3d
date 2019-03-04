@@ -1007,7 +1007,6 @@ void CModeller::AssignPropertiesToTextile()
 		if (Dialog.ShowModal() == wxID_OK)
 		{
 			SavePropertiesFromGrid(pGrid, Properties);
-			auto textile = CTexGen::Instance().GetTextile(m_TextileName);
 			for (auto itProperty = Properties.begin(); itProperty != Properties.end(); itProperty++)
 			{
 				if (itProperty->second.IsSet())
@@ -1111,8 +1110,8 @@ void CModeller::SavePropertiesFromGrid(wxGrid* pGrid, vector<pair<wxString, CPro
 
 void CModeller::AssignMatrixProperties()
 {
-	auto pTextile = CTexGen::Instance().GetTextile(m_TextileName);
-	if (!pTextile)
+	auto textile = CTexGen::Instance().GetTextile(m_TextileName);
+	if (!textile)
 	{
 		return;
 	}
@@ -1120,44 +1119,33 @@ void CModeller::AssignMatrixProperties()
 	if (wxXmlResource::Get()->LoadDialog(&Dialog, ((CTexGenApp*)wxTheApp)->GetMainFrame(), wxT("Properties")))
 	{
 		vector<pair<wxString, CProperty>> Properties;
-		Properties.push_back(make_pair(wxT("Matrix Young's Modulus"), pTextile->m_MatrixYoungsModulus));
-
-		CProperty PoissonsRatio("");
-		PoissonsRatio.SetValue(pTextile->GetMatrixPoissonsRatio(),"");
-
-		CProperty Alpha("/K");
-		Alpha.SetValue(pTextile->GetMatrixAlpha(),"/K");
-
-		// Note that for each property name there should be an equivalent Set<PropertyName>
-		
-		Properties.push_back(make_pair(wxT("Matrix Poisson's Ratio"), PoissonsRatio));
-		Properties.push_back(make_pair(wxT("Matrix Alpha"), Alpha));
-		
-		wxGrid* pGrid = XRCCTRL(Dialog, "PropertiesGrid", wxGrid);
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_Matrix::MATRIX_YOUNGS_MODULUS), textile->m_MatrixYoungsModulus));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_Matrix::MATRIX_POISSONS_RATIO), textile->MatrixPoissonsRatioProperty()));
+		Properties.push_back(make_pair(Convert::ToWxString(CProperties_Matrix::MATRIX_ALPHA), textile->MatrixAlphaProperty()));
+		auto pGrid = XRCCTRL(Dialog, "PropertiesGrid", wxGrid);
 		CreatePropertiesGrid(pGrid, Properties);
-
 		Dialog.SetInitialSize(wxSize(400, 150));
 		if (Dialog.ShowModal() == wxID_OK)
 		{
 			SavePropertiesFromGrid(pGrid, Properties);
-
-			stringstream StringStream;
-			StringStream << "textile = GetTextile('" << m_TextileName << "')" << endl;
 			for (auto itProperty = Properties.begin(); itProperty != Properties.end(); itProperty++)
 			{
 				if (itProperty->second.IsSet())
 				{
-					wxString TruncatedName = itProperty->first;
-					TruncatedName.Replace(wxT(" "), wxT(""));
-					TruncatedName.Replace(wxT("'"), wxT(""));
-					if (TruncatedName == wxT("MatrixPoissonsRatio") || TruncatedName == wxT("MatrixAlpha"))
-						StringStream << "textile.Set" << ConvertString(TruncatedName) << "(" << itProperty->second.GetValue() << ")" << endl;
-					else
-						StringStream << "textile.Set" << ConvertString(TruncatedName) << "(" << itProperty->second.GetValue() << ", '" << itProperty->second.GetUnits() << "')" << endl;
+					switch (Convert::ToMatrixProperty(itProperty->first))
+					{
+					case CProperties_Matrix::MATRIX_YOUNGS_MODULUS:
+						textile->SetMatrixYoungsModulus(itProperty->second.GetValue(), itProperty->second.GetUnits());
+						break;
+					case CProperties_Matrix::MATRIX_POISSONS_RATIO:
+						textile->SetMatrixPoissonsRatio(itProperty->second.GetValue());
+						break;
+					case CProperties_Matrix::MATRIX_ALPHA:
+						textile->SetMatrixAlpha(itProperty->second.GetValue());
+						break;
+					}
 				}
 			}
-			CTexGenMainFrame *pMainFrame = ((CTexGenApp*)wxTheApp)->GetMainFrame();
-			pMainFrame->SendPythonCode(StringStream.str());
 		}
 	}
 }

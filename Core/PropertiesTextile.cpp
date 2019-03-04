@@ -29,71 +29,98 @@ CPropertiesTextile::CPropertiesTextile(TiXmlElement &Element)
 	Element.Attribute("MatrixAlpha", &m_MatrixAlpha);
 }
 
-CPropertiesTextile::~CPropertiesTextile(void) {
-}
-
-void CPropertiesTextile::PopulateTiXmlElement(TiXmlElement &Element, OUTPUT_TYPE OutputType) {
+void CPropertiesTextile::PopulateTiXmlElement(TiXmlElement &Element, OUTPUT_TYPE OutputType)
+{
 	CProperties::PopulateTiXmlElement(Element, OutputType);
 	Element.SetAttribute("GeometryScale", m_GeometryScale);
 	m_ArealDensity.ReadAttribute(Element, "ArealDensity");
 	m_MatrixYoungsModulus.WriteAttribute(Element, "MatrixYoungsModulus");
-	if (m_MatrixPoissonsRatio != 0.0) {
+	if (m_MatrixPoissonsRatio != 0.0)
+	{
 		Element.SetAttribute("MatrixPoissonsRatio", stringify(m_MatrixPoissonsRatio));
 	}
-	if (m_MatrixAlpha != 0.0) {
+	if (m_MatrixAlpha != 0.0)
+	{
 		Element.SetAttribute("MatrixAlpha", stringify(m_MatrixAlpha));
 	}
 }
 
-bool CPropertiesTextile::SetGeometryScale(string Units) {
+bool CPropertiesTextile::SetGeometryScale(string Units)
+{
 	// Check the units are of the same type
-	if (CompatibleUnits("m", Units)) {
+	if (CompatibleUnits("m", Units))
+	{
 		m_GeometryScale = Units;
 		return true;
 	}
-	else {
+	else
+	{
 		TGERROR("Unable to set geometry scale, units must represent a length!");
 		return false;
 	}
 }
 
-void CPropertiesTextile::SetArealDensity(double dValue, string Units) {
+void CPropertiesTextile::SetArealDensity(double dValue, string Units)
+{
 	m_ArealDensity.SetValue(dValue, Units);
 }
 
-string CPropertiesTextile::GetGeometryScale() const {
+string CPropertiesTextile::GetGeometryScale() const
+{
 	return m_GeometryScale;
 }
 
-double CPropertiesTextile::GetArealDensity(string Units) const {
+double CPropertiesTextile::GetArealDensity(string Units) const
+{
 	return m_ArealDensity.GetValue(Units);
 }
 
-void CPropertiesTextile::SetMatrixYoungsModulus(double dValue, string Units) {
+void CPropertiesTextile::SetMatrixYoungsModulus(double dValue, string Units)
+{
 	m_MatrixYoungsModulus.SetValue(dValue, Units);
 }
 
-void CPropertiesTextile::SetMatrixPoissonsRatio(double dValue) {
+void CPropertiesTextile::SetMatrixPoissonsRatio(double dValue)
+{
 	m_MatrixPoissonsRatio = dValue;
 }
 
-void CPropertiesTextile::SetMatrixAlpha(double dValue) {
+void CPropertiesTextile::SetMatrixAlpha(double dValue)
+{
 	m_MatrixAlpha = dValue;
 }
 
-double CPropertiesTextile::GetMatrixYoungsModulus(string Units) const {
+double CPropertiesTextile::GetMatrixYoungsModulus(string Units) const
+{
 	return m_MatrixYoungsModulus.GetValue(Units);
 }
 
-double CPropertiesTextile::GetMatrixPoissonsRatio() const {
+double CPropertiesTextile::GetMatrixPoissonsRatio() const
+{
 	return m_MatrixPoissonsRatio;
 }
 
-double CPropertiesTextile::GetMatrixAlpha() const {
+CProperty CPropertiesTextile::MatrixPoissonsRatioProperty() const
+{
+	CProperty property("");
+	property.SetValue(m_MatrixPoissonsRatio, "");
+	return property;
+}
+
+double CPropertiesTextile::GetMatrixAlpha() const
+{
 	return m_MatrixAlpha;
 }
 
-void CPropertiesTextile::SetDefaultMatrixProperties() {
+CProperty CPropertiesTextile::MatrixAlphaProperty() const
+{
+	CProperty property("/K");
+	property.SetValue(m_MatrixAlpha, "/K");
+	return property;
+}
+
+void CPropertiesTextile::SetDefaultMatrixProperties()
+{
 	SetMatrixYoungsModulus( MATRIX_E );	
 	SetMatrixPoissonsRatio( MATRIX_POISSON );
 	SetMatrixAlpha( MATRIX_ALPHA );

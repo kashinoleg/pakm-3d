@@ -1,7 +1,6 @@
 #include "WeaveWizard.h"
 #include "WindowIDs.h"
 #include "WeavePatternCtrl.h"
-#include "PythonConverter.h"
 
 #include "Wizard.xpm"
 #include "RangeValidator.h"

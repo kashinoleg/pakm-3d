@@ -145,7 +145,6 @@
     <ClCompile Include="CustomWidget.cpp" />
     <ClCompile Include="DomainPlanesDialog.cpp" />
     <ClCompile Include="DropTarget.cpp" />
-    <ClCompile Include="EmbeddedPythonFunctions.cpp" />
     <ClCompile Include="Exporter.cpp" />
     <ClCompile Include="latin_random.cpp" />
     <ClCompile Include="LayersOffsetDialog.cpp" />
@@ -175,7 +174,6 @@
     <ClInclude Include="CustomWidget.h" />
     <ClInclude Include="DomainPlanesDialog.h" />
     <ClInclude Include="DropTarget.h" />
-    <ClInclude Include="EmbeddedPythonFunctions.h" />
     <ClInclude Include="Exporter.h" />
     <ClInclude Include="latin_random.hpp" />
     <ClInclude Include="LayersOffsetDialog.h" />

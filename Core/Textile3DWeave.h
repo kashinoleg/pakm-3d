@@ -258,7 +258,7 @@ namespace TexGen {
 
 		/// Iterates along yarn checking the angle between alternate nodes and setting up vector appropriately
 		/// bYarnsIndex = true indicates WarpIndex gives index into textile yarns vector. If false gives index into x/y yarn vector
-		void CheckUpVectors( int WarpIndex, bool Yarn = PATTERN3D_XYARN, bool bYarnsIndex = false ) const;
+		void CheckUpVectors(size_t WarpIndex, bool Yarn = PATTERN3D_XYARN, bool bYarnsIndex = false) const;
 
 		virtual string GetDefaultName() const;
 		/// Set up row of pattern cells for one weft pattern using one row of weave pattern data and the layers pattern for the weave

@@ -33,9 +33,6 @@
     <ClCompile Include="DropTarget.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="EmbeddedPythonFunctions.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="latin_random.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -120,9 +117,6 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="DropTarget.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="EmbeddedPythonFunctions.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="latin_random.hpp">

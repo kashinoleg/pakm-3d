@@ -41,7 +41,7 @@ namespace TexGen {
 		/// Applies a set of offsets to the yarns. This is an absolute value - if there is already
 		/// an offset in place this will be removed before the new offset is applied
 		void ApplyOffsets( vector<XY> &Offsets );
-		void ApplyLayerOffset( XYZ &Offset, int iLayer );
+		void ApplyLayerOffset(XYZ &Offset, size_t iLayer);
 		void GetOffsetMinDist( int iOffset, vector< vector<pair<double,double> > >& LayerIntersections, vector<pair<int,double> >& MinDist, int iNumX, int iNumY);
 		void GetOffsetMinDist( int x, int y, int iLayer, vector< vector<pair<double,double> > >& LayerIntersections, vector<pair<int,double> >& MinDist, int iNumX, int iNumY, int XSize, int YSize, bool bOffsetTop);
 		int GetLayerMeshes( vector<CMesh>& LayerMeshes );

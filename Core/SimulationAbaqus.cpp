@@ -1227,11 +1227,3 @@ void CSimulationAbaqus::GetSectionVolumeFractions(CTextile &Textile, vector<SECT
 		VolFractionData.push_back( VolFData );
 	}
 }
-
-
-
-vector <double>& CKeywordMaterial::GetConstants()
-{
-	vector<double> Constants;
-	return Constants;
-}

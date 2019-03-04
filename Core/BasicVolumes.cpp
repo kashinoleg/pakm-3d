@@ -152,7 +152,8 @@ void CBasicVolumes::SaveProjectedContoursToVTK(string Filename)
 			Mesh.GetIndices(CMesh::LINE).push_back(i++);
 			AreaIndex.m_Data.push_back(j);
 			Area.m_Data.push_back(itRegion->dArea);
-			NumYarns.m_Data.push_back(itRegion->YarnIndices.size());
+			auto num = (unsigned char)itRegion->YarnIndices.size();
+			NumYarns.m_Data.push_back(num);
 		}
 	}
 
@@ -178,7 +179,8 @@ void CBasicVolumes::SaveProjectedAreasToVTK(string Filename)
 	{
 		AreaIndex.m_Data.push_back(region);
 		Area.m_Data.push_back(m_ProjectedRegions[region].dArea);
-		NumYarns.m_Data.push_back(m_ProjectedRegions[region].YarnIndices.size());
+		auto num = (unsigned char)m_ProjectedRegions[region].YarnIndices.size();
+		NumYarns.m_Data.push_back(num);
 	}
 
 	vector<CMeshDataBase*> MeshData;

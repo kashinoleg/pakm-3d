@@ -414,31 +414,38 @@ bool CYarn::BuildSections() const {
 	return true;
 }
 
-void CYarn::CreateSectionAABBs() const {
+void CYarn::CreateSectionAABBs() const
+{
 	vector<XYZ>::const_iterator itPoint;
 	vector<CSlaveNode>::iterator itSlaveNode;
-	int iIndex;
 	int j;
 	int iSlaveNodeMin;
 	int iSlaveNodeMax;
 	m_SectionAABBs.resize(m_MasterNodes.size()-1);
-	for (size_t i = 0; i < m_SectionAABBs.size(); i++) {
+	for (size_t i = 0; i < m_SectionAABBs.size(); i++)
+	{
 		iSlaveNodeMin = 0;
 		iSlaveNodeMax = (int)m_SlaveNodes.size()-1;
-		for (itSlaveNode = m_SlaveNodes.begin(), j=0; itSlaveNode != m_SlaveNodes.end(); ++itSlaveNode, ++j) {
-			iIndex = itSlaveNode->GetIndex();
-			if (iIndex < i) {
+		for (itSlaveNode = m_SlaveNodes.begin(), j=0; itSlaveNode != m_SlaveNodes.end(); ++itSlaveNode, ++j)
+		{
+			size_t iIndex = itSlaveNode->GetIndex();
+			if (iIndex < i)
+			{
 				iSlaveNodeMin = j;
 			}
-			if (iIndex > i) {
+			if (iIndex > i)
+			{
 				iSlaveNodeMax = j;
 				break;
 			}
 		}
 		bool bFirst = true;
-		for (j=iSlaveNodeMin; j<=iSlaveNodeMax; ++j) {
-			for (itPoint = m_SlaveNodes[j].GetSectionPoints().begin(); itPoint != m_SlaveNodes[j].GetSectionPoints().end(); ++itPoint) {
-				if (bFirst) {
+		for (j=iSlaveNodeMin; j<=iSlaveNodeMax; ++j)
+		{
+			for (itPoint = m_SlaveNodes[j].GetSectionPoints().begin(); itPoint != m_SlaveNodes[j].GetSectionPoints().end(); ++itPoint)
+			{
+				if (bFirst)
+				{
 					m_SectionAABBs[i].first = m_SectionAABBs[i].second = *itPoint;
 					bFirst = false;
 				}
@@ -969,7 +976,8 @@ bool CYarn::AddCentrePlaneToMesh(CMesh &Mesh) const {
 		xSpacing = (StartEnd[1].x - StartEnd[0].x)/(iNumPoints-1);
 		ySpacing = (StartEnd[1].y - StartEnd[0].y)/(iNumPoints-1);
 
-		for ( int i = 0; i < iNumPoints; ++i ) {
+		for ( int i = 0; i < iNumPoints; ++i )
+		{
 			XY Point(StartEnd[0].x + i*xSpacing, StartEnd[0].y + i*ySpacing);
 			XYZ Point3D = itSlaveNode->GetPointOnSection(Point);
 			YarnMesh.AddNode(Point3D);
@@ -977,15 +985,10 @@ bool CYarn::AddCentrePlaneToMesh(CMesh &Mesh) const {
 		
 	}
 	int iOffset = Mesh.InsertNodes(YarnMesh);
-
-	// Add elements to the mesh
-	list<int>::const_iterator itIndex;
-	
-	int iIndex = 0;
-	int iSlaveIndex = 0;
-
-	for (iSlaveIndex = 0; iSlaveIndex < m_SlaveNodes.size()-1; ++iSlaveIndex) {
-		for (int i = 0; i < iNumPoints-1; ++i ) {
+	for (size_t iSlaveIndex = 0; iSlaveIndex < m_SlaveNodes.size() - 1; iSlaveIndex++)
+	{
+		for (int i = 0; i < iNumPoints-1; ++i )
+		{
 			Mesh.GetIndices(CMesh::QUAD).push_back(i+(iSlaveIndex)*iNumPoints + iOffset);
 			Mesh.GetIndices(CMesh::QUAD).push_back(i+(iSlaveIndex+1)*iNumPoints + iOffset);
 			Mesh.GetIndices(CMesh::QUAD).push_back(i+1+(iSlaveIndex+1)*iNumPoints + iOffset);
@@ -1739,23 +1742,28 @@ double CYarn::FindClosestEdgeDistance( XY &Loc, const vector<XY> &SectionPoints,
 	return dClosestEdgeDistance;
 }
 
-CYarn::YARN_TYPE CYarn::GetType() {
+CYarn::YARN_TYPE CYarn::GetType()
+{
 	vector<CNode> nodes = GetMasterNodes();
 	double dX = 0;
 	double dY = 0;
 	double dZ = 0;
-	for (int i = 0; i < nodes.size(); i++) {
+	for (size_t i = 0; i < nodes.size(); i++)
+	{
 		dX += abs(nodes[i].GetNormal().x);
 		dY += abs(nodes[i].GetNormal().y);
 		dZ += abs(nodes[i].GetNormal().z);
 	}
-	if (dX > 0) {
+	if (dX > 0)
+	{
 		return WARP;
 	}
-	else if (dY > 0) {
+	else if (dY > 0)
+	{
 		return WEFT;
 	}
-	else {
+	else
+	{
 		return BINDER;
 	}
 }

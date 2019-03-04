@@ -1584,24 +1584,30 @@ int CTextile3DWeave::AddWeftNodes( int CurrentNode, int XNode, int i, int j ) co
 	return CurrentNode;
 }
 
-void CTextile3DWeave::CheckUpVectors( int Index, bool bYarn, bool bYarnsIndex ) const {
+void CTextile3DWeave::CheckUpVectors(size_t Index, bool bYarn, bool bYarnsIndex) const
+{
 	BuildTextileIfNeeded();
 	int YarnIndex = 0;
-	if (bYarnsIndex) {
-		if (Index > m_Yarns.size() - 1) {
+	if (bYarnsIndex)
+	{
+		if (Index > m_Yarns.size() - 1)
+		{
 			return;
 		}
 		YarnIndex = Index;
 	}
 	else {
-		if (bYarn == PATTERN3D_XYARN) {
-			if (Index > m_iNumXYarns - 1) {
+		if (bYarn == PATTERN3D_XYARN)
+		{
+			if (Index > m_iNumXYarns - 1)
+			{
 				return;
 			}
 			YarnIndex = m_XYarns[Index][0];
 		}
 		else {
-			if (Index > m_iNumYYarns - 1) {
+			if (Index > m_iNumYYarns - 1)
+			{
 				return;
 			}
 			YarnIndex = m_YYarns[Index][0];
@@ -1613,10 +1619,8 @@ void CTextile3DWeave::CheckUpVectors( int Index, bool bYarn, bool bYarnsIndex ) 
 
 	XYZ CheckNodes[3];
 	XYZ UpVector, StartUp;
-	int size = Nodes.size();
 
-	
-	for ( int i = 0; i < size-1; ++i)
+	for (size_t i = 0; i < Nodes.size() - 1; i++)
 	{
 		CheckNodes[1] = Nodes[i].GetPosition();
 		if ( i == 0 )
@@ -1630,11 +1634,13 @@ void CTextile3DWeave::CheckUpVectors( int Index, bool bYarn, bool bYarnsIndex ) 
 		}
 		UpVector = GetUpVector( CheckNodes, bYarn );
 		Nodes[i].SetUp( UpVector );
-		if ( i == 0 )
-			Nodes[size-1].SetUp(UpVector);
+		if (i == 0)
+		{
+			Nodes[Nodes.size() - 1].SetUp(UpVector);
+		}
 		CheckNodes[0] = CheckNodes[1];
 	}
-	m_Yarns[YarnIndex].SetNodes( Nodes );
+	m_Yarns[YarnIndex].SetNodes(Nodes);
 }
 
 XYZ CTextile3DWeave::GetUpVector( XYZ CheckNodes[], bool bYarn ) const

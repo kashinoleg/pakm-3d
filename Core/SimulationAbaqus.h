@@ -51,7 +51,11 @@ namespace TexGen {
 			CMaterial* Copy() const { return new CKeywordMaterial(*this); }
 			string GetAbaqusCommands(string Type = "") { return m_AbaqusCommands; }
 			void SetAbaqusCommands(string AbaqusCommands) { m_AbaqusCommands = AbaqusCommands; }
-			vector<double>& GetConstants();
+			vector<double>& GetConstants()
+			{
+				vector<double> Constants;
+				return Constants;
+			}
 		protected:
 			string m_AbaqusCommands;
 		};

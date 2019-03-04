@@ -18,7 +18,6 @@ public:
 
 	void UpdateModellingPage(const CModeller *pModeller);
 	void UpdateRenderingPage(const CTexGenRenderer *pRenderer);
-	void UpdatePythonPage(bool bRecording);
 	void UpdatePositionText(const CModeller *pModeller);
 	void UpdateSnapSize(const CModeller *pModeller);
 
@@ -30,7 +29,6 @@ protected:
 	void BuildModellerPage();
 	void BuildRenderingPage();
 	void BuildDomainsPage();
-	void BuildPythonPage();
 	void ResizePages();
 	void BuildOptionsPage();
 

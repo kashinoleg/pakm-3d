@@ -201,11 +201,14 @@ void CTextileLayered::ApplyOffsets( vector<XY> &Offsets )
 	}
 }
 
-void CTextileLayered::ApplyLayerOffset( XYZ &Offset, int iLayer ) {
-	if (iLayer < 0 || iLayer >= m_LayerYarnIndices.size()) {
+void CTextileLayered::ApplyLayerOffset(XYZ &Offset, size_t iLayer)
+{
+	if (iLayer < 0 || iLayer >= m_LayerYarnIndices.size())
+	{
 		return;
 	}
-	for (vector<int>::iterator itIndices = m_LayerYarnIndices[iLayer].begin(); itIndices != m_LayerYarnIndices[iLayer].end(); ++itIndices ) {
+	for (auto itIndices = m_LayerYarnIndices[iLayer].begin(); itIndices != m_LayerYarnIndices[iLayer].end(); ++itIndices )
+	{
 		CYarn* Yarn = GetYarn( *itIndices );
 		Yarn->Translate( Offset );
 	}
@@ -281,9 +284,9 @@ void CTextileLayered::NestLayers()
 	vector<double> MinDist(iNumLayers-1,START_DIST);
 
 	// Find the smallest distance between adjacent layers
-	for ( int j = 0; j < LayerIntersections.size(); ++j )
+	for (size_t j = 0; j < LayerIntersections.size(); j++)
 	{	
-		for ( int i = 0; i < LayerIntersections[j].size()-1; ++i )
+		for (size_t i = 0; i < LayerIntersections[j].size() - 1; i++)
 		{
 			if ( LayerIntersections[j][i].first > 0.0 && LayerIntersections[j][i+1].second > 0.0 )
 			{
@@ -355,9 +358,8 @@ void CTextileLayered::MaxNestLayers()
 	vector<pair<int,double> > MinDist(iNumLayers-1,make_pair(-1,START_DIST));
 
 	// Find min dist for each pair of layers
-	for ( int iLayer = 0; iLayer < LayerMeshes.size()-1; ++iLayer )
+	for (size_t iLayer = 0; iLayer < LayerMeshes.size() - 1; iLayer++)
 	{
-
 		double X1 = Repeats[iLayer].x;
 		double X2 = Repeats[iLayer+1].x;
 		double Y1 = Repeats[iLayer].y;
@@ -372,8 +374,8 @@ void CTextileLayered::MaxNestLayers()
 		fact = (int)(iGridRes/((AABB.second.y - AABB.first.y)/gcd));
 		double YInc = gcd/fact;
 
-		iNumX = (AABB.second.x - AABB.first.x)/XInc;
-		iNumY = (AABB.second.y - AABB.first.y)/YInc;
+		iNumX = (int) ((AABB.second.x - AABB.first.x) / XInc);
+		iNumY = (int) ((AABB.second.y - AABB.first.y) / YInc);
 
 		// Set the upper and lower intersection points of the mesh with a grid of vertical lines for each of the pair of meshes
 		vector< vector<pair<double,double> > > LayerIntersections;
@@ -427,11 +429,10 @@ void CTextileLayered::MaxNestLayers()
 	
 		int X = MinDist[iLayer].first % (iNumX+1);
 		int Y = (MinDist[iLayer].first - X) / (iNumX+1);
-
-		if ( bOffsetTop )
+		if (bOffsetTop)
 		{
-			X *= -1.0;
-			Y *= -1.0;
+			X *= -1;
+			Y *= -1;
 		}
 		Offset.x += X * XInc;
 		Offset.y += Y * YInc;
@@ -470,7 +471,7 @@ void CTextileLayered::GetOffsetMinDist( int iOffset, vector< vector<pair<double,
 		{
 			int iInd = j*iNumX+i;
 			int iOffsetInd = ((j+incY)%iNumY)*iNumX + ((i+incX)%iNumX);
-			for ( int LayerInd = 0; LayerInd < LayerIntersections[iInd].size()-1; ++LayerInd )
+			for (size_t LayerInd = 0; LayerInd < LayerIntersections[iInd].size() - 1; LayerInd++)
 			{
 				if ( LayerIntersections[iInd][LayerInd].second > 0.0 && LayerIntersections[iOffsetInd][LayerInd+1].first > 0.0 )
 				{
@@ -485,7 +486,7 @@ void CTextileLayered::GetOffsetMinDist( int iOffset, vector< vector<pair<double,
 	}
 	
 	// Check if min dist for this offset is greater than previous stored for each inter layer gap (ie will give greater nesting)
-	for ( int index = 0; index < MinDist.size(); ++index )  // size of MinDist = number of layers - 1
+	for (size_t index = 0; index < MinDist.size(); index++)  // size of MinDist = number of layers - 1
 	{
 		if ( MinDist[index].second == START_DIST || OffsetMinDist[index] > MinDist[index].second )
 		{
@@ -561,11 +562,10 @@ void CTextileLayered::GetOffsetMinDist( int x, int y, int iLayer, vector< vector
 int CTextileLayered::GetLayerMeshes( vector<CMesh>& LayerMeshes )
 {
 	int iNumSlaveNodes = 0;
-	for ( int i = 0; i < m_LayerYarnIndices.size(); ++i )
+	for (size_t i = 0; i < m_LayerYarnIndices.size(); i++)
 	{
-		vector<int>::iterator itIndices;
 		CMesh Mesh;
-		for ( itIndices = m_LayerYarnIndices[i].begin(); itIndices != m_LayerYarnIndices[i].end(); ++itIndices )
+		for (auto itIndices = m_LayerYarnIndices[i].begin(); itIndices != m_LayerYarnIndices[i].end(); itIndices++)
 		{
 			CYarn* Yarn = GetYarn( *itIndices );
 			int Num = Yarn->GetNumSlaveNodes();  // Use the number of slave nodes to give resolution for grid
@@ -583,14 +583,12 @@ int CTextileLayered::GetLayerMeshes( vector<CMesh>& LayerMeshes )
 
 void CTextileLayered::GetLayerRepeats( vector< XY >& Repeats )
 {
-	for ( int i = 0; i < m_LayerYarnIndices.size(); ++i )
+	for (size_t i = 0; i < m_LayerYarnIndices.size(); i++)
 	{
 		XY Repeat;
 		CYarn* Yarn = GetYarn( m_LayerYarnIndices[i][0] );  // Just get first - assume repeats for all yarns in layer are the same (valid??)
-		vector<XYZ> YarnRepeats;
-		vector<XYZ>::iterator itYarnRepeats;
-		YarnRepeats = Yarn->GetRepeats();
-		for ( itYarnRepeats = YarnRepeats.begin(); itYarnRepeats != YarnRepeats.end(); ++itYarnRepeats )
+		vector<XYZ> YarnRepeats = Yarn->GetRepeats();
+		for (auto itYarnRepeats = YarnRepeats.begin(); itYarnRepeats != YarnRepeats.end(); itYarnRepeats++)
 		{
 			if ( itYarnRepeats->x > Repeat.x )
 			{

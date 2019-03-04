@@ -10,23 +10,14 @@
 BEGIN_EVENT_TABLE(CTexGenMainFrame, wxFrame)
 EVT_MENU(ID_Quit, CTexGenMainFrame::OnQuit)
 EVT_MENU(ID_About, CTexGenMainFrame::OnAbout)
-EVT_MENU(ID_UserGuide, CTexGenMainFrame::OnUserGuide)
 EVT_MENU(ID_Open, CTexGenMainFrame::OnOpen)
 EVT_MENU(ID_Save, CTexGenMainFrame::OnSave)
 EVT_MENU(ID_SaveScreenshot, CTexGenMainFrame::OnSaveScreenshot)
-EVT_MENU(ID_OpenWiseTex, CTexGenMainFrame::OnOpenWiseTex)
-EVT_MENU(ID_OpenTexGenv2, CTexGenMainFrame::OnOpenTexGenv2)
-EVT_MENU(ID_OpenWeavePattern, CTexGenMainFrame::OnOpenWeavePattern)
-EVT_MENU(ID_SaveGrid, CTexGenMainFrame::OnSaveGrid)
-EVT_MENU(ID_SaveVoxel, CTexGenMainFrame::OnSaveVoxel)
 EVT_MENU(ID_SaveVolumeMesh, CTexGenMainFrame::OnSaveVolumeMesh)
 EVT_MENU(ID_SaveSurfaceMesh, CTexGenMainFrame::OnSaveSurfaceMesh)
 EVT_MENU(ID_SaveIGES, CTexGenMainFrame::OnSaveIGES)
-
 EVT_MENU(ID_SaveSTL, CTexGenMainFrame::OnSaveSTL)
-
 EVT_MENU(ID_SaveSTEP, CTexGenMainFrame::OnSaveSTEP)
-EVT_MENU(ID_SaveABAQUS, CTexGenMainFrame::OnSaveABAQUS)
 EVT_MENU(ID_SaveABAQUSVoxels, CTexGenMainFrame::OnSaveABAQUSVoxels)
 EVT_MENU(ID_ToggleControls, CTexGenMainFrame::OnWindow)
 EVT_MENU(ID_ToggleLogWindow, CTexGenMainFrame::OnWindow)
@@ -44,7 +35,6 @@ EVT_BUTTON_MENU_RANGE(ID_CreateYarn, ID_YarnFibreVolumeFraction, CTexGenMainFram
 EVT_RADIOBUTTON_MENU_RANGE(ID_SelectTool, ID_ScaleTool, CTexGenMainFrame::OnModeller)
 EVT_CHECKBOX_MENU_RANGE(ID_FilterNodes, ID_Relative, CTexGenMainFrame::OnModeller)
 EVT_BUTTON_MENU_RANGE(ID_CreateDomainPlanes, ID_DeleteDomain, CTexGenMainFrame::OnDomains)
-EVT_BUTTON_MENU_RANGE(ID_RunScript, ID_RecordMacro, CTexGenMainFrame::OnPython)
 
 //Options
 EVT_MENU(ID_OutputMessages, CTexGenMainFrame::OnOutputMessages)
@@ -80,12 +70,6 @@ END_EVENT_TABLE()
 BEGIN_EVENT_TABLE(CVolumeMeshOptions, wxDialog)
 EVT_UPDATE_UI(XRCID("PeriodicBoundaries"), CVolumeMeshOptions::OnPeriodicBoundariesUpdate)
 END_EVENT_TABLE()
-
-BEGIN_EVENT_TABLE(CSurveyDialog, wxDialog)
-EVT_BUTTON(XRCID("NextTime"), CSurveyDialog::OnClickNextTime)
-EVT_BUTTON(XRCID("NotAgain"), CSurveyDialog::OnClickNotAgain)
-EVT_HYPERLINK(XRCID("TakeSurvey"), CSurveyDialog::OnClickTakeSurvey)
-END_EVENT_TABLE()
 ;
 
 
@@ -106,36 +90,25 @@ CTexGenMainFrame::CTexGenMainFrame(const wxString& title, const wxPoint& pos, co
 	pMenuFile->Append(ID_Save, wxT("&Save as..."));
 	pMenuFile->AppendSeparator();
 	{
-		wxMenu *pImportSubMenu = new wxMenu;
-		pImportSubMenu->Append(ID_OpenTexGenv2, wxT("&TexGen v2 File..."));
-		pImportSubMenu->Append(ID_OpenWiseTex, wxT("&WiseTex File..."));
-		pImportSubMenu->Append(ID_OpenWeavePattern, wxT("&Weave Pattern File..."));
-		pMenuFile->Append(wxID_ANY, wxT("&Import"), pImportSubMenu);
-	}
-	{
 		wxMenu *pExportSubMenu = new wxMenu;
 		pExportSubMenu->Append(ID_SaveScreenshot, wxT("&Image (*.png)"));
-		pExportSubMenu->Append(ID_SaveGrid, wxT("&Grid (*.grd)"));
-		pExportSubMenu->Append(ID_SaveVoxel, wxT("&Voxel (*.vox)"));
 		pExportSubMenu->Append(ID_SaveIGES, wxT("&IGES (*.igs)"));
 		pExportSubMenu->Append(ID_SaveSTEP, wxT("&STEP (*.stp)"));
 		pExportSubMenu->Append(ID_SaveSTL, wxT("&STL (*.stl)"));
 
 
 		pExportSubMenu->Append(ID_SaveSurfaceMesh, wxT("Sur&face Mesh..."));
-		
-		
-
 		{
 			wxMenu *pAbaqusSubMenu = new wxMenu;
 			pAbaqusSubMenu->Append(ID_SaveVolumeMesh, wxT("&Volume Mesh..."));
 			pAbaqusSubMenu->Append(ID_SaveTetgenMesh, wxT("&TetgenMesh..."));
-			pAbaqusSubMenu->Append(ID_SaveABAQUS, wxT("&Dry Fibre File..."));
 			pAbaqusSubMenu->Append(ID_SaveABAQUSVoxels, wxT("&Voxel File..."));
 			pExportSubMenu->Append(wxID_ANY, wxT("&ABAQUS (*.inp)"), pAbaqusSubMenu);
 		}
 		pMenuFile->Append(wxID_ANY, wxT("&Export..."), pExportSubMenu);
 	}
+	pMenuFile->AppendSeparator();
+	pMenuFile->Append(ID_About, wxT("&About..."));
 	pMenuFile->AppendSeparator();
 	pMenuFile->Append(ID_Quit, wxT("&Exit"));
 
@@ -143,7 +116,6 @@ CTexGenMainFrame::CTexGenMainFrame(const wxString& title, const wxPoint& pos, co
 	pMenuWindow->Append(ID_ToggleControls, wxT("&Controls"), wxT(""), wxITEM_CHECK);
 	pMenuWindow->Append(ID_ToggleLogWindow, wxT("&Logs"), wxT(""), wxITEM_CHECK);
 	pMenuWindow->Append(ID_ToggleOutliner, wxT("&Outliner"), wxT(""), wxITEM_CHECK);
-
 
 	wxMenuBar *pMenuBar = new wxMenuBar;
 	pMenuBar->Append(pMenuFile, wxT("&File"));
@@ -205,10 +177,7 @@ CTexGenMainFrame::CTexGenMainFrame(const wxString& title, const wxPoint& pos, co
 
 	bool bSuccess = m_Manager.LoadPerspective(wxConfigBase::Get()->Read(wxT("Perspective"), wxEmptyString));
 
-	wxMenu *pMenuHelp = new wxMenu;
-	pMenuHelp->Append(ID_About, wxT("&About..."));
-	pMenuHelp->Append(ID_UserGuide, wxT("&User Guide"));
-	pMenuBar->Append(pMenuHelp, wxT("&Help"));
+
 	SetMenuBar(pMenuBar);
 
 	UpdateWindowChecks();
@@ -252,24 +221,6 @@ void CTexGenMainFrame::OnAbout(wxCommandEvent& WXUNUSED(event)) {
 	StringStream << "This is free software licensed under the GNU GPLv3." << endl;
 	StringStream << "Copyright " << __DATE__ << " PNRPU All rights reserved." << endl;
 	wxMessageBox(ConvertString(StringStream.str()), ConvertString(Title), wxOK | wxICON_INFORMATION, this);
-}
-
-void CTexGenMainFrame::OnUserGuide(wxCommandEvent& WXUNUSED(event))
-{
-	wxDialog* pDialog = new wxDialog( NULL, wxID_ANY, wxT("User Guide"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE);
-
-	wxBoxSizer *BoxSizer = new wxBoxSizer (wxVERTICAL);
-	wxSizerFlags SizerFlags(0);
-	SizerFlags.Border(wxALL,10);
-	SizerFlags.Expand();
-
-	BoxSizer->Add(new wxStaticText( pDialog, wxID_ANY, wxT("The TexGen User Guide can be found here:") ), SizerFlags );
-	BoxSizer->Add( new wxHyperlinkCtrl( pDialog, -1, wxT("User Guide"), wxT("http://texgen.sourceforge.net/index.php/User_Guide")), SizerFlags );
-	pDialog->SetSizer( BoxSizer );
-	BoxSizer->Fit( pDialog );
-
-	pDialog->ShowModal();
-	pDialog->Destroy();
 }
 
 void CTexGenMainFrame::ReceiveOutput(string Text, bool bError)
@@ -367,170 +318,6 @@ void CTexGenMainFrame::OnSaveScreenshot(wxCommandEvent& event)
 			}
 		}
 	}
-}
-
-void CTexGenMainFrame::OnOpenWiseTex(wxCommandEvent& event)
-{
-	/*wxFileDialog dialog
-	(
-		this,
-		wxT("Open WiseTex file"),
-		wxGetCwd(),
-		wxEmptyString,
-		wxT("WiseTex FlexComp file (*.cfl)|*.cfl"),
-		wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR
-	);
-	dialog.CentreOnParent();
-	if (dialog.ShowModal() == wxID_OK)
-	{
-		string Command;
-		Command = "from TexGen.WiseTex import *\n";
-		Command += "ImportWiseTex(r\"";
-		Command += ConvertString(dialog.GetPath());
-		Command += "\")";
-		SendPythonCode(Command);
-	}//*/
-}
-
-void CTexGenMainFrame::OnOpenTexGenv2(wxCommandEvent& event)
-{
-	/*wxFileDialog dialog
-	(
-		this,
-		wxT("Open TexGen v2 file"),
-		wxGetCwd(),
-		wxEmptyString,
-		wxT("TexGen v2 path file (*.pth)|*.pth"),
-		wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR
-	);
-	dialog.CentreOnParent();
-	if (dialog.ShowModal() == wxID_OK)
-	{
-		string Command;
-		Command = "from TexGen.TexGenv2 import *\n";
-		Command += "ImportTexGenv2(r\"";
-		Command += ConvertString(dialog.GetPath());
-		Command += "\")";
-		SendPythonCode(Command);
-	}//*/
-}
-
-void CTexGenMainFrame::OnOpenWeavePattern(wxCommandEvent& event)
-{
-	/*wxFileDialog dialog
-	(
-		this,
-		wxT("Open Weave Pattern file"),
-		wxGetCwd(),
-		wxEmptyString,
-		wxT("Weave Pattern file (*.txt)|*.txt"),
-		wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR
-	);
-	dialog.CentreOnParent();
-	if (dialog.ShowModal() == wxID_OK)
-	{
-		string Command;
-		Command = "from TexGen.WeavePattern import *\n";
-		Command += "ImportWeavePattern(r\"";
-		Command += ConvertString(dialog.GetPath());
-		Command += "\")";
-		SendPythonCode(Command);
-	}//*/
-}
-
-void CTexGenMainFrame::OnSaveGrid(wxCommandEvent& event)
-{
-	/*wxFileDialog dialog
-	(
-		this,
-		wxT("Save Grid file"),
-		wxGetCwd(),
-		wxEmptyString,
-		wxT("Grid file (*.grd)|*.grd"),
-		wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxFD_CHANGE_DIR
-	);
-	dialog.CentreOnParent();
-	string TextileName = GetTextileSelection();
-
-
-	wxString X, Y;
-	wxDialog GridResolution;
-	if (wxXmlResource::Get()->LoadDialog(&GridResolution, this, wxT("GridResolution")))
-	{
-		XRCCTRL(GridResolution, "X", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &X));
-		XRCCTRL(GridResolution, "Y", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &Y));
-		XRCCTRL(GridResolution, "Z", wxTextCtrl)->Disable();
-
-		if (GridResolution.ShowModal() == wxID_OK)
-		{
-			long iX, iY;
-			X.ToLong(&iX);
-			Y.ToLong(&iY);
-
-			if (dialog.ShowModal() == wxID_OK)
-			{
-				string Command;
-				Command = "from TexGen.GridFile import *\n";
-				Command += "ExportGridFile(r\"";
-				Command += ConvertString(dialog.GetPath());
-				Command += "\", \"";
-				Command += TextileName;
-				Command += "\", (";
-				Command += stringify(iX) + ", ";
-				Command += stringify(iY);
-				Command += "))";
-				SendPythonCode(Command);
-			}
-		}
-	}//*/
-}
-
-void CTexGenMainFrame::OnSaveVoxel(wxCommandEvent& event)
-{
-	/*wxFileDialog dialog
-	(
-		this,
-		wxT("Save Voxel file"),
-		wxGetCwd(),
-		wxEmptyString,
-		wxT("Voxel file (*.vox)|*.vox"),
-		wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxFD_CHANGE_DIR
-	);
-	dialog.CentreOnParent();
-	string TextileName = GetTextileSelection();
-
-	wxString X, Y, Z;
-	wxDialog GridResolution;
-	if (wxXmlResource::Get()->LoadDialog(&GridResolution, this, wxT("GridResolution")))
-	{
-		XRCCTRL(GridResolution, "X", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &X));
-		XRCCTRL(GridResolution, "Y", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &Y));
-		XRCCTRL(GridResolution, "Z", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &Z));
-
-		if (GridResolution.ShowModal() == wxID_OK)
-		{
-			long iX, iY, iZ;
-			X.ToLong(&iX);
-			Y.ToLong(&iY);
-			Z.ToLong(&iZ);
-
-			if (dialog.ShowModal() == wxID_OK)
-			{
-				string Command;
-				Command = "from TexGen.FlowTex import *\n";
-				Command += "ExportFlowTex(r\"";
-				Command += ConvertString(dialog.GetPath());
-				Command += "\", \"";
-				Command += TextileName;
-				Command += "\", (";
-				Command += stringify(iX) + ", ";
-				Command += stringify(iY) + ", ";
-				Command += stringify(iZ);
-				Command += "))";
-				SendPythonCode(Command);
-			}
-		}
-	}//*/
 }
 
 void CTexGenMainFrame::OnSaveVolumeMesh(wxCommandEvent& event)
@@ -678,7 +465,6 @@ void CTexGenMainFrame::OnSaveSTL(wxCommandEvent& event)
 void CTexGenMainFrame::OnSaveSurfaceMesh(wxCommandEvent& event)
 {
 	string TextileName = GetTextileSelection();
-
 	bool bExportDomain = false;
 	bool bTrimSurface = true;
 	wxDialog MeshOptions;
@@ -784,83 +570,6 @@ void CTexGenMainFrame::OnSaveSTEP(wxCommandEvent& event)
 	}
 }
 
-void CTexGenMainFrame::OnSaveABAQUS(wxCommandEvent& event)
-{
-	/*string TextileName = GetTextileSelection();
-
-	wxString XScale = wxT("1.0");
-	wxString YScale = wxT("1.0");
-	wxString ZScale = wxT("1.0");
-	//wxString YoungsModulus = wxT("13000.0");
-	//wxString PoissonsRatio = wxT("0.3");
-	wxString IntersectionTolerance = wxT("0.0000001");
-	bool bAdjustIntersections = false;
-	bool bIncludePlates = false;
-	bool bRegenerateMesh = false;
-	int iElementType = 0;
-	
-	wxFileDialog dialog
-	(
-		this,
-		wxT("Save Abaqus file"),
-		wxGetCwd(),
-		wxEmptyString,
-		wxT("Abaqus input file (*.inp)|*.inp"),
-		wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxFD_CHANGE_DIR
-	);
-	dialog.CentreOnParent();
-
-	wxDialog AbaqusInput;
-	if (wxXmlResource::Get()->LoadDialog(&AbaqusInput, this, wxT("AbaqusOptions")))
-	{
-		XRCCTRL(AbaqusInput, "XScale", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &XScale));
-		XRCCTRL(AbaqusInput, "YScale", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &YScale));
-		XRCCTRL(AbaqusInput, "ZScale", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &ZScale));
-		//XRCCTRL(AbaqusInput, "YoungsModulus", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &YoungsModulus));
-		//XRCCTRL(AbaqusInput, "PoissonsRatio", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &PoissonsRatio));
-		XRCCTRL(AbaqusInput, "AdjustIntersections", wxCheckBox)->SetValidator(wxGenericValidator(&bAdjustIntersections));
-		XRCCTRL(AbaqusInput, "IntersectionTolerance", wxTextCtrl)->SetValidator(wxTextValidator(wxFILTER_NUMERIC, &IntersectionTolerance));
-		XRCCTRL(AbaqusInput, "IncludePlates", wxCheckBox)->SetValidator(wxGenericValidator(&bIncludePlates));
-		XRCCTRL(AbaqusInput, "RegenerateMesh", wxCheckBox)->SetValidator(wxGenericValidator(&bRegenerateMesh));
-		XRCCTRL(AbaqusInput, "ElementType", wxRadioBox)->SetValidator(wxGenericValidator(&iElementType));
-
-		if (AbaqusInput.ShowModal() == wxID_OK)
-		{
-			if (dialog.ShowModal() == wxID_OK)
-			{
-				stringstream Command;
-				Command << "tension = CLinearTransformation()" << endl;
-				Command << "tension.AddScale(" << ConvertString(XScale) << "," << ConvertString(YScale) << "," << ConvertString(ZScale) << ")" << endl;
-
-				Command << "deformer = TextileDeformerAbaqus()" << endl;
-				Command << "deformer.SetIncludePlates(" << bIncludePlates << ")" << endl;
-				Command << "deformer.AddDeformationStep(tension)" << endl;
-
-				//#deformer.SetFortranProgram('LinearElasticUMAT.for')
-				//Command << "deformer.SetMaterial('ISO', [" << ConvertString(YoungsModulus) << "," << ConvertString(PoissonsRatio) << "])" << endl;
-				//#deformer.SetSimulationFilesPrefix(Abaquspre)
-
-				//name = baseName + '.tg3'
-				//ReadFromXML(name)
-				Command << "textile = GetTextile('" + TextileName + "')" << endl;
-
-				//#name = deformer.GetSimulationFilesPrefix()
-				//Command << "deformer.CreateAbaqusInputFile(textile, 'TestAbaqus' + '.inp')" << endl;
-				double Tolerance;
-				IntersectionTolerance.ToDouble( &Tolerance );
-				Command << "deformer.CreateAbaqusInputFile(textile, r\'" << ConvertString(dialog.GetPath()) << "'," << bRegenerateMesh << "," << iElementType << "," 
-															<< bAdjustIntersections << "," << Tolerance <<  ")" << endl;
-
-				SendPythonCode(Command.str());
-			}
-		}
-	}//*/
-/*if not deformer.CreateAbaqusInputFile(textile, baseName + '.inp'):
-	raise RuntimeError('Unable to create ABAQUS input file')
-else:
-    print 'Abaqus input files are complete now.'*/
-}
-
 void CTexGenMainFrame::OnSaveABAQUSVoxels(wxCommandEvent& event)
 {
 	wxString XVoxels = wxT("50");
@@ -931,11 +640,6 @@ void CTexGenMainFrame::OnSaveABAQUSVoxels(wxCommandEvent& event)
 			}
 		}
 	}
-}
-
-void CTexGenMainFrame::OnPeriodicBoundaries(wxCommandEvent& event)
-{
-	int selection = event.GetSelection();
 }
 
 void CTexGenMainFrame::OnSaveTetgenMesh( wxCommandEvent& event )
@@ -1045,7 +749,6 @@ CTexGenRenderer* CTexGenMainFrame::GetRendererWindow(string WindowName)
 	}
 	return NULL;
 }
-
 
 CTexGenRenderWindow *CTexGenMainFrame::CreateRenderWindow(string WindowName)
 {
@@ -1917,74 +1620,6 @@ void CTexGenMainFrame::OnChangeSurfaceColor()
 	}
 }
 
-void CTexGenMainFrame::OnPython(wxCommandEvent& event)
-{
-	/*switch (event.GetId())
-	{
-	case ID_RunScript:
-		{
-			wxFileDialog dialog
-			(
-				this,
-				wxT("Run python script"),
-				wxGetCwd(),
-				wxEmptyString,
-				wxT("Python script (*.py)|*.py"),
-				wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR
-			);
-
-			dialog.CentreOnParent();
-
-			if (dialog.ShowModal() == wxID_OK)
-			{
-				string Command;
-				Command = "execfile(r\"";
-				Command += ConvertString(dialog.GetPath());
-				Command += "\")";
-				SendPythonCode(Command);
-			}
-		}
-		break;
-	case ID_RecordMacro:
-		{
-			if (m_ScriptRecordFile.is_open())
-			{
-				m_ScriptRecordFile.close();
-			}
-			else
-			{
-				wxFileDialog dialog
-				(
-					this,
-					wxT("Record python script"),
-					wxGetCwd(),
-					wxEmptyString,
-					wxT("Python script (*.py)|*.py"),
-					wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxFD_CHANGE_DIR
-				);
-
-				dialog.CentreOnParent();
-
-				if (dialog.ShowModal() == wxID_OK)
-				{
-					m_ScriptRecordFile.open(dialog.GetPath().mb_str());
-					if (!m_ScriptRecordFile.is_open())
-					{
-						wxMessageBox(wxT("Unable to open file for recording:\n") + dialog.GetPath(), wxT("Error saving file"), wxOK | wxICON_ERROR, this);
-					}
-					else
-					{
-						m_ScriptRecordFile << "# Script recorded by TexGen v" << TEXGEN.GetVersion() << endl;
-					}
-				}
-			}
-			if (m_pControls)
-				m_pControls->UpdatePythonPage(m_ScriptRecordFile.is_open());
-		}
-		break;
-	}//*/
-}
-
 void CTexGenMainFrame::OnLogNotebook(wxAuiNotebookEvent& event)
 {
 	if (event.GetSelection() != -1)
@@ -2504,38 +2139,4 @@ void CVolumeMeshOptions::OnPeriodicBoundariesUpdate(wxUpdateUIEvent& event)
 	{
 		event.Enable(false);
 	}
-}
-
-CSurveyDialog::CSurveyDialog(wxWindow* parent)
-{
-	wxXmlResource::Get()->LoadDialog(this, parent, wxT("Survey"));
-}
-
-void CSurveyDialog::OnClickNextTime( wxCommandEvent& event )
-{
-	this->EndModal(wxID_CANCEL);
-}
-
-void CSurveyDialog::OnClickNotAgain( wxCommandEvent& event )
-{
-	int count = -1;
-	ofstream countFile(m_Filename.c_str());
-	countFile << count;
-	countFile.close();
-
-	this->EndModal(wxID_CANCEL);
-}
-
-void CSurveyDialog::OnClickTakeSurvey( wxHyperlinkEvent& event )
-{
-	int count = 1;
-	ofstream countFile(m_Filename.c_str());
-	countFile << count;
-	countFile.close();
-	wxString url = event.GetURL();
-	if (!wxLaunchDefaultBrowser(url))
-	{
-		wxLogWarning(wxT("Could not launch the default browser with url '%s' !"), url.c_str());
-	}
-	this->EndModal(wxID_CANCEL);
 }

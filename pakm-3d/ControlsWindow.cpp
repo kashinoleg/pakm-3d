@@ -14,7 +14,6 @@ void CControlsWindow::BuildControls()
 	BuildModellerPage();
 	BuildDomainsPage();
 	BuildRenderingPage();
-	BuildPythonPage();
 	BuildOptionsPage();
 	ResizePages();
 }
@@ -352,37 +351,6 @@ void CControlsWindow::BuildDomainsPage()
 	m_pMenuBar->Append(pMenu, wxT("&Domain"));
 }
 
-void CControlsWindow::BuildPythonPage()
-{
-	wxNotebookPage *pControls = new wxNotebookPage(this, wxID_ANY);
-
-	wxBoxSizer *pMainSizer = new wxBoxSizer(wxVERTICAL);
-	wxSizerFlags SizerFlags(0);
-//	SizerFlags.Border(wxALL, 1);
-	SizerFlags.Expand();
-
-	vector<wxSizer*> SubSizers;
-	wxSizer *pSubSizer;
-
-	pSubSizer = new wxStaticBoxSizer(wxVERTICAL, pControls, wxT("Script:"));
-	pSubSizer->Add(new wxButton(pControls, ID_RunScript, wxT("Run"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT), SizerFlags);
-	pSubSizer->Add(new wxButton(pControls, ID_RecordMacro, wxT("Record"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT), SizerFlags);
-	pMainSizer->Add(pSubSizer, SizerFlags);
-	SubSizers.push_back(pSubSizer);
-
-	for (size_t i = 0; i < SubSizers.size(); i++) {
-		SubSizers[i]->SetDimension(0, 0, pMainSizer->GetMinSize().x, SubSizers[i]->GetMinSize().y);
-	}
-
-	pControls->SetSizer(pMainSizer);
-	AddPage(pControls, wxT("Python"));
-
-	wxMenu *pMenu = new wxMenu;
-	pMenu->Append(ID_RunScript, wxT("Run Script..."));
-	pMenu->Append(ID_RecordMacro, wxT("Record Script..."));
-	m_pMenuBar->Append(pMenu, wxT("&Python"));
-}
-
 void CControlsWindow::UpdateModellingPage(const CModeller *pModeller)
 {
 	wxRadioButton* pRadioButton = NULL;
@@ -498,26 +466,6 @@ void CControlsWindow::UpdateRenderingPage(const CTexGenRenderer *pRenderer)
 		pCheckBox->SetValue(bChecked);
 	}
 	m_pMenuBar->Check(ID_TrimtoDomain, bChecked);
-}
-
-void CControlsWindow::UpdatePythonPage(bool bRecording)
-{
-	wxButton* pButton = (wxButton*)FindWindowById(ID_RecordMacro, this);
-	if (pButton)
-	{
-		if (bRecording)
-			pButton->SetLabel(wxT("Stop Recording"));
-		else
-			pButton->SetLabel(wxT("Record"));
-	}
-	wxMenuItem* pMenuItem = m_pMenuBar->FindItem(ID_RecordMacro);
-	if (pMenuItem)
-	{
-		if (bRecording)
-			pMenuItem->SetText(wxT("Stop Recording"));
-		else
-			pMenuItem->SetText(wxT("Record Script..."));
-	}
 }
 
 void CControlsWindow::UpdateCheckWidget(int iID, bool bChecked)

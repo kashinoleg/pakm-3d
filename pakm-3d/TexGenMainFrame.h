@@ -51,17 +51,11 @@ public:
 protected:
 	void OnQuit(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
-	void OnUserGuide(wxCommandEvent& event);
 
 	// File drop-down menu
 	void OnOpen(wxCommandEvent& event);
 	void OnSave(wxCommandEvent& event);
 	void OnSaveScreenshot(wxCommandEvent& event);
-	void OnOpenWiseTex(wxCommandEvent& event);
-	void OnOpenTexGenv2(wxCommandEvent& event);
-	void OnOpenWeavePattern(wxCommandEvent& event);
-	void OnSaveGrid(wxCommandEvent& event);
-	void OnSaveVoxel(wxCommandEvent& event);
 	void OnSaveVolumeMesh(wxCommandEvent& event);
 	void OnSaveSurfaceMesh(wxCommandEvent& event);
 
@@ -70,7 +64,6 @@ protected:
 
 	void OnSaveIGES(wxCommandEvent& event);
 	void OnSaveSTEP(wxCommandEvent& event);
-	void OnSaveABAQUS(wxCommandEvent& event);
 	void OnSaveABAQUSVoxels(wxCommandEvent& event);
 	void OnSaveTetgenMesh(wxCommandEvent& event);
 
@@ -111,7 +104,6 @@ protected:
 	
 
 
-	void OnPython(wxCommandEvent& event);
     void OnLogNotebook(wxAuiNotebookEvent& event);
     void OnViewerNotebookPageChanged(wxAuiNotebookEvent& event);
     void OnViewerNotebookClose(wxAuiNotebookEvent& event);
@@ -127,10 +119,6 @@ protected:
 	void OnPatternDraft(wxCommandEvent& event);
 	void OnDomainVolumeFraction(wxCommandEvent& event);
 	void OnQuickDomainVolumeFraction(wxCommandEvent& event);
-	//
-
-
-	void OnPeriodicBoundaries(wxCommandEvent& event);
 
 	string GetTextileSelection();
 	void UpdateRenderingPage();
@@ -196,22 +184,6 @@ public:
 
 private:
 	void OnPeriodicBoundariesUpdate(wxUpdateUIEvent& event);
-
-	DECLARE_EVENT_TABLE()
-};
-
-class CSurveyDialog : public wxDialog
-{
-public:
-	CSurveyDialog( wxWindow* parent );
-	void SetFilename( string Filename ){m_Filename = Filename;}
-
-private:
-	void OnClickNextTime( wxCommandEvent& event );
-	void OnClickNotAgain( wxCommandEvent& event );
-	void OnClickTakeSurvey( wxHyperlinkEvent& event);
-
-	string m_Filename;
 
 	DECLARE_EVENT_TABLE()
 };

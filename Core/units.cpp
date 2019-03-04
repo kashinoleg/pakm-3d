@@ -185,9 +185,9 @@ string UnitConvert::units_reduce(string unitString) {
 
 /*  local functions  */
 /*  unit string to reduce  */
-Unit * UnitConvert::reduceUnit(const char *unitString) {
+Unit * UnitConvert::reduceUnit(const char *unitString)
+{
 	char *tokenString;       /*  tokenized copy of unitString  */
-	int numeratorlen;        /*  for splitting unitString  */
 	char *subunit;           /*  one token from tokenString  */
 	char *subunitcopy;       /*  copy of subunit, for plural chopping  */
 	double factor;           /*  value of constant factor subunits  */
@@ -263,8 +263,10 @@ Unit * UnitConvert::reduceUnit(const char *unitString) {
 
 	/*  Make a copy of unitString, and replace any "/" with " / "  */
 	tokenString = stringcopy(unitString);
+	size_t numeratorlen;        /*  for splitting unitString  */
 	numeratorlen = strcspn(tokenString, "/");
-	if (numeratorlen < strlen(tokenString)) {
+	if (numeratorlen < strlen(tokenString))
+	{
 		tokenString[numeratorlen] = '\0';
 		tokenString = stringappend(tokenString, " / ");
 		tokenString = stringappend(tokenString, unitString + numeratorlen + 1);
@@ -360,14 +362,17 @@ Unit * UnitConvert::reduceUnit(const char *unitString) {
 					break;
 				}
 				/* otherwise, search prefix list */
-				int i = 0;
-				for (; i < prefixs.size(); i++) {
+				size_t i = 0;
+				for (; i < prefixs.size(); i++)
+				{
 					p = &prefixs[i];
-					if (p->name.length() == pos && strncmp(subunit, p->name.c_str(), pos) == 0) {
+					if (p->name.length() == pos && strncmp(subunit, p->name.c_str(), pos) == 0)
+					{
 						break;
 					}
 				}
-				if (i != prefixs.size()) {
+				if (i != prefixs.size())
+				{
 					break;
 				}
 			}
@@ -388,14 +393,17 @@ Unit * UnitConvert::reduceUnit(const char *unitString) {
 						break;
 					}
 					/* otherwise, search prefix list */
-					int i = 0;
-					for (; i < prefixs.size(); i++) {
+					size_t i = 0;
+					for (; i < prefixs.size(); i++)
+					{
 						p = &prefixs[i];
-						if (strncmp(subunitcopy, p->name.c_str(), pos) == 0) {
+						if (strncmp(subunitcopy, p->name.c_str(), pos) == 0)
+						{
 							break;
 						}
 					}
-					if (i != prefixs.size()) {
+					if (i != prefixs.size())
+					{
 						break;
 					}
 				}
@@ -416,14 +424,17 @@ Unit * UnitConvert::reduceUnit(const char *unitString) {
 							break;
 						}
 						/* otherwise, search prefix list */
-						int i = 0;
-						for (; i < prefixs.size(); i++) {
+						size_t i = 0;
+						for (; i < prefixs.size(); i++)
+						{
 							p = &prefixs[i];
-							if (strncmp(subunitcopy, p->name.c_str(), pos) == 0) {
+							if (strncmp(subunitcopy, p->name.c_str(), pos) == 0)
+							{
 								break;
 							}
 						}
-						if (i != prefixs.size()) {
+						if (i != prefixs.size())
+						{
 							break;
 						}
 					}

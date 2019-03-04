@@ -3,7 +3,8 @@
 #include "TexGenApp.h"
 #include "TexGenMainFrame.h"
 
-class CFileDropTarget : public wxFileDropTarget {
+class CFileDropTarget : public wxFileDropTarget
+{
 public:
 	CFileDropTarget(void) {};
 	~CFileDropTarget(void) {};

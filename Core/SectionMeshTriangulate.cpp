@@ -62,14 +62,14 @@ bool CSectionMeshTriangulate::CreateMesh(const vector<XY> &Section) const
 	m_Mesh.Clear();
 
 	XYZ Point;
-	for (size_t i = 0; i < TriangleOutput.numberofpoints; i++)
+	for (int i = 0; i < TriangleOutput.numberofpoints; i++)
 	{
 		Point.x = TriangleOutput.pointlist[i*2];
 		Point.y = TriangleOutput.pointlist[i*2+1];
 		m_Mesh.AddNode(Point);
 	}
 
-	for (size_t i = 0; i < TriangleOutput.numberoftriangles; i++)
+	for (int i = 0; i < TriangleOutput.numberoftriangles; i++)
 	{
 		m_Mesh.GetIndices(CMesh::TRI).push_back(TriangleOutput.trianglelist[i*3]);
 		m_Mesh.GetIndices(CMesh::TRI).push_back(TriangleOutput.trianglelist[i*3+1]);

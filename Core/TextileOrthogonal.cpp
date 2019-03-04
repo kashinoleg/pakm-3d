@@ -2416,7 +2416,7 @@ void CTextileOrthogonal::ConsolidateCells()
 					vector<PATTERN3D> &Cell1 = GetCell(i+1,j);
 					vector<int> &YarnCell = GetYarnCell(i,j);
 					vector<int> &YarnCell1 = GetYarnCell(i+1,j);
-					for ( int k = 1; k < Cell1.size(); ++k )
+					for (size_t k = 1; k < Cell1.size(); k++)
 					{
 						if ( Cell1[k] == PATTERN3D_YYARN )
 						{
@@ -2450,7 +2450,7 @@ void CTextileOrthogonal::MoveBinderYarnPosition( vector<PATTERN3D> &Cell )
 {
 	if ( Cell[0] == PATTERN3D_XYARN )  //  Binder at bottom. Track up through cell until
 	{
-		int i = 1;
+		size_t i = 1;
 		if ( Cell[1] != PATTERN3D_NOYARN )  // No space directly over binder - don't need to move
 			return;
 		while ( i < Cell.size() && Cell[i] == PATTERN3D_NOYARN )

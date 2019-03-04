@@ -4,7 +4,6 @@ enum
 {
 	ID_Quit = 1,
 	ID_About,
-	ID_UserGuide,
 	ID_LogNoteBook,
 	ID_ViewerNoteBook,
 	ID_ControlsWindow,
@@ -16,15 +15,9 @@ enum
 	ID_SaveSTEP,
 	ID_SaveVolumeMesh,
 	ID_SaveSurfaceMesh,
-	ID_SaveGrid,
-	ID_SaveVoxel,
-	ID_OpenTexGenv2,
-	ID_OpenWiseTex,
-	ID_OpenWeavePattern,
 	ID_ToggleControls,
 	ID_ToggleLogWindow,
 	ID_ToggleOutliner,
-	ID_SaveABAQUS,
 	ID_SaveABAQUSVoxels,
 	ID_SaveTetgenMesh,
 
@@ -83,9 +76,6 @@ enum
 	ID_CreateDomainBox,
 	ID_EditDomain,
 	ID_DeleteDomain,
-
-	ID_RunScript,
-	ID_RecordMacro,
 
 	ID_PlaneListView,
 	ID_AddPlane,

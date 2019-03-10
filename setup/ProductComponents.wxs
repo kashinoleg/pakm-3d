@@ -5,549 +5,549 @@
   <Fragment>
     <ComponentGroup Id="ProductComponents" Directory="INSTALL_FOLDER">
       <!--Find: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Redist\MSVC-->
-      <Component Id="concrt140.dll" Guid="*">
-        <File Source="Microsoft.VC141.CRT\concrt140.dll" />
+      <Component Id="concrt140.dll" Guid="*" Win64="$(var.Win64)">
+        <File Source="$(var.CrtSource)\concrt140.dll" />
       </Component>
-      <Component Id="msvcp140.dll" Guid="*">
-        <File Source="Microsoft.VC141.CRT\msvcp140.dll"/>
+      <Component Id="msvcp140.dll" Guid="*" Win64="$(var.Win64)">
+        <File Source="$(var.CrtSource)\msvcp140.dll"/>
       </Component>
-      <Component Id="msvcp140_1.dll" Guid="*">
-        <File Source="Microsoft.VC141.CRT\msvcp140_1.dll"/>
+      <Component Id="msvcp140_1.dll" Guid="*" Win64="$(var.Win64)">
+        <File Source="$(var.CrtSource)\msvcp140_1.dll"/>
       </Component>
-      <Component Id="msvcp140_2.dll" Guid="*">
-        <File Source="Microsoft.VC141.CRT\msvcp140_2.dll"/>
+      <Component Id="msvcp140_2.dll" Guid="*" Win64="$(var.Win64)">
+        <File Source="$(var.CrtSource)\msvcp140_2.dll"/>
       </Component>
-      <Component Id="vccorlib140.dll" Guid="*">
-        <File Source="Microsoft.VC141.CRT\vccorlib140.dll" />
+      <Component Id="vccorlib140.dll" Guid="*" Win64="$(var.Win64)">
+        <File Source="$(var.CrtSource)\vccorlib140.dll" />
       </Component>
-      <Component Id="vcruntime140.dll" Guid="*">
-        <File Source="Microsoft.VC141.CRT\vcruntime140.dll" />
+      <Component Id="vcruntime140.dll" Guid="*" Win64="$(var.Win64)">
+        <File Source="$(var.CrtSource)\vcruntime140.dll" />
       </Component>
 
       <!--Find: ../Release-->
-      <Component Id="core.dll" Guid="*">
+      <Component Id="core.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\core.dll" />
       </Component>
-      <Component Id="core.exp" Guid="*">
+      <Component Id="core.exp" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\core.exp" />
       </Component>
-      <Component Id="core.lib" Guid="*">
+      <Component Id="core.lib" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\core.lib" />
       </Component>
-      <Component Id="core.pdb" Guid="*">
+      <Component Id="core.pdb" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\core.pdb" />
       </Component>
-      <Component Id="pakm_3d.exe" Guid="*">
+      <Component Id="pakm_3d.exe" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\pakm-3d.exe" />
       </Component>
-      <Component Id="pakm_3d.exp" Guid="*">
+      <Component Id="pakm_3d.exp" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\pakm-3d.exp" />
       </Component>
-      <Component Id="pakm_3d.lib" Guid="*">
+      <Component Id="pakm_3d.lib" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\pakm-3d.lib" />
       </Component>
-      <Component Id="TexGen.xrc" Guid="*">
+      <Component Id="TexGen.xrc" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TexGen.xrc" />
       </Component>
-      <Component Id="TKBin.dll" Guid="*">
+      <Component Id="TKBin.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKBin.dll" />
       </Component>
-      <Component Id="TKBinL.dll" Guid="*">
+      <Component Id="TKBinL.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKBinL.dll" />
       </Component>
-      <Component Id="TKBinTObj.dll" Guid="*">
+      <Component Id="TKBinTObj.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKBinTObj.dll" />
       </Component>
-      <Component Id="TKBinXCAF.dll" Guid="*">
+      <Component Id="TKBinXCAF.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKBinXCAF.dll" />
       </Component>
-      <Component Id="TKBO.dll" Guid="*">
+      <Component Id="TKBO.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKBO.dll" />
       </Component>
-      <Component Id="TKBool.dll" Guid="*">
+      <Component Id="TKBool.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKBool.dll" />
       </Component>
-      <Component Id="TKBRep.dll" Guid="*">
+      <Component Id="TKBRep.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKBRep.dll" />
       </Component>
-      <Component Id="TKCAF.dll" Guid="*">
+      <Component Id="TKCAF.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKCAF.dll" />
       </Component>
-      <Component Id="TKCDF.dll" Guid="*">
+      <Component Id="TKCDF.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKCDF.dll" />
       </Component>
-      <Component Id="TKDCAF.dll" Guid="*">
+      <Component Id="TKDCAF.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKDCAF.dll" />
       </Component>
-      <Component Id="TKDraw.dll" Guid="*">
+      <Component Id="TKDraw.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKDraw.dll" />
       </Component>
-      <Component Id="TKernel.dll" Guid="*">
+      <Component Id="TKernel.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKernel.dll" />
       </Component>
-      <Component Id="TKFeat.dll" Guid="*">
+      <Component Id="TKFeat.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKFeat.dll" />
       </Component>
-      <Component Id="TKFillet.dll" Guid="*">
+      <Component Id="TKFillet.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKFillet.dll" />
       </Component>
-      <Component Id="TKG2d.dll" Guid="*">
+      <Component Id="TKG2d.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKG2d.dll" />
       </Component>
-      <Component Id="TKG3d.dll" Guid="*">
+      <Component Id="TKG3d.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKG3d.dll" />
       </Component>
-      <Component Id="TKGeomAlgo.dll" Guid="*">
+      <Component Id="TKGeomAlgo.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKGeomAlgo.dll" />
       </Component>
-      <Component Id="TKGeomBase.dll" Guid="*">
+      <Component Id="TKGeomBase.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKGeomBase.dll" />
       </Component>
-      <Component Id="TKHLR.dll" Guid="*">
+      <Component Id="TKHLR.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKHLR.dll" />
       </Component>
-      <Component Id="TKIGES.dll" Guid="*">
+      <Component Id="TKIGES.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKIGES.dll" />
       </Component>
-      <Component Id="TKLCAF.dll" Guid="*">
+      <Component Id="TKLCAF.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKLCAF.dll" />
       </Component>
-      <Component Id="TKMath.dll" Guid="*">
+      <Component Id="TKMath.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKMath.dll" />
       </Component>
-      <Component Id="TKMesh.dll" Guid="*">
+      <Component Id="TKMesh.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKMesh.dll" />
       </Component>
-      <Component Id="TKMeshVS.dll" Guid="*">
+      <Component Id="TKMeshVS.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKMeshVS.dll" />
       </Component>
-      <Component Id="TKOffset.dll" Guid="*">
+      <Component Id="TKOffset.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKOffset.dll" />
       </Component>
-      <Component Id="TKOpenGl.dll" Guid="*">
+      <Component Id="TKOpenGl.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKOpenGl.dll" />
       </Component>
-      <Component Id="TKPrim.dll" Guid="*">
+      <Component Id="TKPrim.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKPrim.dll" />
       </Component>
-      <Component Id="TKQADraw.dll" Guid="*">
+      <Component Id="TKQADraw.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKQADraw.dll" />
       </Component>
-      <Component Id="TKService.dll" Guid="*">
+      <Component Id="TKService.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKService.dll" />
       </Component>
-      <Component Id="TKShHealing.dll" Guid="*">
+      <Component Id="TKShHealing.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKShHealing.dll" />
       </Component>
-      <Component Id="TKStd.dll" Guid="*">
+      <Component Id="TKStd.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKStd.dll" />
       </Component>
-      <Component Id="TKStdL.dll" Guid="*">
+      <Component Id="TKStdL.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKStdL.dll" />
       </Component>
-      <Component Id="TKSTEP.dll" Guid="*">
+      <Component Id="TKSTEP.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKSTEP.dll" />
       </Component>
-      <Component Id="TKSTEP209.dll" Guid="*">
+      <Component Id="TKSTEP209.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKSTEP209.dll" />
       </Component>
-      <Component Id="TKSTEPAttr.dll" Guid="*">
+      <Component Id="TKSTEPAttr.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKSTEPAttr.dll" />
       </Component>
-      <Component Id="TKSTEPBase.dll" Guid="*">
+      <Component Id="TKSTEPBase.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKSTEPBase.dll" />
       </Component>
-      <Component Id="TKSTL.dll" Guid="*">
+      <Component Id="TKSTL.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKSTL.dll" />
       </Component>
-      <Component Id="TKTObj.dll" Guid="*">
+      <Component Id="TKTObj.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKTObj.dll" />
       </Component>
-      <Component Id="TKTObjDRAW.dll" Guid="*">
+      <Component Id="TKTObjDRAW.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKTObjDRAW.dll" />
       </Component>
-      <Component Id="TKTopAlgo.dll" Guid="*">
+      <Component Id="TKTopAlgo.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKTopAlgo.dll" />
       </Component>
-      <Component Id="TKTopTest.dll" Guid="*">
+      <Component Id="TKTopTest.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKTopTest.dll" />
       </Component>
-      <Component Id="TKV3d.dll" Guid="*">
+      <Component Id="TKV3d.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKV3d.dll" />
       </Component>
-      <Component Id="TKVCAF.dll" Guid="*">
+      <Component Id="TKVCAF.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKVCAF.dll" />
       </Component>
-      <Component Id="TKViewerTest.dll" Guid="*">
+      <Component Id="TKViewerTest.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKViewerTest.dll" />
       </Component>
-      <Component Id="TKVRML.dll" Guid="*">
+      <Component Id="TKVRML.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKVRML.dll" />
       </Component>
-      <Component Id="TKXCAF.dll" Guid="*">
+      <Component Id="TKXCAF.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKXCAF.dll" />
       </Component>
-      <Component Id="TKXDEDRAW.dll" Guid="*">
+      <Component Id="TKXDEDRAW.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKXDEDRAW.dll" />
       </Component>
-      <Component Id="TKXDEIGES.dll" Guid="*">
+      <Component Id="TKXDEIGES.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKXDEIGES.dll" />
       </Component>
-      <Component Id="TKXDESTEP.dll" Guid="*">
+      <Component Id="TKXDESTEP.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKXDESTEP.dll" />
       </Component>
-      <Component Id="TKXMesh.dll" Guid="*">
+      <Component Id="TKXMesh.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKXMesh.dll" />
       </Component>
-      <Component Id="TKXml.dll" Guid="*">
+      <Component Id="TKXml.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKXml.dll" />
       </Component>
-      <Component Id="TKXmlL.dll" Guid="*">
+      <Component Id="TKXmlL.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKXmlL.dll" />
       </Component>
-      <Component Id="TKXmlTObj.dll" Guid="*">
+      <Component Id="TKXmlTObj.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKXmlTObj.dll" />
       </Component>
-      <Component Id="TKXmlXCAF.dll" Guid="*">
+      <Component Id="TKXmlXCAF.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKXmlXCAF.dll" />
       </Component>
-      <Component Id="TKXSBase.dll" Guid="*">
+      <Component Id="TKXSBase.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKXSBase.dll" />
       </Component>
-      <Component Id="TKXSDRAW.dll" Guid="*">
+      <Component Id="TKXSDRAW.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\TKXSDRAW.dll" />
       </Component>
-      <Component Id="triangulate.lib" Guid="*">
+      <Component Id="triangulate.lib" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\triangulate.lib" />
       </Component>
-      <Component Id="vtkalglib_6.3.dll" Guid="*">
+      <Component Id="vtkalglib_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkalglib-6.3.dll" />
       </Component>
-      <Component Id="vtkChartsCore_6.3.dll" Guid="*">
+      <Component Id="vtkChartsCore_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkChartsCore-6.3.dll" />
       </Component>
-      <Component Id="vtkCommonColor_6.3.dll" Guid="*">
+      <Component Id="vtkCommonColor_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkCommonColor-6.3.dll" />
       </Component>
-      <Component Id="vtkCommonComputationalGeometry_6.3.dll" Guid="*">
+      <Component Id="vtkCommonComputationalGeometry_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkCommonComputationalGeometry-6.3.dll" />
       </Component>
-      <Component Id="vtkCommonCore_6.3.dll" Guid="*">
+      <Component Id="vtkCommonCore_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkCommonCore-6.3.dll" />
       </Component>
-      <Component Id="vtkCommonDataModel_6.3.dll" Guid="*">
+      <Component Id="vtkCommonDataModel_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkCommonDataModel-6.3.dll" />
       </Component>
-      <Component Id="vtkCommonExecutionModel_6.3.dll" Guid="*">
+      <Component Id="vtkCommonExecutionModel_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkCommonExecutionModel-6.3.dll" />
       </Component>
-      <Component Id="vtkCommonMath_6.3.dll" Guid="*">
+      <Component Id="vtkCommonMath_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkCommonMath-6.3.dll" />
       </Component>
-      <Component Id="vtkCommonMisc_6.3.dll" Guid="*">
+      <Component Id="vtkCommonMisc_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkCommonMisc-6.3.dll" />
       </Component>
-      <Component Id="vtkCommonSystem_6.3.dll" Guid="*">
+      <Component Id="vtkCommonSystem_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkCommonSystem-6.3.dll" />
       </Component>
-      <Component Id="vtkCommonTransforms_6.3.dll" Guid="*">
+      <Component Id="vtkCommonTransforms_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkCommonTransforms-6.3.dll" />
       </Component>
-      <Component Id="vtkDICOMParser_6.3.dll" Guid="*">
+      <Component Id="vtkDICOMParser_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkDICOMParser-6.3.dll" />
       </Component>
-      <Component Id="vtkDomainsChemistry_6.3.dll" Guid="*">
+      <Component Id="vtkDomainsChemistry_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkDomainsChemistry-6.3.dll" />
       </Component>
-      <Component Id="vtkexoIIc_6.3.dll" Guid="*">
+      <Component Id="vtkexoIIc_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkexoIIc-6.3.dll" />
       </Component>
-      <Component Id="vtkexpat_6.3.dll" Guid="*">
+      <Component Id="vtkexpat_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkexpat-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersAMR_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersAMR_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersAMR-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersCore_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersCore_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersCore-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersExtraction_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersExtraction_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersExtraction-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersFlowPaths_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersFlowPaths_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersFlowPaths-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersGeneral_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersGeneral_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersGeneral-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersGeneric_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersGeneric_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersGeneric-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersGeometry_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersGeometry_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersGeometry-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersHybrid_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersHybrid_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersHybrid-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersHyperTree_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersHyperTree_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersHyperTree-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersImaging_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersImaging_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersImaging-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersModeling_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersModeling_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersModeling-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersParallel_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersParallel_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersParallel-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersParallelImaging_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersParallelImaging_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersParallelImaging-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersProgrammable_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersProgrammable_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersProgrammable-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersSelection_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersSelection_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersSelection-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersSMP_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersSMP_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersSMP-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersSources_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersSources_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersSources-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersStatistics_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersStatistics_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersStatistics-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersTexture_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersTexture_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersTexture-6.3.dll" />
       </Component>
-      <Component Id="vtkFiltersVerdict_6.3.dll" Guid="*">
+      <Component Id="vtkFiltersVerdict_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkFiltersVerdict-6.3.dll" />
       </Component>
-      <Component Id="vtkfreetype_6.3.dll" Guid="*">
+      <Component Id="vtkfreetype_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkfreetype-6.3.dll" />
       </Component>
-      <Component Id="vtkftgl_6.3.dll" Guid="*">
+      <Component Id="vtkftgl_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkftgl-6.3.dll" />
       </Component>
-      <Component Id="vtkGeovisCore_6.3.dll" Guid="*">
+      <Component Id="vtkGeovisCore_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkGeovisCore-6.3.dll" />
       </Component>
-      <Component Id="vtkgl2ps_6.3.dll" Guid="*">
+      <Component Id="vtkgl2ps_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkgl2ps-6.3.dll" />
       </Component>
-      <Component Id="vtkhdf5_hl_6.3.dll" Guid="*">
+      <Component Id="vtkhdf5_hl_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkhdf5_hl-6.3.dll" />
       </Component>
-      <Component Id="vtkhdf5_6.3.dll" Guid="*">
+      <Component Id="vtkhdf5_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkhdf5-6.3.dll" />
       </Component>
-      <Component Id="vtkImagingColor_6.3.dll" Guid="*">
+      <Component Id="vtkImagingColor_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkImagingColor-6.3.dll" />
       </Component>
-      <Component Id="vtkImagingCore_6.3.dll" Guid="*">
+      <Component Id="vtkImagingCore_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkImagingCore-6.3.dll" />
       </Component>
-      <Component Id="vtkImagingFourier_6.3.dll" Guid="*">
+      <Component Id="vtkImagingFourier_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkImagingFourier-6.3.dll" />
       </Component>
-      <Component Id="vtkImagingGeneral_6.3.dll" Guid="*">
+      <Component Id="vtkImagingGeneral_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkImagingGeneral-6.3.dll" />
       </Component>
-      <Component Id="vtkImagingHybrid_6.3.dll" Guid="*">
+      <Component Id="vtkImagingHybrid_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkImagingHybrid-6.3.dll" />
       </Component>
-      <Component Id="vtkImagingMath_6.3.dll" Guid="*">
+      <Component Id="vtkImagingMath_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkImagingMath-6.3.dll" />
       </Component>
-      <Component Id="vtkImagingMorphological_6.3.dll" Guid="*">
+      <Component Id="vtkImagingMorphological_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkImagingMorphological-6.3.dll" />
       </Component>
-      <Component Id="vtkImagingSources_6.3.dll" Guid="*">
+      <Component Id="vtkImagingSources_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkImagingSources-6.3.dll" />
       </Component>
-      <Component Id="vtkImagingStatistics_6.3.dll" Guid="*">
+      <Component Id="vtkImagingStatistics_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkImagingStatistics-6.3.dll" />
       </Component>
-      <Component Id="vtkImagingStencil_6.3.dll" Guid="*">
+      <Component Id="vtkImagingStencil_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkImagingStencil-6.3.dll" />
       </Component>
-      <Component Id="vtkInfovisCore_6.3.dll" Guid="*">
+      <Component Id="vtkInfovisCore_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkInfovisCore-6.3.dll" />
       </Component>
-      <Component Id="vtkInfovisLayout_6.3.dll" Guid="*">
+      <Component Id="vtkInfovisLayout_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkInfovisLayout-6.3.dll" />
       </Component>
-      <Component Id="vtkInteractionImage_6.3.dll" Guid="*">
+      <Component Id="vtkInteractionImage_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkInteractionImage-6.3.dll" />
       </Component>
-      <Component Id="vtkInteractionStyle_6.3.dll" Guid="*">
+      <Component Id="vtkInteractionStyle_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkInteractionStyle-6.3.dll" />
       </Component>
-      <Component Id="vtkInteractionWidgets_6.3.dll" Guid="*">
+      <Component Id="vtkInteractionWidgets_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkInteractionWidgets-6.3.dll" />
       </Component>
-      <Component Id="vtkIOAMR_6.3.dll" Guid="*">
+      <Component Id="vtkIOAMR_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOAMR-6.3.dll" />
       </Component>
-      <Component Id="vtkIOCore_6.3.dll" Guid="*">
+      <Component Id="vtkIOCore_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOCore-6.3.dll" />
       </Component>
-      <Component Id="vtkIOEnSight_6.3.dll" Guid="*">
+      <Component Id="vtkIOEnSight_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOEnSight-6.3.dll" />
       </Component>
-      <Component Id="vtkIOExodus_6.3.dll" Guid="*">
+      <Component Id="vtkIOExodus_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOExodus-6.3.dll" />
       </Component>
-      <Component Id="vtkIOExport_6.3.dll" Guid="*">
+      <Component Id="vtkIOExport_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOExport-6.3.dll" />
       </Component>
-      <Component Id="vtkIOGeometry_6.3.dll" Guid="*">
+      <Component Id="vtkIOGeometry_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOGeometry-6.3.dll" />
       </Component>
-      <Component Id="vtkIOImage_6.3.dll" Guid="*">
+      <Component Id="vtkIOImage_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOImage-6.3.dll" />
       </Component>
-      <Component Id="vtkIOImport_6.3.dll" Guid="*">
+      <Component Id="vtkIOImport_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOImport-6.3.dll" />
       </Component>
-      <Component Id="vtkIOInfovis_6.3.dll" Guid="*">
+      <Component Id="vtkIOInfovis_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOInfovis-6.3.dll" />
       </Component>
-      <Component Id="vtkIOLegacy_6.3.dll" Guid="*">
+      <Component Id="vtkIOLegacy_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOLegacy-6.3.dll" />
       </Component>
-      <Component Id="vtkIOLSDyna_6.3.dll" Guid="*">
+      <Component Id="vtkIOLSDyna_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOLSDyna-6.3.dll" />
       </Component>
-      <Component Id="vtkIOMINC_6.3.dll" Guid="*">
+      <Component Id="vtkIOMINC_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOMINC-6.3.dll" />
       </Component>
-      <Component Id="vtkIOMovie_6.3.dll" Guid="*">
+      <Component Id="vtkIOMovie_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOMovie-6.3.dll" />
       </Component>
-      <Component Id="vtkIONetCDF_6.3.dll" Guid="*">
+      <Component Id="vtkIONetCDF_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIONetCDF-6.3.dll" />
       </Component>
-      <Component Id="vtkIOParallel_6.3.dll" Guid="*">
+      <Component Id="vtkIOParallel_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOParallel-6.3.dll" />
       </Component>
-      <Component Id="vtkIOParallelXML_6.3.dll" Guid="*">
+      <Component Id="vtkIOParallelXML_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOParallelXML-6.3.dll" />
       </Component>
-      <Component Id="vtkIOPLY_6.3.dll" Guid="*">
+      <Component Id="vtkIOPLY_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOPLY-6.3.dll" />
       </Component>
-      <Component Id="vtkIOSQL_6.3.dll" Guid="*">
+      <Component Id="vtkIOSQL_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOSQL-6.3.dll" />
       </Component>
-      <Component Id="vtkIOVideo_6.3.dll" Guid="*">
+      <Component Id="vtkIOVideo_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOVideo-6.3.dll" />
       </Component>
-      <Component Id="vtkIOXML_6.3.dll" Guid="*">
+      <Component Id="vtkIOXML_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOXML-6.3.dll" />
       </Component>
-      <Component Id="vtkIOXMLParser_6.3.dll" Guid="*">
+      <Component Id="vtkIOXMLParser_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkIOXMLParser-6.3.dll" />
       </Component>
-      <Component Id="vtkjpeg_6.3.dll" Guid="*">
+      <Component Id="vtkjpeg_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkjpeg-6.3.dll" />
       </Component>
-      <Component Id="vtkjsoncpp_6.3.dll" Guid="*">
+      <Component Id="vtkjsoncpp_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkjsoncpp-6.3.dll" />
       </Component>
-      <Component Id="vtklibxml2_6.3.dll" Guid="*">
+      <Component Id="vtklibxml2_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtklibxml2-6.3.dll" />
       </Component>
-      <Component Id="vtkmetaio_6.3.dll" Guid="*">
+      <Component Id="vtkmetaio_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkmetaio-6.3.dll" />
       </Component>
-      <Component Id="vtkNetCDF_cxx_6.3.dll" Guid="*">
+      <Component Id="vtkNetCDF_cxx_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkNetCDF_cxx-6.3.dll" />
       </Component>
-      <Component Id="vtkNetCDF_6.3.dll" Guid="*">
+      <Component Id="vtkNetCDF_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkNetCDF-6.3.dll" />
       </Component>
-      <Component Id="vtkoggtheora_6.3.dll" Guid="*">
+      <Component Id="vtkoggtheora_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkoggtheora-6.3.dll" />
       </Component>
-      <Component Id="vtkParallelCore_6.3.dll" Guid="*">
+      <Component Id="vtkParallelCore_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkParallelCore-6.3.dll" />
       </Component>
-      <Component Id="vtkpng_6.3.dll" Guid="*">
+      <Component Id="vtkpng_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkpng-6.3.dll" />
       </Component>
-      <Component Id="vtkproj4_6.3.dll" Guid="*">
+      <Component Id="vtkproj4_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkproj4-6.3.dll" />
       </Component>
-      <Component Id="vtkRenderingAnnotation_6.3.dll" Guid="*">
+      <Component Id="vtkRenderingAnnotation_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkRenderingAnnotation-6.3.dll" />
       </Component>
-      <Component Id="vtkRenderingContext2D_6.3.dll" Guid="*">
+      <Component Id="vtkRenderingContext2D_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkRenderingContext2D-6.3.dll" />
       </Component>
-      <Component Id="vtkRenderingContextOpenGL_6.3.dll" Guid="*">
+      <Component Id="vtkRenderingContextOpenGL_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkRenderingContextOpenGL-6.3.dll" />
       </Component>
-      <Component Id="vtkRenderingCore_6.3.dll" Guid="*">
+      <Component Id="vtkRenderingCore_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkRenderingCore-6.3.dll" />
       </Component>
-      <Component Id="vtkRenderingFreeType_6.3.dll" Guid="*">
+      <Component Id="vtkRenderingFreeType_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkRenderingFreeType-6.3.dll" />
       </Component>
-      <Component Id="vtkRenderingGL2PS_6.3.dll" Guid="*">
+      <Component Id="vtkRenderingGL2PS_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkRenderingGL2PS-6.3.dll" />
       </Component>
-      <Component Id="vtkRenderingImage_6.3.dll" Guid="*">
+      <Component Id="vtkRenderingImage_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkRenderingImage-6.3.dll" />
       </Component>
-      <Component Id="vtkRenderingLabel_6.3.dll" Guid="*">
+      <Component Id="vtkRenderingLabel_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkRenderingLabel-6.3.dll" />
       </Component>
-      <Component Id="vtkRenderingLIC_6.3.dll" Guid="*">
+      <Component Id="vtkRenderingLIC_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkRenderingLIC-6.3.dll" />
       </Component>
-      <Component Id="vtkRenderingLOD_6.3.dll" Guid="*">
+      <Component Id="vtkRenderingLOD_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkRenderingLOD-6.3.dll" />
       </Component>
-      <Component Id="vtkRenderingOpenGL_6.3.dll" Guid="*">
+      <Component Id="vtkRenderingOpenGL_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkRenderingOpenGL-6.3.dll" />
       </Component>
-      <Component Id="vtkRenderingVolume_6.3.dll" Guid="*">
+      <Component Id="vtkRenderingVolume_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkRenderingVolume-6.3.dll" />
       </Component>
-      <Component Id="vtkRenderingVolumeOpenGL_6.3.dll" Guid="*">
+      <Component Id="vtkRenderingVolumeOpenGL_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkRenderingVolumeOpenGL-6.3.dll" />
       </Component>
-      <Component Id="vtksys_6.3.dll" Guid="*">
+      <Component Id="vtksys_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtksys-6.3.dll" />
       </Component>
-      <Component Id="vtkTestingGenericBridge_6.3.dll" Guid="*">
+      <Component Id="vtkTestingGenericBridge_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkTestingGenericBridge-6.3.dll" />
       </Component>
-      <Component Id="vtkTestingIOSQL_6.3.dll" Guid="*">
+      <Component Id="vtkTestingIOSQL_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkTestingIOSQL-6.3.dll" />
       </Component>
-      <Component Id="vtkTestingRendering_6.3.dll" Guid="*">
+      <Component Id="vtkTestingRendering_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkTestingRendering-6.3.dll" />
       </Component>
-      <Component Id="vtktiff_6.3.dll" Guid="*">
+      <Component Id="vtktiff_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtktiff-6.3.dll" />
       </Component>
-      <Component Id="vtkverdict_6.3.dll" Guid="*">
+      <Component Id="vtkverdict_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkverdict-6.3.dll" />
       </Component>
-      <Component Id="vtkViewsContext2D_6.3.dll" Guid="*">
+      <Component Id="vtkViewsContext2D_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkViewsContext2D-6.3.dll" />
       </Component>
-      <Component Id="vtkViewsCore_6.3.dll" Guid="*">
+      <Component Id="vtkViewsCore_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkViewsCore-6.3.dll" />
       </Component>
-      <Component Id="vtkViewsInfovis_6.3.dll" Guid="*">
+      <Component Id="vtkViewsInfovis_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkViewsInfovis-6.3.dll" />
       </Component>
-      <Component Id="vtkzlib_6.3.dll" Guid="*">
+      <Component Id="vtkzlib_6.3.dll" Guid="*" Win64="$(var.Win64)">
         <File Source="$(var.source)\vtkzlib-6.3.dll" />
       </Component>
     </ComponentGroup>

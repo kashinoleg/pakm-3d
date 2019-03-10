@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
   <?define ProdId="*" ?>
-  <?define ProdName="Saturn PAKM 3D" ?>
   <?define ProdVersion="3.11.0.0" ?>
   <?define ProdManufacturer="KashinOA" ?>
   <?define ProdUpgradeCode="b6ada045-9f5f-44c7-a9b3-0ddfe8d71c31" ?>
+
+  <?if $(sys.BUILDARCH) = x64 ?>
+      <?define ProdName = "Saturn PAKM 3D (64 bit)" ?>
+      <?define Win64 = "yes" ?>
+      <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+      <?define CrtSource="x64\Microsoft.VC141.CRT"?>
+      <?define source="..\x64\Release"?>
+  <?else ?>
+      <?define ProdName = "Saturn PAKM 3D" ?>
+      <?define Win64 = "no" ?>
+      <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
+      <?define CrtSource="x86\Microsoft.VC141.CRT"?>
+      <?define source="..\Release"?>
+  <?endif ?>
   
   <?define ProdLicense="..\License-ru.rtf"?>
-  <?define source="..\Release"?>
 </Include>

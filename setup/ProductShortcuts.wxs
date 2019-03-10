@@ -4,7 +4,7 @@
 
   <Fragment>
     <ComponentGroup Id="ProductShortcuts" Directory="ApplicationProgramsFolder">
-      <Component Id="ApplicationShortcut" Guid="*">
+      <Component Id="ApplicationShortcut" Guid="*" Win64="$(var.Win64)">
         <Shortcut Id="ApplicationStartMenuShortcut"
                   Name="$(var.ProdName)"
                   Description="Starts $(var.ProdName) on this computer."
@@ -14,7 +14,7 @@
         <Shortcut Id="ApplicationUninstallMenuShortcut"
                   Name="Uninstall $(var.ProdName)"
                   Description="Uninstalls $(var.ProdName) from this computer."
-                  Target="[System64Folder]msiexec.exe"
+                  Target="[SystemFolder]msiexec.exe"
                   Arguments="/x [ProductCode]"/>
         
         <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall"/>

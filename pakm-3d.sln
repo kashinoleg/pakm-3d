@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core", "core\core.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "triangulate", "triangulate\triangulate.vcxproj", "{F218C2B7-4657-43B9-B418-59181308C049}"
 EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "setup", "setup\setup.wixproj", "{FBF6B712-BC7D-40F8-A746-51597B0EE995}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,12 @@ Global
 		{F218C2B7-4657-43B9-B418-59181308C049}.Release|x64.Build.0 = Release|x64
 		{F218C2B7-4657-43B9-B418-59181308C049}.Release|x86.ActiveCfg = Release|Win32
 		{F218C2B7-4657-43B9-B418-59181308C049}.Release|x86.Build.0 = Release|Win32
+		{FBF6B712-BC7D-40F8-A746-51597B0EE995}.Debug|x64.ActiveCfg = Debug|x86
+		{FBF6B712-BC7D-40F8-A746-51597B0EE995}.Debug|x86.ActiveCfg = Debug|x86
+		{FBF6B712-BC7D-40F8-A746-51597B0EE995}.Debug|x86.Build.0 = Debug|x86
+		{FBF6B712-BC7D-40F8-A746-51597B0EE995}.Release|x64.ActiveCfg = Release|x86
+		{FBF6B712-BC7D-40F8-A746-51597B0EE995}.Release|x86.ActiveCfg = Release|x86
+		{FBF6B712-BC7D-40F8-A746-51597B0EE995}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

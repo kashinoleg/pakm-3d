@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define ProdId="*" ?>
+  <?define ProdName="Saturn PAKM 3D" ?>
+  <?define ProdVersion="3.11.0.0" ?>
+  <?define ProdManufacturer="KashinOA" ?>
+  <?define ProdUpgradeCode="b6ada045-9f5f-44c7-a9b3-0ddfe8d71c31" ?>
+  
+  <?define ProdLicense="..\License-ru.rtf"?>
+  <?define source="..\Release"?>
+</Include>

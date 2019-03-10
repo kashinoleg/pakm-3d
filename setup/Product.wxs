@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+  <?include Variables.wxi?>
+  
+	<Product Id="$(var.ProdId)" Name="$(var.ProdName)" Language="1049" Version="$(var.ProdVersion)" Manufacturer="$(var.ProdManufacturer)" UpgradeCode="$(var.ProdUpgradeCode)">
+		<Package InstallerVersion="400" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes"/>
+
+    <PropertyRef Id="WIX_IS_NETFRAMEWORK_461_OR_LATER_INSTALLED"/>
+    <Condition Message=".NET 4.6 has to be installed">
+      Installed Or WIX_IS_NETFRAMEWORK_461_OR_LATER_INSTALLED
+    </Condition>
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALL_FOLDER" />
+    <WixVariable Id="WixUILicenseRtf" Overridable="yes" Value="$(var.ProdLicense)" />
+    <UIRef Id="WixUI_InstallDir"/>
+    
+		<Feature Id="ProductFeature" Title="$(var.ProdName)" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+      <Feature Id="ShortcutsFeature" Title="Shortcuts" Level="1">
+        <ComponentGroupRef Id="ProductShortcuts" />
+      </Feature>
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALL_FOLDER" Name="$(var.ProdName)" />
+			</Directory>
+      
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="$(var.ProdName)" />
+      </Directory>
+		</Directory>
+	</Fragment>
+</Wix>

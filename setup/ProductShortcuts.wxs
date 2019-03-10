@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include Variables.wxi?>
+
+  <Fragment>
+    <ComponentGroup Id="ProductShortcuts" Directory="ApplicationProgramsFolder">
+      <Component Id="ApplicationShortcut" Guid="*">
+        <Shortcut Id="ApplicationStartMenuShortcut"
+                  Name="$(var.ProdName)"
+                  Description="Starts $(var.ProdName) on this computer."
+                  Target="[INSTALL_FOLDER]pakm-3d.exe"
+                  WorkingDirectory="INSTALL_FOLDER"/>
+
+        <Shortcut Id="ApplicationUninstallMenuShortcut"
+                  Name="Uninstall $(var.ProdName)"
+                  Description="Uninstalls $(var.ProdName) from this computer."
+                  Target="[System64Folder]msiexec.exe"
+                  Arguments="/x [ProductCode]"/>
+        
+        <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\$(var.ProdName)" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

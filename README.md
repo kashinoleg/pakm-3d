@@ -22,9 +22,9 @@ This is free software licensed under the GNU GPLv3.
 
 # Example
 
-![Screenshot 1](https://github.com/kashinoleg/pakm-3d/releases/download/3.11.0/pakm-3d-3.11.0-screenshot-1.jpg)
+![Screenshot 1](https://github.com/kashinoleg/pakm-3d/releases/download/3.11.0/pakm-3d-3.11.0-screenshot-1.jpg?raw=true)
 
-![Screenshot 2](https://github.com/kashinoleg/pakm-3d/releases/download/3.11.0/pakm-3d-3.11.0-screenshot-2.jpg)
+![Screenshot 2](https://github.com/kashinoleg/pakm-3d/releases/download/3.11.0/pakm-3d-3.11.0-screenshot-2.jpg?raw=true)
 
 # License
 

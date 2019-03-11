@@ -1,5 +1,5 @@
 # Saturn PAKM 3D
-![GitHub Logo](https://raw.githubusercontent.com/kashinoleg/pakm-3d/master/GUI/Icon.ico?raw=true)
+![GitHub Logo](https://github.com/kashinoleg/pakm-3d/blob/master/pakm-3d/Icon.ico?raw=true)
 ***
 
 ### PAKM 3D v3.11.0 has been released [here](https://github.com/kashinoleg/pakm-3d/releases)!

@@ -2,7 +2,9 @@
 ![GitHub Logo](https://raw.githubusercontent.com/kashinoleg/pakm-3d/master/GUI/Icon.ico?raw=true)
 ***
 
-### PAKM 3D v3.10.3 has been released [here](https://github.com/kashinoleg/pakm-3d/releases)!
+### PAKM 3D v3.11.0 has been released [here](https://github.com/kashinoleg/pakm-3d/releases)!
+
+### [Windows(x86)](https://github.com/kashinoleg/pakm-3d/releases/download/3.11.0/pakm-3d-3.11.0-x86.msi)
 
 ***
 
@@ -17,3 +19,14 @@ This is free software licensed under the GNU GPLv3.
   - Variable yarn cross sections
   - Export in various formats including ABAQUS, IGES and STEP
   - Calculate of textile properties.
+
+# Example
+
+![Screenshot 1](https://github.com/kashinoleg/pakm-3d/releases/download/3.11.0/pakm-3d-3.11.0-screenshot-1.jpg)
+
+![Screenshot 2](https://github.com/kashinoleg/pakm-3d/releases/download/3.11.0/pakm-3d-3.11.0-screenshot-2.jpg)
+
+# License
+
+The PAKM 3D is licensed under the [GNU GPLv3 license](https://github.com/kashinoleg/pakm-3d/blob/master/LICENSE).
+
